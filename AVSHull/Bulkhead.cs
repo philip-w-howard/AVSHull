@@ -7,7 +7,7 @@ using System.Windows.Media.Media3D;
 
 namespace AVSHull
 {
-    // Class representing a bulkhead: A closed polygon that represents a slice through a hull.
+    // Class representing a bulkhead: A polygon that represents a slice through a hull.
     public class Bulkhead : INotifyPropertyChanged
     {
         private const double NEAR_ZERO = 0.02;
@@ -15,15 +15,29 @@ namespace AVSHull
         public enum BulkheadType { BOW, VERTICAL, TRANSOM };
         public BulkheadType type { get; set; }
 
+        public int NumChines { get { return m_points.Count; } }
+
         private double m_transomAngle;
         public double TransomAngle {  get { return m_transomAngle; } }
 
         private Point3DCollection m_points;
         public Point3DCollection Points {  get { return m_points; } }
 
+        public Point3D GetPoint(int index)
+        {
+            return m_points[index];
+        }
+
         public Bulkhead()
         {
             m_points = new Point3DCollection();
+        }
+
+        public Bulkhead(SerializableBulkhead bulk)
+        {
+            m_transomAngle = bulk.transom_angle;
+            m_points = bulk.points.Clone();
+            type = bulk.bulkheadType;
         }
 
         public void LoadFromHullFile(StreamReader file, int numChines, BulkheadType type)
@@ -124,6 +138,14 @@ namespace AVSHull
             for (int chine = 0; chine < m_points.Count; chine++)
             {
                 // FIXTHIS: uncomment after UpdatePoint works with TRANSOM points. UpdatePoint(chine, 0, 0, 0);
+            }
+        }
+
+        public void Shift(Vector3D zero)
+        {
+            for (int ii = 0; ii < m_points.Count; ii++)
+            {
+                m_points[ii] += zero;
             }
         }
 
