@@ -160,7 +160,7 @@ namespace AVSHull
 
         void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "BulkheadData")
+            if (e.PropertyName == "Bulkhead")
             {
                 Debug.WriteLine("Update chines");
                 UpdateViews();

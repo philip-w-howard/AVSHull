@@ -17,19 +17,13 @@ namespace AVSHull
 
         private List<Point3DCollection> m_chines;
         private int m_SelectedBulkhead;
-        private double m_scale = 1;
-        private bool m_editable;
         private Hull m_BaseHull;
-        private List<Rect> m_handles;
 
         public int SelectedBulkhead
         {
             get { return m_SelectedBulkhead; }
-            set { m_SelectedBulkhead = value; m_handles = null; }
+            set { m_SelectedBulkhead = value; }
         }
-
-        public double Scale { get { return m_scale; } }
-
 
         public Hull BaseHull 
         { 
@@ -37,7 +31,6 @@ namespace AVSHull
             set 
             { 
                 m_BaseHull = value;
-                m_scale = 1;
                 bulkheads = new List<Bulkhead>();
 
                 foreach (Bulkhead bulkhead in m_BaseHull.bulkheads)
@@ -53,10 +46,8 @@ namespace AVSHull
 
         public EditableHull()
         {
-            m_scale = 1;
             m_SelectedBulkhead = NOT_SELECTED;
             m_BaseHull = null;
-            m_editable = false;
         }
 
         public void Rotate(double x, double y, double z)
@@ -205,13 +196,6 @@ namespace AVSHull
 
         //*************************************************************
         // INotifyPropertyChanged implementation
-        public event PropertyChangedEventHandler PropertyChanged;
-        void Notify(string propName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
-        }
+        // Handled by base class
     }
 }

@@ -86,7 +86,7 @@ namespace AVSHull
         //*********************************************
         // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
-        void Notify(string propName)
+        protected void Notify(string propName)
         {
             if (PropertyChanged != null)
             {

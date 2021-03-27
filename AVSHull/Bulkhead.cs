@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
 namespace AVSHull
@@ -153,6 +155,21 @@ namespace AVSHull
             }
             Notify("ShiftBy");
             
+        }
+
+        public Geometry GetGeometry()
+        {
+            GeometryGroup geom = new GeometryGroup();
+
+            for (int chine = 0; chine < NumChines - 1; chine++)
+            {
+                Point p1 = new Point(GetPoint(chine).X, GetPoint(chine).Y);
+                Point p2 = new Point(GetPoint(chine + 1).X, GetPoint(chine + 1).Y);
+
+                geom.Children.Add(new LineGeometry(p1, p2));
+            }
+
+            return geom;
         }
 
         //******************************************
