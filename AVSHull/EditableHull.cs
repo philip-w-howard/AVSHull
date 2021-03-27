@@ -109,7 +109,7 @@ namespace AVSHull
         {
             for (int ii = 0; ii < bulkheads.Count; ii++)
             {
-                //bulkheads[ii].UpdateWithMatrix(matrix);
+                bulkheads[ii].UpdateWithMatrix(matrix);
             }
 
             if (m_chines != null)
