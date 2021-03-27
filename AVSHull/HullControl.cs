@@ -10,8 +10,12 @@ namespace AVSHull
 {
     public class HullControl : Control, INotifyPropertyChanged
     {
+        public enum PerspectiveType { FRONT, TOP, SIDE, PERSPECTIVE };
+
         private EditableHull m_editableHull;
         private double m_scale = 1.0;
+        public bool IsEditable = false;
+        public PerspectiveType perspective = PerspectiveType.PERSPECTIVE;
 
         public HullControl()
         {

@@ -74,6 +74,24 @@ namespace AVSHull
 
         private void HullMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            PerspectiveView.IsEditable = false;
+
+            if (sender == FrontView)
+            {
+                PerspectiveView.perspective = HullControl.PerspectiveType.FRONT;
+            }
+            else if (sender == TopView)
+            {
+                PerspectiveView.perspective = HullControl.PerspectiveType.TOP;
+            }
+            else if (sender == SideView)
+            {
+                PerspectiveView.perspective = HullControl.PerspectiveType.SIDE;
+            }
+
+            UpdateViews();
+            PerspectiveView.IsEditable = true;
+            PerspectiveView.InvalidateVisual();
 
         }
 
@@ -114,10 +132,24 @@ namespace AVSHull
             frontView.Rotate(0, 0, 180);
             FrontView.editableHull = frontView;
 
-            // FIXTHIS: handle editable front, top, side
             EditableHull perspectiveView = new EditableHull();
             perspectiveView.BaseHull = myHull;
-            perspectiveView.Rotate(10, 30, 190);
+            switch (PerspectiveView.perspective)
+            {
+                case HullControl.PerspectiveType.FRONT:
+                    perspectiveView.Rotate(0, 0, 180);
+                    break;
+                case HullControl.PerspectiveType.TOP:
+                    perspectiveView.Rotate(0, 90, 90);
+                    break;
+                case HullControl.PerspectiveType.SIDE:
+                    perspectiveView.Rotate(0, 90, 180);
+                    break;
+                case HullControl.PerspectiveType.PERSPECTIVE:
+                    perspectiveView.Rotate(10, 30, 190);
+                    break;
+
+            }
             PerspectiveView.editableHull = perspectiveView;
 
             TopView.InvalidateVisual();
