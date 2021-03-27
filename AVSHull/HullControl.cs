@@ -23,6 +23,23 @@ namespace AVSHull
             set { m_editableHull = value; }
         }
 
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            return availableSize;
+        }
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            //if (m_editableHull != null)
+            //{
+            //    Geometry chines = m_editableHull.GetChineGeometry();
+            //    Rect bounds = chines.Bounds;
+            //    return new Size(bounds.Width, bounds.Height);
+            //}
+            //else
+            {
+                return finalSize;
+            }
+        }
         protected override void OnRender(DrawingContext drawingContext)
         {
             Rect background = new Rect(new Point(0, 0), new Point(ActualWidth, ActualHeight));
@@ -30,14 +47,24 @@ namespace AVSHull
 
             if (m_editableHull == null) return;
 
-            Pen pen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
+            Pen bulkheadPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
 
             Geometry bulkheads = m_editableHull.GetBulkheadGeometry();
-            drawingContext.DrawGeometry(null, pen, bulkheads);
 
-            pen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
+            Pen chinePen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
             Geometry chines = m_editableHull.GetChineGeometry();
-            drawingContext.DrawGeometry(null, pen, chines);
+            
+            Rect drawBounds = chines.GetRenderBounds(bulkheadPen);
+
+            double scale = 0.9 * Math.Min(ActualWidth/drawBounds.Width, ActualHeight/drawBounds.Height);
+            // drawBounds.Width, Height
+            ScaleTransform scaleXform = new ScaleTransform(scale, scale);
+
+            bulkheads.Transform = scaleXform;
+            chines.Transform = scaleXform;
+
+            drawingContext.DrawGeometry(null, bulkheadPen, bulkheads);
+            drawingContext.DrawGeometry(null, chinePen, chines);
 
             //DrawHandles(drawingContext);
         }
