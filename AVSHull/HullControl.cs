@@ -11,6 +11,7 @@ namespace AVSHull
     public class HullControl : Control, INotifyPropertyChanged
     {
         private EditableHull m_editableHull;
+        private double m_scale = 1.0;
 
         public HullControl()
         {
@@ -29,13 +30,14 @@ namespace AVSHull
         }
         protected override Size ArrangeOverride(Size finalSize)
         {
-            //if (m_editableHull != null)
-            //{
-            //    Geometry chines = m_editableHull.GetChineGeometry();
-            //    Rect bounds = chines.Bounds;
-            //    return new Size(bounds.Width, bounds.Height);
-            //}
-            //else
+            if (m_editableHull != null)
+            {
+                Geometry chines = m_editableHull.GetChineGeometry();
+                Rect bounds = chines.Bounds;
+                m_scale = 0.9 * Math.Min(finalSize.Width / bounds.Width, finalSize.Height / bounds.Height);
+                return new Size(0.9 * finalSize.Width, 0.9 * finalSize.Height);
+            }
+            else
             {
                 return finalSize;
             }
@@ -56,9 +58,9 @@ namespace AVSHull
             
             Rect drawBounds = chines.GetRenderBounds(bulkheadPen);
 
-            double scale = 0.9 * Math.Min(ActualWidth/drawBounds.Width, ActualHeight/drawBounds.Height);
+            //double scale = 0.9 * Math.Min(ActualWidth/drawBounds.Width, ActualHeight/drawBounds.Height);
             // drawBounds.Width, Height
-            ScaleTransform scaleXform = new ScaleTransform(scale, scale);
+            ScaleTransform scaleXform = new ScaleTransform(m_scale, m_scale);
 
             bulkheads.Transform = scaleXform;
             chines.Transform = scaleXform;
