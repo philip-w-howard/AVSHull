@@ -42,7 +42,11 @@ namespace AVSHull
         public EditableHull editableHull
         {
             get { return m_editableHull; }
-            set { m_editableHull = value; }
+            set 
+            { 
+                m_editableHull = value;
+                CreateHandles();
+            }
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -60,6 +64,9 @@ namespace AVSHull
                 double scale_y = 0.9 * finalSize.Height / bounds.Height;
 
                 m_scale = Math.Min(scale_x, scale_y);
+                
+                // If scale changed, need to recreate handles.
+                CreateHandles();
 
                 return new Size(m_scale * bounds.Width, m_scale * bounds.Height);
             }
