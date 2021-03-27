@@ -79,7 +79,22 @@ namespace AVSHull
 
         private void RotateClick(object sender, RoutedEventArgs e)
         {
+            Button button = (Button)sender;
 
+            if ((string)button.Content == "+X")
+                PerspectiveView.editableHull.Rotate(5, 0, 0);
+            else if ((string)button.Content == "-X")
+                PerspectiveView.editableHull.Rotate(-5, 0, 0);
+            else if ((string)button.Content == "+Y")
+                PerspectiveView.editableHull.Rotate(0, 5, 0);
+            else if ((string)button.Content == "-Y")
+                PerspectiveView.editableHull.Rotate(0, -5, 0);
+            else if ((string)button.Content == "+Z")
+                PerspectiveView.editableHull.Rotate(0, 0, 5);
+            else if ((string)button.Content == "-Z")
+                PerspectiveView.editableHull.Rotate(0, 0, -5);
+
+            PerspectiveView.InvalidateVisual();
         }
 
         private void UpdateViews()

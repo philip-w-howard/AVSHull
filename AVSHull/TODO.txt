@@ -10,3 +10,9 @@ DisplayHull
 	Can return Geometry
 HullControl
 	Displays a DisplayHull
+
+TODO:
+	Implement rotation of Perspective
+	Implement selecting bulkhead
+	Implement handles
+	Implement editing
