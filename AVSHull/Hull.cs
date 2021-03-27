@@ -1,40 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Text;
 using System.Windows.Media.Media3D;
 
 namespace AVSHull
 {
-    public class Hull : INotifyPropertyChanged
+    public class Hull : INotifyPropertyChanged, ICloneable
     {
-        private const int POINTS_PER_CHINE = 50;
-        private List<Bulkhead> m_bulkheads;
-        private List<Point3DCollection> m_chines;
+        public List<Bulkhead> bulkheads;
 
         public Hull()
         {
-            m_bulkheads = new List<Bulkhead>();
-            m_chines = new List<Point3DCollection>();
+            bulkheads = new List<Bulkhead>();
         }
 
-        public Hull(SerializableHull hull)
+        public void LoadFromHullFile(string filename)
         {
-            m_chines = null;
-            m_bulkheads = null;
-            if (hull.bulkheads != null)
+            bulkheads = new List<Bulkhead>();
+
+            using (StreamReader file = File.OpenText(filename))
             {
-                m_bulkheads = new List<Bulkhead>();
-                foreach (SerializableBulkhead bulk in hull.bulkheads)
+                string line;
+                int num_chines;
+                int numBulkheads = 5;
+
+                line = file.ReadLine();
+                if (!int.TryParse(line, out num_chines)) throw new Exception("Invalid HUL file format");
+
+                Bulkhead bulkhead = new Bulkhead();
+                bulkhead.LoadFromHullFile(file, num_chines, Bulkhead.BulkheadType.BOW);
+                bulkheads.Add(bulkhead);
+
+                for (int ii = 1; ii < numBulkheads - 1; ii++)
                 {
-                    m_bulkheads.Add(new Bulkhead(bulk));
+                    bulkhead = new Bulkhead();
+                    bulkhead.LoadFromHullFile(file, num_chines, Bulkhead.BulkheadType.VERTICAL);
+                    bulkheads.Add(bulkhead);
                 }
 
-                PrepareChines(POINTS_PER_CHINE);
-                RepositionToZero();
-
-                Notify("HullData");
+                bulkhead = new Bulkhead();
+                bulkhead.LoadFromHullFile(file, num_chines, Bulkhead.BulkheadType.TRANSOM);
+                bulkheads.Add(bulkhead);
             }
+            RepositionToZero();
+
+            Notify("HullData");
         }
 
         private void RepositionToZero()
@@ -43,56 +55,20 @@ namespace AVSHull
 
             Vector3D zeroVect = new Vector3D(-zero.X, -zero.Y, -zero.Z);
 
-            foreach (Bulkhead bulk in m_bulkheads)
+            foreach (Bulkhead bulk in bulkheads)
             {
-                bulk.Shift(zeroVect);
-            }
-
-            if (m_chines != null)
-            {
-                for (int ii = 0; ii < m_chines.Count; ii++)
-                {
-                    Point3DCollection newChine = new Point3DCollection(m_chines.Count);
-                    foreach (Point3D point in m_chines[ii])
-                    {
-                        newChine.Add(point + zeroVect);
-                    }
-
-                    m_chines[ii] = newChine;
-                }
+                bulk.ShiftBy(zeroVect);
             }
         }
 
-        private void PrepareChines(int points_per_chine)
-        {
-            int nChines = m_bulkheads[0].NumChines;
 
-            m_chines = new List<Point3DCollection>();
-
-            for (int chine = 0; chine < nChines; chine++)
-            {
-                Point3DCollection newChine = new Point3DCollection(points_per_chine);
-                Point3DCollection chine_data = new Point3DCollection(m_bulkheads.Count);
-
-                for (int bulkhead = 0; bulkhead < m_bulkheads.Count; bulkhead++)
-                {
-                    chine_data.Add(m_bulkheads[bulkhead].GetPoint(chine));
-                }
-                Splines spline = new Splines(chine_data, Splines.RELAXED);
-                spline.GetPoints(points_per_chine, newChine);
-                m_chines.Add(newChine);
-            }
-
-            RepositionToZero();
-        }
-
-        protected Point3D GetMin()
+        private Point3D GetMin()
         {
             double min_x = double.MaxValue;
             double min_y = double.MaxValue;
             double min_z = double.MaxValue;
 
-            foreach (Bulkhead bulk in m_bulkheads)
+            foreach (Bulkhead bulk in bulkheads)
             {
                 for (int ii = 0; ii < bulk.NumChines; ii++)
                 {
@@ -102,19 +78,6 @@ namespace AVSHull
                     min_z = Math.Min(min_z, point.Z);
                 }
 
-            }
-
-            if (m_chines != null)
-            {
-                foreach (Point3DCollection chine in m_chines)
-                {
-                    foreach (Point3D point in chine)
-                    {
-                        min_x = Math.Min(min_x, point.X);
-                        min_y = Math.Min(min_y, point.Y);
-                        min_z = Math.Min(min_z, point.Z);
-                    }
-                }
             }
 
             return new Point3D(min_x, min_y, min_z);
@@ -130,25 +93,19 @@ namespace AVSHull
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-        
-        //***************************************************
-        // Serialization
-        public class SerializableHull
+
+        //***********************************************
+        // IClonable implementation
+        public object Clone()
         {
-            public List<SerializableBulkhead> bulkheads;
+            Hull copy = new Hull();
 
-            public SerializableHull()
-            { }
-
-            public SerializableHull(Hull hull)
+            foreach (Bulkhead bulkhead in bulkheads)
             {
-                bulkheads = new List<SerializableBulkhead>();
-
-                foreach (Bulkhead bulkhead in hull.m_bulkheads)
-                {
-                    bulkheads.Add(new SerializableBulkhead(bulkhead));
-                }
+                bulkheads.Add((Bulkhead)bulkhead.Clone());
             }
+
+            return copy;
         }
     }
 }

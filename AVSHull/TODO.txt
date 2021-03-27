@@ -1,0 +1,12 @@
+﻿Hull
+	contains vector of bulkheads
+DisplayHull
+	contains BaseHull
+	vector of bulkheads
+	vector of bulkheads
+	vector of Chines
+	Rotatable
+	Editable
+	Can return Geometry
+HullControl
+	Displays a DisplayHull

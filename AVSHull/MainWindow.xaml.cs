@@ -24,5 +24,45 @@ namespace AVSHull
         {
             InitializeComponent();
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void openClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void saveClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void importClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PanelsClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ResizeClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HullMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void RotateClick(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Windows.Media.Media3D;
 namespace AVSHull
 {
     // Class with static methods for performing geometry calculations
-    class Geometry
+    class GeometryOperations
     {
         // Compute the two solutions to the quadradic forumula.
         // a,b,c have the normal meaning for the quadradic formula.
@@ -193,7 +193,7 @@ namespace AVSHull
         static public PointCollection ParallelShape(PointCollection points, double offset, bool inside = false)
         {
             double leftAngle = 0, rightAngle = 0;
-            Geometry.ComputeAngles(points, ref leftAngle, ref rightAngle);
+            GeometryOperations.ComputeAngles(points, ref leftAngle, ref rightAngle);
             bool doLeft = false;
 
             if (leftAngle < rightAngle && inside)
@@ -219,10 +219,10 @@ namespace AVSHull
             {
                 if (!Double.IsNaN(p1.X))
                 {
-                    Geometry.OffsetLine(p2, p1, offset, ref l1a, ref l1b);
-                    Geometry.OffsetLine(p1, p, offset, ref l2a, ref l2b);
+                    GeometryOperations.OffsetLine(p2, p1, offset, ref l1a, ref l1b);
+                    GeometryOperations.OffsetLine(p1, p, offset, ref l2a, ref l2b);
 
-                    newPoint = Geometry.Intersection(l1a, l1b, l2a, l2b);
+                    newPoint = GeometryOperations.Intersection(l1a, l1b, l2a, l2b);
                     result.Add(newPoint);
                 }
 

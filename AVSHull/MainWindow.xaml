@@ -3,10 +3,80 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:properties="clr-namespace:AVSHull.Properties"
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="AVS Hull" 
+        Height="{Binding Source={x:Static properties:Settings.Default}, Path=MainHeight, Mode=TwoWay}" 
+        Width="{Binding Source={x:Static properties:Settings.Default}, Path=MainWidth, Mode=TwoWay}" 
+        Closed="Window_Closed">
+    <DockPanel>
+        <ToolBarTray Background="White" DockPanel.Dock="Top">
+            <ToolBar Band="0 " BandIndex="1">
+                <Menu >
+                    <MenuItem Header="_File">
+                        <MenuItem Header="_Open" Click="openClick"/>
+                        <MenuItem Header="_Save" Click="saveClick"/>
+                        <MenuItem Header="_Import Carlson HUL file" Click="importClick"/>
+                    </MenuItem>
+                    <MenuItem Header="_Tools">
+                        <MenuItem Name="PanelsMenu" Header="_Panels" Click="PanelsClick" IsEnabled="False"/>
+                        <MenuItem Name ="ResizeMenu" Header="_Resize" Click="ResizeClick" />
+                    </MenuItem>
+                </Menu>
+            </ToolBar>
+            <ToolBar Band="0" BandIndex="2">
 
-    </Grid>
+            </ToolBar>
+        </ToolBarTray>
+
+        <Border BorderBrush="Gray" BorderThickness="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition  Width="auto"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition  Width="auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray"  ShowsPreview="true" Width="3"/>
+                <GridSplitter Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="true" Width="3"/>
+                <GridSplitter Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="true" Width="3"/>
+                <GridSplitter Grid.Row="1" Grid.ColumnSpan="7" VerticalAlignment="Center" HorizontalAlignment="Stretch" Background="Gray" ShowsPreview="true" Height="3"/>
+                <local:HullControl x:Name="FrontManip" Grid.Column="0" Grid.Row="0" MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
+                </local:HullControl>
+
+                <local:HullControl x:Name="TopManip" Grid.Column="2" Grid.Row="0" MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
+                </local:HullControl>
+
+                <local:HullControl x:Name="SideManip" Grid.Column="4" Grid.Row="0" MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
+                </local:HullControl>
+
+                <local:HullControl x:Name="PerspectiveManip" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="7" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
+                </local:HullControl>
+
+                <StackPanel Grid.Column="6" Grid.Row="0">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical" Margin="5">
+                            <Button Click="RotateClick">+X</Button>
+                            <Button Click="RotateClick">+Y</Button>
+                            <Button Click="RotateClick">+Z</Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Margin="5">
+                            <Button Click="RotateClick">-X</Button>
+                            <Button Click="RotateClick">-Y</Button>
+                            <Button Click="RotateClick">-Z</Button>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </DockPanel>
 </Window>

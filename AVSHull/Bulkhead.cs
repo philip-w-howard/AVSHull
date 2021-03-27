@@ -8,7 +8,7 @@ using System.Windows.Media.Media3D;
 namespace AVSHull
 {
     // Class representing a bulkhead: A polygon that represents a slice through a hull.
-    public class Bulkhead : INotifyPropertyChanged
+    public class Bulkhead : INotifyPropertyChanged, ICloneable
     {
         private const double NEAR_ZERO = 0.02;
 
@@ -141,12 +141,14 @@ namespace AVSHull
             }
         }
 
-        public void Shift(Vector3D zero)
+        public void ShiftBy(Vector3D offset)
         {
             for (int ii = 0; ii < m_points.Count; ii++)
             {
-                m_points[ii] += zero;
+                m_points[ii] += offset;
             }
+            Notify("ShiftBy");
+            
         }
 
         //******************************************
@@ -158,6 +160,18 @@ namespace AVSHull
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
+        }
+
+        //**********************************************
+        // IClonable implementation
+        public object Clone()
+        {
+            Bulkhead copy = new Bulkhead();
+            copy.type = type;
+            copy.m_transomAngle = TransomAngle;
+            copy.m_points = m_points.Clone();
+
+            return copy;
         }
     }
 
