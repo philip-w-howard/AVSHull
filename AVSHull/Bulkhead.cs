@@ -67,7 +67,7 @@ namespace AVSHull
             }
 
 
-            if (Math.Abs(m_points[0].X) < NEAR_ZERO)
+            if (Math.Abs(temp_points[0].X) < NEAR_ZERO)
             {
                 // Bottom is on center-line
                 for (int ii= temp_points.Count - 1; ii>0; ii--)
@@ -78,6 +78,7 @@ namespace AVSHull
                 // Force center to zero
                 m_points.Add(new Point3D(0, temp_points[0].Y, temp_points[0].Z));
                 
+                // Insert other half of hull
                 for (int ii=1; ii<temp_points.Count; ii++)
                 {
                     m_points.Add(temp_points[ii]);
@@ -91,6 +92,7 @@ namespace AVSHull
                     m_points.Add(temp_points[ii]);
                 }
 
+                // Insert other half of hull
                 for (int ii = 1; ii < temp_points.Count; ii++)
                 {
                     m_points.Add(temp_points[ii]);

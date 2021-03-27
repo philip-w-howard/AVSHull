@@ -50,17 +50,11 @@
                 <GridSplitter Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="true" Width="3"/>
                 <GridSplitter Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="true" Width="3"/>
                 <GridSplitter Grid.Row="1" Grid.ColumnSpan="7" VerticalAlignment="Center" HorizontalAlignment="Stretch" Background="Gray" ShowsPreview="true" Height="3"/>
-                <local:HullControl x:Name="FrontManip" Grid.Column="0" Grid.Row="0" MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
-                </local:HullControl>
-
-                <local:HullControl x:Name="TopManip" Grid.Column="2" Grid.Row="0" MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
-                </local:HullControl>
-
-                <local:HullControl x:Name="SideManip" Grid.Column="4" Grid.Row="0" MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
-                </local:HullControl>
-
-                <local:HullControl x:Name="PerspectiveManip" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="7" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
-                </local:HullControl>
+                
+                <local:HullControl x:Name="FrontView" Grid.Column="0" Grid.Row="0" MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" />
+                <local:HullControl x:Name="TopView" Grid.Column="2" Grid.Row="0" MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" />
+                <local:HullControl x:Name="SideView" Grid.Column="4" Grid.Row="0" MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" />
+                <local:HullControl x:Name="PerspectiveView" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="7" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" />
 
                 <StackPanel Grid.Column="6" Grid.Row="0">
                     <StackPanel Orientation="Horizontal">
