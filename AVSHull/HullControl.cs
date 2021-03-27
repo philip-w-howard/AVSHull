@@ -34,8 +34,13 @@ namespace AVSHull
             {
                 Geometry chines = m_editableHull.GetChineGeometry();
                 Rect bounds = chines.Bounds;
-                m_scale = 0.9 * Math.Min(finalSize.Width / bounds.Width, finalSize.Height / bounds.Height);
-                return new Size(0.9 * finalSize.Width, 0.9 * finalSize.Height);
+
+                double scale_x = 0.9 * finalSize.Width / bounds.Width;
+                double scale_y = 0.9 * finalSize.Height / bounds.Height;
+
+                m_scale = Math.Min(scale_x, scale_y);
+
+                return new Size(m_scale * bounds.Width, m_scale * bounds.Height);
             }
             else
             {
@@ -56,12 +61,8 @@ namespace AVSHull
             Pen chinePen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
             Geometry chines = m_editableHull.GetChineGeometry();
             
-            Rect drawBounds = chines.GetRenderBounds(bulkheadPen);
-
-            //double scale = 0.9 * Math.Min(ActualWidth/drawBounds.Width, ActualHeight/drawBounds.Height);
-            // drawBounds.Width, Height
             ScaleTransform scaleXform = new ScaleTransform(m_scale, m_scale);
-
+            
             bulkheads.Transform = scaleXform;
             chines.Transform = scaleXform;
 
