@@ -24,18 +24,19 @@ namespace AVSHull
         public PerspectiveType perspective = PerspectiveType.PERSPECTIVE;
 
         private List<Geometry> m_bulkheadGeometry;
-        private List<Geometry> m_handles;
+        private List<RectangleGeometry> m_handles;
 
         private int m_selectedBulkhead = NOT_SELECTED;
         private int m_draggingHandle = NOT_SELECTED;
         private bool m_dragging = false;
         private Point m_startDrag = new Point(0, 0);
+        private Point m_lastDrag = new Point(0, 0);
 
         public HullControl()
         {
             m_editableHull = null;
             m_bulkheadGeometry = new List<Geometry>();
-            m_handles = new List<Geometry>();
+            m_handles = new List<RectangleGeometry>();
         }
 
         public EditableHull editableHull
@@ -100,7 +101,6 @@ namespace AVSHull
 
             if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
             {
-                CreateHandles(scaleXform);
                 foreach (Geometry geom in m_handles)
                 {
                     drawingContext.DrawGeometry(null, bulkheadPen, geom);
@@ -108,11 +108,13 @@ namespace AVSHull
             }
         }
 
-        private void CreateHandles(Transform xform)
+        private void CreateHandles()
         {
             m_handles.Clear();
             if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
             {
+                ScaleTransform xform = new ScaleTransform(m_scale, m_scale);
+
                 Bulkhead bulk = m_editableHull.bulkheads[m_selectedBulkhead];
                 foreach (Point3D point in bulk.Points)
                 {
@@ -163,6 +165,8 @@ namespace AVSHull
                 {
                     m_dragging = true;
                     m_startDrag = loc;
+                    m_lastDrag = loc;
+
                     Debug.WriteLine("clicked handle {0}", m_draggingHandle);
                 }
                 else
@@ -171,6 +175,7 @@ namespace AVSHull
                     m_selectedBulkhead = BulkheadClicked(loc);
                     if (m_selectedBulkhead != NOT_SELECTED)
                     {
+                        CreateHandles();
                         InvalidateVisual();
                     }
                 }
@@ -225,20 +230,29 @@ namespace AVSHull
         //    }
         //}
 
-        //protected override void OnPreviewMouseMove(MouseEventArgs e)
-        //{
-        //    if (e.LeftButton == MouseButtonState.Pressed)
-        //    {
-        //        UIElement content = (UIElement)this.Content;
-        //        Point loc = e.GetPosition(content);
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Point loc = e.GetPosition(this);
 
-        //        if (m_Dragging)
-        //        {
-        //            m_HullDisplay.MoveHandle(m_DraggingHandle, loc);
-        //            Draw();
-        //        }
-        //    }
-        //}
+                if (m_dragging)
+                {
+                    ScaleTransform xform = new ScaleTransform(m_scale, m_scale);
+
+                    Rect rect = m_handles[m_draggingHandle].Rect;
+                    rect.X += (loc.X - m_lastDrag.X) / m_scale;
+                    rect.Y += (loc.Y - m_lastDrag.Y) / m_scale;
+
+                    m_lastDrag = loc;
+                    RectangleGeometry geom = new RectangleGeometry(rect);
+                    geom.Transform = xform;
+
+                    m_handles[m_draggingHandle] = geom;
+                    InvalidateVisual();
+                }
+            }
+        }
         //*******************************************************
         // INotifyPropertyChanged Implementation
         public event PropertyChangedEventHandler PropertyChanged;
