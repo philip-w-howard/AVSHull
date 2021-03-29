@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,11 +40,59 @@ namespace AVSHull
 
         private void openClick(object sender, RoutedEventArgs e)
         {
+            // destroy any previous hull
+            myHull = null;
 
+            OpenFileDialog openDlg = new OpenFileDialog();
+
+            openDlg.Filter = "AVS Hull files (*.avsh)|*.avsh|All files (*.*)|*.*";
+            openDlg.FilterIndex = 0;
+            openDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = openDlg.ShowDialog();
+            if (result == true)
+            {
+                Hull tempHull;
+
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Hull));
+
+                using (Stream reader = new FileStream(openDlg.FileName, FileMode.Open))
+                {
+                    // Call the Deserialize method to restore the object's state.
+                    tempHull = (Hull)serializer.Deserialize(reader);
+                    myHull = tempHull;
+                    myHull.PropertyChanged += hull_PropertyChanged;
+                    myHull.SetBulkheadHandler();
+
+                    PerspectiveView.perspective = HullControl.PerspectiveType.PERSPECTIVE;
+                    PerspectiveView.IsEditable = false;
+                    UpdateViews();
+
+                    PanelsMenu.IsEnabled = true;
+                }
+            }
         }
 
         private void saveClick(object sender, RoutedEventArgs e)
         {
+            if (myHull == null) return;
+
+            SaveFileDialog saveDlg = new SaveFileDialog();
+
+            saveDlg.Filter = "AVS Hull files (*.avsh)|*.avsh|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 0;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(Hull));
+
+                using (FileStream output = new FileStream(saveDlg.FileName, FileMode.Create))
+                {
+                    writer.Serialize(output, myHull);
+                }
+            }
 
         }
 
@@ -160,7 +209,8 @@ namespace AVSHull
 
         void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Bulkhead")
+            Debug.WriteLine("PropertyChanged: " + e.PropertyName);
+            if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
                 Debug.WriteLine("Update chines");
                 UpdateViews();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Media.Media3D;
@@ -46,12 +47,27 @@ namespace AVSHull
             }
             RepositionToZero();
 
+            SetBulkheadHandler(bulkhead_PropertyChanged);
+
             Notify("HullData");
         }
 
+        public void SetBulkheadHandler(PropertyChangedEventHandler handler = null)
+        {
+            if (handler == null) handler = bulkhead_PropertyChanged;
+
+            foreach (Bulkhead bulk in bulkheads)
+            {
+                bulk.PropertyChanged += handler;
+            }
+        }
         private void RepositionToZero()
         {
-            Point3D zero = GetMin();
+            Point3D min = GetMin();
+            Point3D max = GetMax();
+            Point3D zero = min;
+
+            zero.X = (max.X + min.X) / 2; // move centerline to zero
 
             Vector3D zeroVect = new Vector3D(-zero.X, -zero.Y, -zero.Z);
 
@@ -83,6 +99,27 @@ namespace AVSHull
             return new Point3D(min_x, min_y, min_z);
         }
 
+        private Point3D GetMax()
+        {
+            double min_x = double.MinValue;
+            double min_y = double.MinValue;
+            double min_z = double.MinValue;
+
+            foreach (Bulkhead bulk in bulkheads)
+            {
+                for (int ii = 0; ii < bulk.NumChines; ii++)
+                {
+                    Point3D point = bulk.GetPoint(ii);
+                    min_x = Math.Max(min_x, point.X);
+                    min_y = Math.Max(min_y, point.Y);
+                    min_z = Math.Max(min_z, point.Z);
+                }
+
+            }
+
+            return new Point3D(min_x, min_y, min_z);
+        }
+
         //*********************************************
         // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
@@ -92,6 +129,12 @@ namespace AVSHull
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
+        }
+
+        private void bulkhead_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Debug.WriteLine("Hull:Bulkhead PropertyChanged: " + e.PropertyName);
+            Notify(e.PropertyName);
         }
 
         //***********************************************

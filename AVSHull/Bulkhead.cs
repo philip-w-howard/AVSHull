@@ -19,11 +19,11 @@ namespace AVSHull
 
         public int NumChines { get { return m_points.Count; } }
 
-        private double m_transomAngle;
-        public double TransomAngle {  get { return m_transomAngle; } }
+        public double m_transomAngle;
+        public double TransomAngle { get { return m_transomAngle; } }
 
         private Point3DCollection m_points;
-        public Point3DCollection Points {  get { return m_points; } }
+        public Point3DCollection Points { get { return m_points; } }
 
         public Point3D GetPoint(int index)
         {
@@ -33,13 +33,6 @@ namespace AVSHull
         public Bulkhead()
         {
             m_points = new Point3DCollection();
-        }
-
-        public Bulkhead(SerializableBulkhead bulk)
-        {
-            m_transomAngle = bulk.transom_angle;
-            m_points = bulk.points.Clone();
-            type = bulk.bulkheadType;
         }
 
         public void LoadFromHullFile(StreamReader file, int numChines, BulkheadType type)
@@ -55,6 +48,8 @@ namespace AVSHull
                 double value;
                 line = file.ReadLine();
                 if (!double.TryParse(line, out value)) throw new Exception("Unable to read bulkhead X value");
+                
+                if (type == BulkheadType.BOW && Math.Abs(value) < NEAR_ZERO) value = 0;
                 point.X = value;
 
                 line = file.ReadLine();
@@ -72,16 +67,16 @@ namespace AVSHull
             if (Math.Abs(temp_points[0].X) < NEAR_ZERO)
             {
                 // Bottom is on center-line
-                for (int ii= temp_points.Count - 1; ii>0; ii--)
+                for (int ii = temp_points.Count - 1; ii > 0; ii--)
                 {
                     m_points.Add(temp_points[ii]);
                 }
 
                 // Force center to zero
                 m_points.Add(new Point3D(0, temp_points[0].Y, temp_points[0].Z));
-                
+
                 // Insert other half of hull
-                for (int ii=1; ii<temp_points.Count; ii++)
+                for (int ii = 1; ii < temp_points.Count; ii++)
                 {
                     Point3D point = new Point3D(-temp_points[ii].X, temp_points[ii].Y, temp_points[ii].Z);
                     m_points.Add(point);
@@ -154,7 +149,7 @@ namespace AVSHull
                 m_points[ii] += offset;
             }
             Notify("ShiftBy");
-            
+
         }
 
         public Geometry GetGeometry()
@@ -212,25 +207,89 @@ namespace AVSHull
 
             Notify("Bulkhead");
         }
-    }
 
-    //**********************************************
-    public class SerializableBulkhead
-    {
-        public double transom_angle;
-        public Bulkhead.BulkheadType bulkheadType;
-        public Point3DCollection points;
-
-        public SerializableBulkhead()
+        public void UpdateBulkheadPoint(int chine, double x, double y, double z)
         {
-            points = new Point3DCollection();
+            Point3D basePoint = m_points[0];
+            Point3D point = m_points[chine];
+            int otherChine = (m_points.Count - 1) - chine;
+            Point3D otherPoint = m_points[otherChine];
+
+            switch (type)
+            {
+                case BulkheadType.BOW:
+                    point.X += x;
+                    point.Y += y;
+                    point.Z += 0;                    // force all points to be on the Z axix
+                    otherPoint.X -= x;
+                    otherPoint.Y += y;
+                    otherPoint.Z += 0;               // force all points to be on the Z axix
+                    break;
+                case BulkheadType.VERTICAL:
+                    point.X += x;
+                    point.Y += y;
+                    point.Z = basePoint.Z;          // force all points to be vertical relative to base point
+                    otherPoint.X -= x;
+                    otherPoint.Y += y;
+                    otherPoint.Z = basePoint.Z;          // force all points to be vertical relative to base point
+                    break;
+                case BulkheadType.TRANSOM:
+                    if (x == 0 && y == 0 && z == 0)
+                    {
+                        // Simply force Z to be on the plane of the transom
+                        if (chine != 0)
+                        {
+                            point.Z = NewZPoint(basePoint, point);
+                            otherPoint.Z = NewZPoint(basePoint, point);
+                        }
+                    }
+                    else if (x == 0)
+                    {
+                        // assume updating from side view
+                        // Believe the user's y coordinate and then compute Z to be on the plane.
+                        point.Y += y;
+                        point.Z = NewZPoint(basePoint, point);
+                        otherPoint.Y += y;
+                        otherPoint.Z = NewZPoint(basePoint, otherPoint);
+                    }
+                    else if (y == 0)
+                    {
+                        // assume updating from top view
+                        // Can't update Z or Y from top view
+                        point.X += x;
+                        otherPoint.X -= x;
+                    }
+                    else if (z == 0)
+                    {
+                        // assume updating from front view
+                        // can update both x and y
+                        point.X += x;
+                        point.Y += y;
+                        point.Z = NewZPoint(basePoint, point);
+                        otherPoint.X -= x;
+                        otherPoint.Y += y;
+                        otherPoint.Z = NewZPoint(basePoint, otherPoint);
+                    }
+                    else
+                    {
+                        throw new Exception("Perspective updates not implemented");
+                    }
+                    break;
+            }
+
+            m_points[chine] = point;
+
+            if (chine != otherChine)
+            {
+                m_points[otherChine] = otherPoint;
+            }
+
+            Notify("Bulkhead");
         }
 
-        public SerializableBulkhead(Bulkhead bulkhead)
+        private double NewZPoint(Point3D basePoint, Point3D newPoint)
         {
-            transom_angle = bulkhead.TransomAngle;
-            bulkheadType = bulkhead.type;
-            points = bulkhead.Points.Clone();
+            return basePoint.Z + (newPoint.Y - basePoint.Y) * Math.Cos(m_transomAngle) / Math.Sin(m_transomAngle);
         }
     }
-}
+ }

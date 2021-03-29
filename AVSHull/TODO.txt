@@ -16,3 +16,8 @@ TODO:
 	Implement selecting bulkhead
 	Implement handles
 	Implement editing
+
+
+	Working at updating bulkhead.
+		Some updates are working. Need to test/fix the rest
+	Hull.MoveToZero needs to move the centerline to zero.

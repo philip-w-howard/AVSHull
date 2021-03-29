@@ -5,6 +5,7 @@ using System.Windows;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using System.Diagnostics;
 
 namespace AVSHull
 {
@@ -177,6 +178,7 @@ namespace AVSHull
         {
             int nChines = bulkheads[0].NumChines;
 
+            Debug.WriteLine("Preparing chings");
             m_chines = new List<Point3DCollection>();
 
             for (int chine = 0; chine < nChines; chine++)
@@ -194,6 +196,12 @@ namespace AVSHull
             }
         }
 
+        public void UpdateBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
+        {
+            m_BaseHull.bulkheads[bulkhead].UpdateBulkheadPoint(chine, x, y, z);
+        }
+
+        //m_selectedBulkhead, m_draggingHandle, x, y, z);
         //*************************************************************
         // INotifyPropertyChanged implementation
         // Handled by base class

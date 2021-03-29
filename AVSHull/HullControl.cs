@@ -22,6 +22,7 @@ namespace AVSHull
         private double m_scale = 1.0;
         public bool IsEditable = false;
         public PerspectiveType perspective = PerspectiveType.PERSPECTIVE;
+        private bool m_RecreateHandles = false;
 
         private List<Geometry> m_bulkheadGeometry;
         private List<RectangleGeometry> m_handles;
@@ -45,16 +46,20 @@ namespace AVSHull
             set 
             { 
                 m_editableHull = value;
+                m_editableHull.PropertyChanged += hull_PropertyChanged;
                 CreateHandles();
             }
         }
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            Debug.WriteLine("MeasureOverride");
+            m_RecreateHandles = true;
             return availableSize;
         }
         protected override Size ArrangeOverride(Size finalSize)
         {
+            Debug.WriteLine("ArrangeOverride");
             if (m_editableHull != null)
             {
                 Geometry chines = m_editableHull.GetChineGeometry();
@@ -63,10 +68,14 @@ namespace AVSHull
                 double scale_x = 0.9 * finalSize.Width / bounds.Width;
                 double scale_y = 0.9 * finalSize.Height / bounds.Height;
 
-                m_scale = Math.Min(scale_x, scale_y);
-                
+                double newScale = Math.Min(scale_x, scale_y);
+
                 // If scale changed, need to recreate handles.
-                CreateHandles();
+                //if (m_scale != newScale) CreateHandles();
+                if (m_RecreateHandles) CreateHandles();
+                m_RecreateHandles = false;
+
+                m_scale = newScale;
 
                 return new Size(m_scale * bounds.Width, m_scale * bounds.Height);
             }
@@ -163,6 +172,8 @@ namespace AVSHull
         }
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
+            m_RecreateHandles = false;
+
             Point loc = e.GetPosition(this);
 
             if (IsEditable)
@@ -190,55 +201,63 @@ namespace AVSHull
                 e.Handled = true;
             }
         }
-        //protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
-        //{
-        //    UIElement content = (UIElement)this.Content;
-        //    Point loc = e.GetPosition(content);
+        protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
+        {
+            m_RecreateHandles = false;
 
-        //    Debug.WriteLine("dropped handle {0} {1}", m_DraggingHandle, m_Dragging);
-        //    if (m_Dragging)
-        //    {
-        //        double x, y, z;
+            Point loc = e.GetPosition(this);
 
-        //        if (perspective == PerspectiveType.FRONT)
-        //        {
-        //            // Front
-        //            x = -(m_dragStartX - loc.X) / m_HullDisplay.Scale;
-        //            y = (m_dragStartY - loc.Y) / m_HullDisplay.Scale;
-        //            z = 0;
-        //        }
-        //        else if (perspective == PerspectiveType.SIDE)
-        //        {
-        //            // Side
-        //            x = 0;
-        //            y = (m_dragStartY - loc.Y) / m_HullDisplay.Scale;
-        //            z = -(m_dragStartX - loc.X) / m_HullDisplay.Scale;
-        //        }
-        //        else if (perspective == PerspectiveType.TOP)
-        //        {
-        //            // Top
-        //            x = (m_dragStartY - loc.Y) / m_HullDisplay.Scale;
-        //            y = 0;
-        //            z = -(m_dragStartX - loc.X) / m_HullDisplay.Scale;
-        //        }
-        //        else
-        //        {
-        //            x = 0;
-        //            y = 0;
-        //            z = 0;
-        //        }
+            Debug.WriteLine("dropped handle {0} {1}", m_draggingHandle, m_dragging);
+            if (m_dragging && m_draggingHandle != NOT_SELECTED)
+            {
+                Debug.WriteLine("Updating handle {0} {1}", m_draggingHandle, m_dragging);
+                double x, y, z;
 
-        //        m_Hull.UpdateMirroredBulkheadPoint(m_SelectedBulkhead, m_DraggingHandle, x, y, z);
+                if (perspective == PerspectiveType.FRONT)
+                {
+                    // Front
+                    x = (m_startDrag.X - loc.X) / m_scale;
+                    y = (m_startDrag.Y - loc.Y) / m_scale;
+                    z = 0;
 
-        //        m_Dragging = false;
+                    // Can't change X coordinate on front view of BOW.
+                    if (m_editableHull.bulkheads[m_selectedBulkhead].type == Bulkhead.BulkheadType.BOW) x = 0;
+                }
+                else if (perspective == PerspectiveType.SIDE)
+                {
+                    // Side
+                    x = 0;
+                    y = (m_startDrag.Y - loc.Y) / m_scale;
+                    z = -(m_startDrag.X - loc.X) / m_scale;
+                }
+                else if (perspective == PerspectiveType.TOP)
+                {
+                    // Top
+                    x = -(m_startDrag.Y - loc.Y) / m_scale;
+                    y = 0;
+                    z = -(m_startDrag.X - loc.X) / m_scale;
+                }
+                else
+                {
+                    x = 0;
+                    y = 0;
+                    z = 0;
+                }
 
-        //        //FIXTHIS: need to recompute chines?
-        //        Draw();
-        //    }
-        //}
+
+                m_editableHull.UpdateBulkheadPoint(m_selectedBulkhead, m_draggingHandle, x, y, z);
+
+                m_dragging = false;
+
+                //FIXTHIS: need to recompute chines?
+                InvalidateVisual();
+            }
+        }
 
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
+            m_RecreateHandles = false;
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 Point loc = e.GetPosition(this);
@@ -248,10 +267,15 @@ namespace AVSHull
                     ScaleTransform xform = new ScaleTransform(m_scale, m_scale);
 
                     Rect rect = m_handles[m_draggingHandle].Rect;
-                    rect.X += (loc.X - m_lastDrag.X) / m_scale;
-                    rect.Y += (loc.Y - m_lastDrag.Y) / m_scale;
+                    double deltaX = (loc.X - m_lastDrag.X) / m_scale;
+                    double deltaY = (loc.Y - m_lastDrag.Y) / m_scale;
+                    rect.X += deltaX;
+                    rect.Y += deltaY;
+
+                    Debug.WriteLine("Drag: {0} {1} {2} {3} ({4}, {5})", rect.TopLeft, loc, m_lastDrag, m_scale, deltaX, deltaY);
 
                     m_lastDrag = loc;
+
                     RectangleGeometry geom = new RectangleGeometry(rect);
                     geom.Transform = xform;
 
@@ -260,6 +284,17 @@ namespace AVSHull
                 }
             }
         }
+        private void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Debug.WriteLine("Control PropertyChanged: " + e.PropertyName);
+            if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
+            {
+                Debug.WriteLine("Update chines");
+                CreateHandles();
+                InvalidateVisual();
+            }
+        }
+
         //*******************************************************
         // INotifyPropertyChanged Implementation
         public event PropertyChangedEventHandler PropertyChanged;
