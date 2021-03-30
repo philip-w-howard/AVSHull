@@ -38,6 +38,7 @@ namespace AVSHull
             m_editableHull = null;
             m_bulkheadGeometry = new List<Geometry>();
             m_handles = new List<RectangleGeometry>();
+            Debug.WriteLine("Constructed with Selected Bulkhead: {0}", m_selectedBulkhead);
         }
 
         public EditableHull editableHull
@@ -160,11 +161,14 @@ namespace AVSHull
 
         private int HandleClicked(Point loc)
         {
-            for (int index = 0; index < m_handles.Count; index++)
+            if (m_selectedBulkhead != NOT_SELECTED)
             {
-                if (m_handles[index].FillContains(loc))
+                for (int index = 0; index < m_handles.Count; index++)
                 {
-                    return index;
+                    if (m_handles[index].FillContains(loc))
+                    {
+                        return index;
+                    }
                 }
             }
 
@@ -190,7 +194,14 @@ namespace AVSHull
                 else
                 {
                     m_dragging = false;
-                    m_selectedBulkhead = BulkheadClicked(loc);
+                    int bulk = BulkheadClicked(loc);
+                    if (bulk != m_selectedBulkhead)
+                    {
+                        m_selectedBulkhead = bulk;
+                        m_handles.Clear();
+                    }
+
+                    Debug.WriteLine("Selected Bulkhead: {0}", m_selectedBulkhead);
                     if (m_selectedBulkhead != NOT_SELECTED)
                     {
                         CreateHandles();
@@ -248,6 +259,7 @@ namespace AVSHull
                 m_editableHull.UpdateBulkheadPoint(m_selectedBulkhead, m_draggingHandle, x, y, z);
 
                 m_dragging = false;
+                m_draggingHandle = NOT_SELECTED;
 
                 //FIXTHIS: need to recompute chines?
                 InvalidateVisual();

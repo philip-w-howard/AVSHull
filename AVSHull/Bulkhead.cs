@@ -109,23 +109,20 @@ namespace AVSHull
             m_transomAngle = 0;
             if (type == BulkheadType.TRANSOM)
             {
-                double delta, max_delta;
-                int max_index = 1;
+                double delta, delta_z, delta_y;
 
                 // find greatest delta_z
-                max_delta = 0;
+                delta_z = 0;
+                delta_y = 0;
                 for (int ii = 1; ii < m_points.Count; ii++)
                 {
                     delta = Math.Abs(m_points[ii - 1].Z - m_points[ii].Z);
-                    if (delta > max_delta)
+                    if (delta > delta_z)
                     {
-                        delta = max_delta;
-                        max_index = ii;
+                        delta_z = delta;
+                        delta_y = Math.Abs(m_points[ii - 1].Y - m_points[ii].Y);
                     }
                 }
-
-                double delta_y = m_points[0].Y - m_points[max_index].Y;
-                double delta_z = m_points[0].Z - m_points[max_index].Z;
 
                 if (delta_z == 0)
                     type = BulkheadType.VERTICAL;
@@ -218,12 +215,12 @@ namespace AVSHull
             switch (type)
             {
                 case BulkheadType.BOW:
-                    point.X += x;
+                    point.X += 0;                   // Can't shift BOW points in the X direction
                     point.Y += y;
-                    point.Z += 0;                    // force all points to be on the Z axix
-                    otherPoint.X -= x;
+                    point.Z += z;
+                    otherPoint.X -= 0;              // Can't shift BOW points in the X direction
                     otherPoint.Y += y;
-                    otherPoint.Z += 0;               // force all points to be on the Z axix
+                    otherPoint.Z += z;
                     break;
                 case BulkheadType.VERTICAL:
                     point.X += x;

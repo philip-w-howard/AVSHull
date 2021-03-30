@@ -1,4 +1,9 @@
-﻿Hull
+﻿Axis:
+	X: left/right
+	Y: Up/Down
+	Z: along the keel
+
+Hull
 	contains vector of bulkheads
 DisplayHull
 	contains BaseHull
@@ -12,12 +17,7 @@ HullControl
 	Displays a DisplayHull
 
 TODO:
-	Implement rotation of Perspective
-	Implement selecting bulkhead
-	Implement handles
-	Implement editing
-
-
 	Working at updating bulkhead.
 		Some updates are working. Need to test/fix the rest
-	Hull.MoveToZero needs to move the centerline to zero.
+
+	When setting selectedBulkhead, need to clear handles.
