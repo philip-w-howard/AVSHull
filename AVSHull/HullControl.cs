@@ -20,6 +20,7 @@ namespace AVSHull
 
         private EditableHull m_editableHull;
         private double m_scale = 1.0;
+        private TransformGroup m_xform = new TransformGroup();              // Transform applied to geometry to scale and center drawings
         public bool IsEditable = false;
         public PerspectiveType perspective = PerspectiveType.PERSPECTIVE;
         private bool m_RecreateHandles = false;
@@ -74,16 +75,25 @@ namespace AVSHull
                 double scale_x = 0.9 * finalSize.Width / bounds.Width;
                 double scale_y = 0.9 * finalSize.Height / bounds.Height;
 
-                double newScale = Math.Min(scale_x, scale_y);
+                m_scale =  Math.Min(scale_x, scale_y);
+
+                ScaleTransform scaleXform = new ScaleTransform(m_scale, m_scale);
+                double xlate_x = (DesiredSize.Width - bounds.Width * m_scale) / 2;
+                double xlate_y = (DesiredSize.Height - bounds.Height * m_scale) / 2;
+
+                TranslateTransform xlateXform = new TranslateTransform(xlate_x, xlate_y);
+                m_xform = new TransformGroup();
+                m_xform.Children.Add(scaleXform);
+                m_xform.Children.Add(xlateXform);
 
                 // If scale changed, need to recreate handles.
                 //if (m_scale != newScale) CreateHandles();
                 if (m_RecreateHandles) CreateHandles();
                 m_RecreateHandles = false;
 
-                m_scale = newScale;
 
-                return new Size(newScale * bounds.Width, newScale * bounds.Height);
+                return finalSize;
+                //return new Size(newScale * bounds.Width, newScale * bounds.Height);
             }
             else
             {
@@ -97,28 +107,24 @@ namespace AVSHull
 
             if (m_editableHull == null) return;
 
-            ScaleTransform scaleXform = new ScaleTransform(m_scale, m_scale);
+            Pen bulkheadPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
+            Pen chinePen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
 
             m_bulkheadGeometry.Clear();
             foreach (Bulkhead bulk in m_editableHull.bulkheads)
             {
                 Geometry bulkGeom = bulk.GetGeometry();
-                bulkGeom.Transform = scaleXform;
+                bulkGeom.Transform = m_xform;
                 m_bulkheadGeometry.Add(bulkGeom);
             }
-
-            Geometry chines = m_editableHull.GetChineGeometry();
-                       
-            chines.Transform = scaleXform;
-
-            Pen bulkheadPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
-            Pen chinePen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
 
             foreach (Geometry geom in m_bulkheadGeometry)
             {
                 drawingContext.DrawGeometry(null, bulkheadPen, geom);
             }
-            
+
+            Geometry chines = m_editableHull.GetChineGeometry();
+            chines.Transform = m_xform;
             drawingContext.DrawGeometry(null, chinePen, chines);
 
             if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
@@ -135,8 +141,6 @@ namespace AVSHull
             m_handles.Clear();
             if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
             {
-                ScaleTransform xform = new ScaleTransform(m_scale, m_scale);
-
                 Bulkhead bulk = m_editableHull.bulkheads[m_selectedBulkhead];
                 foreach (Point3D point in bulk.Points)
                 {
@@ -146,7 +150,7 @@ namespace AVSHull
                     rect.X = point.X - HANDLE_SIZE / m_scale / 2;
                     rect.Y = point.Y - HANDLE_SIZE / m_scale / 2;
                     RectangleGeometry geom = new RectangleGeometry(rect);
-                    geom.Transform = xform;
+                    geom.Transform = m_xform;
                     m_handles.Add(geom);
                 }
             }
@@ -265,6 +269,7 @@ namespace AVSHull
 
                 m_dragging = false;
                 m_draggingHandle = NOT_SELECTED;
+                m_RecreateHandles = true;
 
                 //FIXTHIS: need to recompute chines?
                 InvalidateVisual();
@@ -281,8 +286,6 @@ namespace AVSHull
 
                 if (m_dragging)
                 {
-                    ScaleTransform xform = new ScaleTransform(m_scale, m_scale);
-
                     Rect rect = m_handles[m_draggingHandle].Rect;
                     double deltaX = (loc.X - m_lastDrag.X) / m_scale;
                     double deltaY = (loc.Y - m_lastDrag.Y) / m_scale;
@@ -294,7 +297,7 @@ namespace AVSHull
                     m_lastDrag = loc;
 
                     RectangleGeometry geom = new RectangleGeometry(rect);
-                    geom.Transform = xform;
+                    geom.Transform = m_xform;
 
                     m_handles[m_draggingHandle] = geom;
                     InvalidateVisual();
