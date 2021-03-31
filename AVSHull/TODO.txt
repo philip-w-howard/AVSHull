@@ -17,7 +17,9 @@ HullControl
 	Displays a DisplayHull
 
 TODO:
-	Working at updating bulkhead.
-		Some updates are working. Need to test/fix the rest
+	Working on clipping. 
+		Try placing EditableHull inside a rectangle.
+		Rectangle is Top, Left
+		Editable Hull is Center, Center
 
-	When setting selectedBulkhead, need to clear handles.
+	Get handles to be able to move outside bounds of current hull (possibly related to the clipping problem)

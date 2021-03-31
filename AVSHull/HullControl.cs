@@ -54,6 +54,11 @@ namespace AVSHull
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            // attempt to clip output. FIX THIS: Does not work as expected
+            RectangleGeometry clip = new RectangleGeometry();
+            clip.Rect = new Rect(availableSize);
+            Clip = clip;
+
             Debug.WriteLine("MeasureOverride");
             m_RecreateHandles = true;
             return availableSize;
@@ -78,7 +83,7 @@ namespace AVSHull
 
                 m_scale = newScale;
 
-                return new Size(m_scale * bounds.Width, m_scale * bounds.Height);
+                return new Size(newScale * bounds.Width, newScale * bounds.Height);
             }
             else
             {
