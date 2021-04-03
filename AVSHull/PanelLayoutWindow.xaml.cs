@@ -33,8 +33,14 @@ namespace AVSHull
 
         private void AddAllClick(object sender, RoutedEventArgs e)
         {
-            foreach (Panel panel in m_panels)
+            double x = 10;
+            double y = 10;
+
+            foreach (Panel p in m_panels)
             {
+                Panel panel = (Panel)p.Clone();
+                panel.Origin = new Point(x, y);
+                y += 10;
                 LayoutControl.AddPanel(panel);
             }
         }

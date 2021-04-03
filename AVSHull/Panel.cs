@@ -18,7 +18,7 @@ namespace AVSHull
         public Point Origin
         {
             get { return m_origin; }
-            set { m_origin = value; Notify("Panel.Origin"); }
+            set { m_origin = value; ShiftTo(0, 0);  Notify("Panel.Origin"); }
         }
 
         protected PointCollection m_panelPoints;
@@ -205,11 +205,14 @@ namespace AVSHull
             x -= min_x;
             y -= min_y;
 
+            x += m_origin.X;
+            y += m_origin.Y;
+
             if (x != 0 || y != 0) Shift(x, y);
         }
         private void Shift(double x, double y)
         {
-            GeometryOperations.TranslateShape(m_panelPoints, x + m_origin.X, y + m_origin.Y);
+            GeometryOperations.TranslateShape(m_panelPoints, x, y);
         }
 
         public void VerticalFlip()

@@ -33,6 +33,7 @@ namespace AVSHull
         public void AddPanel(Panel p)
         {
             m_panels.Add(p);
+            InvalidateVisual();
         }
 
         protected override Size MeasureOverride(Size availableSize)
