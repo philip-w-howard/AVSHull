@@ -11,7 +11,7 @@ using System.Windows.Media.Media3D;
 
 namespace AVSHull
 {
-    public class HullControl : Control, INotifyPropertyChanged
+    public class HullControl : Control
     {
         public enum PerspectiveType { FRONT, TOP, SIDE, PERSPECTIVE };
         private const double CLICK_WIDTH = 5.0;
@@ -312,17 +312,6 @@ namespace AVSHull
                 Debug.WriteLine("Update chines");
                 CreateHandles();
                 InvalidateVisual();
-            }
-        }
-
-        //*******************************************************
-        // INotifyPropertyChanged Implementation
-        public event PropertyChangedEventHandler PropertyChanged;
-        void Notify(string propName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
     }

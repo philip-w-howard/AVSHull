@@ -17,9 +17,10 @@ HullControl
 	Displays a DisplayHull
 
 TODO:
-	Working on clipping. 
-		Try placing EditableHull inside a rectangle.
-		Rectangle is Top, Left
-		Editable Hull is Center, Center
-
-	Get handles to be able to move outside bounds of current hull (possibly related to the clipping problem)
+	Panel
+	DisplayPanel
+	PanelLayout: Control
+		Rectangle size of window
+		Draw rectangles for each sheet
+		list of panels (not displayed)
+		list of displayed panels
