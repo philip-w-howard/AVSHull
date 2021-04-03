@@ -249,18 +249,21 @@ namespace AVSHull
 
         public Geometry GetGeometry()
         {
-            GeometryGroup geom = new GeometryGroup();
+            PathFigure path = new PathFigure();
+
+            PathGeometry geom = new PathGeometry();
             
             if (m_panelPoints.Count < 2) return geom;
 
-            Point p2 = m_panelPoints[m_panelPoints.Count - 1];
+            path.StartPoint = m_panelPoints[m_panelPoints.Count - 1];
 
-            foreach (Point p1 in  m_panelPoints)
+            foreach (Point p in  m_panelPoints)
             {
-                geom.Children.Add(new LineGeometry(p2, p1));
-                p2 = p1;
+                path.Segments.Add(new LineSegment(p, true));
             }
-  
+
+            geom.Figures.Add(path);
+            
             return geom;
         }
 

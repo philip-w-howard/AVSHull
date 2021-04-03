@@ -17,10 +17,5 @@ HullControl
 	Displays a DisplayHull
 
 TODO:
-	Panel
-	DisplayPanel
-	PanelLayout: Control
-		Rectangle size of window
-		Draw rectangles for each sheet
-		list of panels (not displayed)
-		list of displayed panels
+	Selecting panels.
+	    Why aren't the geometries filling?
