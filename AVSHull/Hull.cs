@@ -10,16 +10,16 @@ namespace AVSHull
 {
     public class Hull : INotifyPropertyChanged, ICloneable
     {
-        public List<Bulkhead> bulkheads;
+        public List<Bulkhead> Bulkheads;
 
         public Hull()
         {
-            bulkheads = new List<Bulkhead>();
+            Bulkheads = new List<Bulkhead>();
         }
 
         public void LoadFromHullFile(string filename)
         {
-            bulkheads = new List<Bulkhead>();
+            Bulkheads = new List<Bulkhead>();
 
             using (StreamReader file = File.OpenText(filename))
             {
@@ -32,18 +32,18 @@ namespace AVSHull
 
                 Bulkhead bulkhead = new Bulkhead();
                 bulkhead.LoadFromHullFile(file, num_chines, Bulkhead.BulkheadType.BOW);
-                bulkheads.Add(bulkhead);
+                Bulkheads.Add(bulkhead);
 
                 for (int ii = 1; ii < numBulkheads - 1; ii++)
                 {
                     bulkhead = new Bulkhead();
                     bulkhead.LoadFromHullFile(file, num_chines, Bulkhead.BulkheadType.VERTICAL);
-                    bulkheads.Add(bulkhead);
+                    Bulkheads.Add(bulkhead);
                 }
 
                 bulkhead = new Bulkhead();
                 bulkhead.LoadFromHullFile(file, num_chines, Bulkhead.BulkheadType.TRANSOM);
-                bulkheads.Add(bulkhead);
+                Bulkheads.Add(bulkhead);
             }
             RepositionToZero();
 
@@ -56,7 +56,7 @@ namespace AVSHull
         {
             if (handler == null) handler = bulkhead_PropertyChanged;
 
-            foreach (Bulkhead bulk in bulkheads)
+            foreach (Bulkhead bulk in Bulkheads)
             {
                 bulk.PropertyChanged += handler;
             }
@@ -71,7 +71,7 @@ namespace AVSHull
 
             Vector3D zeroVect = new Vector3D(-zero.X, -zero.Y, -zero.Z);
 
-            foreach (Bulkhead bulk in bulkheads)
+            foreach (Bulkhead bulk in Bulkheads)
             {
                 bulk.ShiftBy(zeroVect);
             }
@@ -84,7 +84,7 @@ namespace AVSHull
             double min_y = double.MaxValue;
             double min_z = double.MaxValue;
 
-            foreach (Bulkhead bulk in bulkheads)
+            foreach (Bulkhead bulk in Bulkheads)
             {
                 for (int ii = 0; ii < bulk.NumChines; ii++)
                 {
@@ -105,7 +105,7 @@ namespace AVSHull
             double min_y = double.MinValue;
             double min_z = double.MinValue;
 
-            foreach (Bulkhead bulk in bulkheads)
+            foreach (Bulkhead bulk in Bulkheads)
             {
                 for (int ii = 0; ii < bulk.NumChines; ii++)
                 {
@@ -143,9 +143,9 @@ namespace AVSHull
         {
             Hull copy = new Hull();
 
-            foreach (Bulkhead bulkhead in bulkheads)
+            foreach (Bulkhead bulkhead in Bulkheads)
             {
-                bulkheads.Add((Bulkhead)bulkhead.Clone());
+                Bulkheads.Add((Bulkhead)bulkhead.Clone());
             }
 
             return copy;

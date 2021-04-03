@@ -111,7 +111,7 @@ namespace AVSHull
             Pen chinePen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
 
             m_bulkheadGeometry.Clear();
-            foreach (Bulkhead bulk in m_editableHull.bulkheads)
+            foreach (Bulkhead bulk in m_editableHull.Bulkheads)
             {
                 Geometry bulkGeom = bulk.GetGeometry();
                 bulkGeom.Transform = m_xform;
@@ -141,7 +141,7 @@ namespace AVSHull
             m_handles.Clear();
             if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
             {
-                Bulkhead bulk = m_editableHull.bulkheads[m_selectedBulkhead];
+                Bulkhead bulk = m_editableHull.Bulkheads[m_selectedBulkhead];
                 foreach (Point3D point in bulk.Points)
                 {
                     Rect rect = new Rect();
@@ -241,7 +241,7 @@ namespace AVSHull
                     z = 0;
 
                     // Can't change X coordinate on front view of BOW.
-                    if (m_editableHull.bulkheads[m_selectedBulkhead].type == Bulkhead.BulkheadType.BOW) x = 0;
+                    if (m_editableHull.Bulkheads[m_selectedBulkhead].type == Bulkhead.BulkheadType.BOW) x = 0;
                 }
                 else if (perspective == PerspectiveType.SIDE)
                 {

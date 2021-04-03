@@ -14,6 +14,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -113,7 +114,21 @@ namespace AVSHull
 
         private void PanelsClick(object sender, RoutedEventArgs e)
         {
+            PanelLayoutWindow layout = new PanelLayoutWindow();
+            if (myHull != null)
+            {
+                EditableHull eHull = new EditableHull(myHull);
+                for (int index=0; index  < eHull.Chines.Count/2; index++)
+                {
+                    layout.AddPanel(new Panel(eHull.Chines[index], eHull.Chines[index+1]));
+                }
 
+                foreach (Bulkhead bulk in eHull.Bulkheads)
+                {
+                    layout.AddPanel(new Panel(bulk.Points));
+                }
+            }
+            layout.Show();
         }
 
         private void ResizeClick(object sender, RoutedEventArgs e)
@@ -166,23 +181,19 @@ namespace AVSHull
 
         private void UpdateViews()
         {
-            EditableHull topView = new EditableHull();
-            topView.BaseHull = myHull;
+            EditableHull topView = new EditableHull(myHull);
             topView.Rotate(0, 90, 90);
             TopView.editableHull = topView;
 
-            EditableHull sideView = new EditableHull();
-            sideView.BaseHull = myHull;
+            EditableHull sideView = new EditableHull(myHull);
             sideView.Rotate(0, 90, 180);
             SideView.editableHull = sideView;
 
-            EditableHull frontView = new EditableHull();
-            frontView.BaseHull = myHull;
+            EditableHull frontView = new EditableHull(myHull);
             frontView.Rotate(0, 0, 180);
             FrontView.editableHull = frontView;
 
-            EditableHull perspectiveView = new EditableHull();
-            perspectiveView.BaseHull = myHull;
+            EditableHull perspectiveView = new EditableHull(myHull);
             switch (PerspectiveView.perspective)
             {
                 case HullControl.PerspectiveType.FRONT:

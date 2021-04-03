@@ -16,7 +16,7 @@ namespace AVSHull
         private const int HANDLE_SIZE = 5;
         public static int NOT_SELECTED = -1;
 
-        private List<Point3DCollection> m_chines;
+        public List<Point3DCollection> Chines;
         private int m_SelectedBulkhead;
         private Hull m_BaseHull;
 
@@ -32,11 +32,11 @@ namespace AVSHull
             set 
             { 
                 m_BaseHull = value;
-                bulkheads = new List<Bulkhead>();
+                Bulkheads = new List<Bulkhead>();
 
-                foreach (Bulkhead bulkhead in m_BaseHull.bulkheads)
+                foreach (Bulkhead bulkhead in m_BaseHull.Bulkheads)
                 {
-                    bulkheads.Add((Bulkhead)bulkhead.Clone());
+                    Bulkheads.Add((Bulkhead)bulkhead.Clone());
                 }
 
                 PrepareChines(POINTS_PER_CHINE);
@@ -45,10 +45,10 @@ namespace AVSHull
             }
         }
 
-        public EditableHull()
+        public EditableHull(Hull baseHull)
         {
             m_SelectedBulkhead = NOT_SELECTED;
-            m_BaseHull = null;
+            BaseHull = baseHull;
         }
 
         public void Rotate(double x, double y, double z)
@@ -65,7 +65,7 @@ namespace AVSHull
         {
             GeometryGroup geom = new GeometryGroup();
 
-            foreach (Bulkhead bulk in bulkheads)
+            foreach (Bulkhead bulk in Bulkheads)
             {
                 for (int chine = 0; chine < bulk.NumChines - 1; chine++)
                 {
@@ -82,7 +82,7 @@ namespace AVSHull
         {
             GeometryGroup geom = new GeometryGroup();
 
-            foreach (Point3DCollection chine in m_chines)
+            foreach (Point3DCollection chine in Chines)
             {
                 // FIXTHIS: use a foreach and simply remember the previous point
                 for (int point = 0; point < chine.Count - 1; point++)
@@ -99,18 +99,18 @@ namespace AVSHull
     
     private void UpdateWithMatrix(double[,] matrix)
         {
-            for (int ii = 0; ii < bulkheads.Count; ii++)
+            for (int ii = 0; ii < Bulkheads.Count; ii++)
             {
-                bulkheads[ii].UpdateWithMatrix(matrix);
+                Bulkheads[ii].UpdateWithMatrix(matrix);
             }
 
-            if (m_chines != null)
+            if (Chines != null)
             {
-                for (int ii = 0; ii < m_chines.Count; ii++)
+                for (int ii = 0; ii < Chines.Count; ii++)
                 {
                     Point3DCollection newChine;
-                    Matrix.Multiply(m_chines[ii], matrix, out newChine);
-                    m_chines[ii] = newChine;
+                    Matrix.Multiply(Chines[ii], matrix, out newChine);
+                    Chines[ii] = newChine;
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace AVSHull
             double min_y = double.MaxValue;
             double min_z = double.MaxValue;
 
-            foreach (Bulkhead bulk in bulkheads)
+            foreach (Bulkhead bulk in Bulkheads)
             {
                 for (int ii = 0; ii < bulk.NumChines; ii++)
                 {
@@ -132,9 +132,9 @@ namespace AVSHull
 
             }
 
-            if (m_chines != null)
+            if (Chines != null)
             {
-                foreach (Point3DCollection chine in m_chines)
+                foreach (Point3DCollection chine in Chines)
                 {
                     foreach (Point3D point in chine)
                     {
@@ -154,51 +154,51 @@ namespace AVSHull
 
             Vector3D zeroVect = new Vector3D(-zero.X, -zero.Y, -zero.Z);
 
-            foreach (Bulkhead bulk in bulkheads)
+            foreach (Bulkhead bulk in Bulkheads)
             {
                 bulk.ShiftBy(zeroVect);
             }
 
-            if (m_chines != null)
+            if (Chines != null)
             {
-                for (int ii = 0; ii < m_chines.Count; ii++)
+                for (int ii = 0; ii < Chines.Count; ii++)
                 {
-                    Point3DCollection newChine = new Point3DCollection(m_chines.Count);
-                    foreach (Point3D point in m_chines[ii])
+                    Point3DCollection newChine = new Point3DCollection(Chines.Count);
+                    foreach (Point3D point in Chines[ii])
                     {
                         newChine.Add(point + zeroVect);
                     }
 
-                    m_chines[ii] = newChine;
+                    Chines[ii] = newChine;
                 }
             }
         }
 
         private void PrepareChines(int points_per_chine)
         {
-            int nChines = bulkheads[0].NumChines;
+            int nChines = Bulkheads[0].NumChines;
 
             Debug.WriteLine("Preparing chings");
-            m_chines = new List<Point3DCollection>();
+            Chines = new List<Point3DCollection>();
 
             for (int chine = 0; chine < nChines; chine++)
             {
                 Point3DCollection newChine = new Point3DCollection(points_per_chine);
-                Point3DCollection chine_data = new Point3DCollection(bulkheads.Count);
+                Point3DCollection chine_data = new Point3DCollection(Bulkheads.Count);
 
-                for (int bulkhead = 0; bulkhead < bulkheads.Count; bulkhead++)
+                for (int bulkhead = 0; bulkhead < Bulkheads.Count; bulkhead++)
                 {
-                    chine_data.Add(bulkheads[bulkhead].GetPoint(chine));
+                    chine_data.Add(Bulkheads[bulkhead].GetPoint(chine));
                 }
                 Splines spline = new Splines(chine_data, Splines.RELAXED);
                 spline.GetPoints(points_per_chine, newChine);
-                m_chines.Add(newChine);
+                Chines.Add(newChine);
             }
         }
 
         public void UpdateBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
         {
-            m_BaseHull.bulkheads[bulkhead].UpdateBulkheadPoint(chine, x, y, z);
+            m_BaseHull.Bulkheads[bulkhead].UpdateBulkheadPoint(chine, x, y, z);
         }
 
         //m_selectedBulkhead, m_draggingHandle, x, y, z);
