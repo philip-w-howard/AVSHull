@@ -23,10 +23,16 @@ namespace AVSHull
         {
             InitializeComponent();
             m_panels = new List<Panel>();
+            SheetWidth = 96;
+            SheetHeight = 48;
+            SheetsWide = 1;
+            SheetsHigh = 1;
         }
 
         public int SheetsWide { get; set; }
         public int SheetsHigh { get; set; }
+        public double SheetWidth { get; set; }
+        public double SheetHeight { get; set; }
 
         private List<Panel> m_panels;
 
@@ -38,13 +44,14 @@ namespace AVSHull
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            // attempt to clip output. FIX THIS: Does not work as expected
-            RectangleGeometry clip = new RectangleGeometry();
-            clip.Rect = new Rect(availableSize);
-            Clip = clip;
-
             Debug.WriteLine("PanelLayout.MeasureOverride");
-            return availableSize;
+            if (Double.IsInfinity(availableSize.Width) || Double.IsNaN(availableSize.Width)) availableSize.Width = 0;
+            if (Double.IsInfinity(availableSize.Height) || Double.IsNaN(availableSize.Height)) availableSize.Height = 0;
+
+            double width = Math.Max(availableSize.Width, SheetsWide * SheetWidth);
+            double height = Math.Max(availableSize.Height, SheetsHigh * SheetHeight);
+
+            return new Size(width, height);
         }
         protected override Size ArrangeOverride(Size finalSize)
         {
@@ -81,6 +88,19 @@ namespace AVSHull
         {
             Rect background = new Rect(new Point(0, 0), new Point(ActualWidth, ActualHeight));
             drawingContext.DrawRectangle(this.Background, null, background);
+
+            Pen sheetPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
+
+            for (int row=0; row<SheetsWide; row++)
+            {
+                for (int col=0; col<SheetsHigh; col++)
+                {
+                    double x = row * SheetWidth;
+                    double y = col * SheetHeight;
+                    Rect sheet = new Rect(new Point(x, y), new Point(x + SheetWidth, y + SheetHeight));
+                    drawingContext.DrawRectangle(this.Background, sheetPen, sheet);
+                }
+            }
 
             Pen panelPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
             foreach (Panel panel in m_panels)
