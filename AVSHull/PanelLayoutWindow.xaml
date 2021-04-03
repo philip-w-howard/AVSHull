@@ -12,7 +12,7 @@
             <MenuItem Header="Add _Panel" Click="AddPanelClick" />
         </ContextMenu>-->
     </Window.Resources>
-    <Grid>
+    
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"  Background="White">
             <ScrollViewer.ContextMenu>
                 <ContextMenu>
@@ -23,5 +23,5 @@
             <local:PanelLayoutControl x:Name="LayoutControl" SheetsHigh="2" SheetsWide="3" Background="White" />
 
         </ScrollViewer>
-    </Grid>
+    
 </Window>

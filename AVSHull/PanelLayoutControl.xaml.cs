@@ -19,6 +19,10 @@ namespace AVSHull
     /// </summary>
     public partial class PanelLayoutControl : UserControl
     {
+        private const double CLICK_WIDTH = 1.0;
+        private const int NOT_SELECTED = -1;
+        private int m_selectedPanel = NOT_SELECTED;
+
         public PanelLayoutControl()
         {
             InitializeComponent();
@@ -27,6 +31,11 @@ namespace AVSHull
             SheetHeight = 48;
             SheetsWide = 1;
             SheetsHigh = 1;
+            MouseWheel += OnMouseWheel;
+            PreviewMouseDown += OnPreviewMouseDown;
+            PreviewMouseMove += OnPreviewMouseMove;
+            PreviewMouseUp += OnPreviewMouseUp;
+
         }
 
         public int SheetsWide { get; set; }
@@ -36,6 +45,17 @@ namespace AVSHull
 
         private List<Panel> m_panels;
 
+        private double m_scale = 1.0;
+        public double Scale
+        {
+            get { return m_scale; }
+            set 
+            { 
+                m_scale = value;
+                InvalidateMeasure();
+                InvalidateVisual(); 
+            }
+        }
         public void AddPanel(Panel p)
         {
             m_panels.Add(p);
@@ -45,11 +65,13 @@ namespace AVSHull
         protected override Size MeasureOverride(Size availableSize)
         {
             Debug.WriteLine("PanelLayout.MeasureOverride");
-            if (Double.IsInfinity(availableSize.Width) || Double.IsNaN(availableSize.Width)) availableSize.Width = 0;
-            if (Double.IsInfinity(availableSize.Height) || Double.IsNaN(availableSize.Height)) availableSize.Height = 0;
+            //if (Double.IsInfinity(availableSize.Width) || Double.IsNaN(availableSize.Width)) availableSize.Width = 0;
+            //if (Double.IsInfinity(availableSize.Height) || Double.IsNaN(availableSize.Height)) availableSize.Height = 0;
 
-            double width = Math.Max(availableSize.Width, SheetsWide * SheetWidth);
-            double height = Math.Max(availableSize.Height, SheetsHigh * SheetHeight);
+            //double width = Math.Max(availableSize.Width, SheetsWide * SheetWidth * m_scale * 1.05);
+            //double height = Math.Max(availableSize.Height, SheetsHigh * SheetHeight * m_scale * 1.05);
+            double width = SheetsWide * SheetWidth * m_scale;
+            double height = SheetsHigh * SheetHeight * m_scale;
 
             return new Size(width, height);
         }
@@ -89,6 +111,8 @@ namespace AVSHull
             Rect background = new Rect(new Point(0, 0), new Point(ActualWidth, ActualHeight));
             drawingContext.DrawRectangle(this.Background, null, background);
 
+            ScaleTransform scale = new ScaleTransform(m_scale, m_scale);
+
             Pen sheetPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
 
             for (int row=0; row<SheetsWide; row++)
@@ -97,8 +121,10 @@ namespace AVSHull
                 {
                     double x = row * SheetWidth;
                     double y = col * SheetHeight;
-                    Rect sheet = new Rect(new Point(x, y), new Point(x + SheetWidth, y + SheetHeight));
-                    drawingContext.DrawRectangle(this.Background, sheetPen, sheet);
+                    Rect rect = new Rect(new Point(x, y), new Point(x + SheetWidth, y + SheetHeight));
+                    RectangleGeometry sheet = new RectangleGeometry(rect);
+                    sheet.Transform = scale;
+                    drawingContext.DrawGeometry(this.Background, sheetPen, sheet);
                 }
             }
 
@@ -106,40 +132,95 @@ namespace AVSHull
             foreach (Panel panel in m_panels)
             {
                 Geometry geom = panel.GetGeometry();
+                geom.Transform = scale;
                 drawingContext.DrawGeometry(null, panelPen, geom);
 
             }
-            //    if (m_editableHull == null) return;
+        }
 
-            //    Pen bulkheadPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
-            //    Pen chinePen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
+        private void OnMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+                Scale *= 1.1;
+            else if (e.Delta < 0)
+                Scale /= 1.1;
+            Debug.WriteLine("Delta: {0} Scale: {1}", e.Delta, m_scale);
+        }
 
-            //    m_bulkheadGeometry.Clear();
-            //    foreach (Bulkhead bulk in m_editableHull.bulkheads)
+        private int PanelClicked(Point loc)
+        {
+            //Pen pen = new Pen(Brushes.Black, CLICK_WIDTH);
+            ScaleTransform scale = new ScaleTransform(m_scale, m_scale);
+
+            for (int index=m_panels.Count-1; index >= 0; index--)
+            {
+                Geometry geom = m_panels[index].GetGeometry();
+                geom.Transform = scale;
+
+                Debug.WriteLine("Panel {0}: {1} loc: {2}", index, geom.Bounds, loc);
+                if (geom.FillContains(loc))
+                {
+                    return index;
+                }
+            }
+            return NOT_SELECTED;
+        }
+        private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Point loc = e.GetPosition(this);
+
+            int panel = PanelClicked(loc);
+            if (panel != NOT_SELECTED)
+            {
+                m_selectedPanel = panel;
+                InvalidateVisual();
+            }
+            Debug.WriteLine("Layout.MouseDown: {0} {1}", loc, m_selectedPanel);
+        }
+        private void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+        }
+
+        private void OnPreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            //Point loc = e.GetPosition(canvas);
+
+            //if (e.LeftButton == MouseButtonState.Pressed)
+            //{
+            //    if (m_selectedPanel != null && m_dragging)
             //    {
-            //        Geometry bulkGeom = bulk.GetGeometry();
-            //        bulkGeom.Transform = m_xform;
-            //        m_bulkheadGeometry.Add(bulkGeom);
+            //        // handle dragging
+            //        m_selectedPanel.X += loc.X - m_dragLoc.X;
+            //        m_selectedPanel.Y += loc.Y - m_dragLoc.Y;
+            //        m_dragLoc = loc;
+            //        Canvas.SetLeft(m_selectedPanel, m_selectedPanel.X);
+            //        Canvas.SetTop(m_selectedPanel, m_selectedPanel.Y);
+            //        ResizeCanvas();
+
             //    }
-
-            //    foreach (Geometry geom in m_bulkheadGeometry)
+            //    else if (m_selectedPanel != null && m_rotating)
             //    {
-            //        drawingContext.DrawGeometry(null, bulkheadPen, geom);
-            //    }
+            //        // Handle rotations
+            //        double distance = loc.X - m_dragLoc.X;
+            //        Debug.WriteLine("Rotate: {0}", distance);
 
-            //    Geometry chines = m_editableHull.GetChineGeometry();
-            //    chines.Transform = m_xform;
-            //    drawingContext.DrawGeometry(null, chinePen, chines);
-
-            //    if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
-            //    {
-            //        foreach (Geometry geom in m_handles)
+            //        if (Math.Abs(distance) > MIN_ROTATE_DRAG)
             //        {
-            //            drawingContext.DrawGeometry(null, bulkheadPen, geom);
+            //            m_dragLoc = loc;
+
+            //            if (distance > 0)
+            //                m_selectedPanel.Rotate(ROTATE_STEP);
+
+            //            else
+            //                m_selectedPanel.Rotate(-ROTATE_STEP);
+
             //        }
+            //        ResizeCanvas();
+
             //    }
             //}
-
         }
+
+
     }
 }
