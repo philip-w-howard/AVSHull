@@ -176,16 +176,16 @@ namespace AVSHull
             double angle;
 
             angle = Math.Atan2(y, x);
-            Rotate(new Point(0, 0), -angle);
+            Rotate(-angle);
 
             ShiftTo(0, 0);
         }
 
-        public void Rotate(Point origin, double angle)
+        public void Rotate(double angle)
         {
             double[,] rotate = new double[2, 2];
 
-            Shift(-origin.X, -origin.Y);
+            Shift(-m_origin.X, -m_origin.Y);
 
             rotate[0, 0] = Math.Cos(angle);
             rotate[1, 1] = Math.Cos(angle);

@@ -21,8 +21,9 @@ namespace AVSHull
     {
         private const double CLICK_WIDTH = 1.0;
         private const int NOT_SELECTED = -1;
+        private double MIN_ROTATE_DRAG = 3;
+        private double ROTATE_STEP = Math.PI / 180;
         private int m_selectedPanel = NOT_SELECTED;
-        private Point m_startDragLoc;
         private Point m_currentDragLoc = new Point(0, 0);
         private bool m_dragging = false;
 
@@ -195,17 +196,40 @@ namespace AVSHull
 
         private void OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (m_dragging && m_selectedPanel != NOT_SELECTED)
+            Point loc = e.GetPosition(this);
+
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                Point loc = e.GetPosition(this);
-                double deltaX = (loc.X - m_currentDragLoc.X) / m_scale;
-                double deltaY = (loc.Y - m_currentDragLoc.Y) / m_scale;
-                Point currLoc = m_panels[m_selectedPanel].Origin;
-                currLoc.X += deltaX;
-                currLoc.Y += deltaY;
-                m_panels[m_selectedPanel].Origin = currLoc;
-                m_currentDragLoc = loc;
-                InvalidateVisual();
+                if (m_dragging && m_selectedPanel != NOT_SELECTED)
+                {
+                    double deltaX = (loc.X - m_currentDragLoc.X) / m_scale;
+                    double deltaY = (loc.Y - m_currentDragLoc.Y) / m_scale;
+                    Point currLoc = m_panels[m_selectedPanel].Origin;
+                    currLoc.X += deltaX;
+                    currLoc.Y += deltaY;
+                    m_panels[m_selectedPanel].Origin = currLoc;
+                    m_currentDragLoc = loc;
+                    InvalidateVisual();
+                }
+                else if (m_selectedPanel != NOT_SELECTED)
+                {
+                    // do rotation
+                    double distance = loc.X - m_currentDragLoc.X;
+                    Debug.WriteLine("Rotate: {0}", distance);
+
+                    if (Math.Abs(distance) > MIN_ROTATE_DRAG)
+                    {
+                        m_currentDragLoc = loc;
+
+                        if (distance > 0)
+                            m_panels[m_selectedPanel].Rotate(ROTATE_STEP);
+
+                        else
+                            m_panels[m_selectedPanel].Rotate(-ROTATE_STEP);
+
+                        InvalidateVisual();
+                    }
+                }
             }
         }
     }
