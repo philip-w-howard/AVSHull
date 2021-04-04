@@ -22,6 +22,9 @@ namespace AVSHull
         private const double CLICK_WIDTH = 1.0;
         private const int NOT_SELECTED = -1;
         private int m_selectedPanel = NOT_SELECTED;
+        private Point m_startDragLoc;
+        private Point m_currentDragLoc = new Point(0, 0);
+        private bool m_dragging = false;
 
         public PanelLayoutControl()
         {
@@ -178,54 +181,32 @@ namespace AVSHull
             if (panel != NOT_SELECTED)
             {
                 m_selectedPanel = panel;
+                m_currentDragLoc = loc;
+                m_dragging = true;
                 InvalidateVisual();
             }
             Debug.WriteLine("Layout.MouseDown: {0} {1}", loc, m_selectedPanel);
         }
         private void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
+            m_dragging = false;
+
         }
 
         private void OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
-            //Point loc = e.GetPosition(canvas);
-
-            //if (e.LeftButton == MouseButtonState.Pressed)
-            //{
-            //    if (m_selectedPanel != null && m_dragging)
-            //    {
-            //        // handle dragging
-            //        m_selectedPanel.X += loc.X - m_dragLoc.X;
-            //        m_selectedPanel.Y += loc.Y - m_dragLoc.Y;
-            //        m_dragLoc = loc;
-            //        Canvas.SetLeft(m_selectedPanel, m_selectedPanel.X);
-            //        Canvas.SetTop(m_selectedPanel, m_selectedPanel.Y);
-            //        ResizeCanvas();
-
-            //    }
-            //    else if (m_selectedPanel != null && m_rotating)
-            //    {
-            //        // Handle rotations
-            //        double distance = loc.X - m_dragLoc.X;
-            //        Debug.WriteLine("Rotate: {0}", distance);
-
-            //        if (Math.Abs(distance) > MIN_ROTATE_DRAG)
-            //        {
-            //            m_dragLoc = loc;
-
-            //            if (distance > 0)
-            //                m_selectedPanel.Rotate(ROTATE_STEP);
-
-            //            else
-            //                m_selectedPanel.Rotate(-ROTATE_STEP);
-
-            //        }
-            //        ResizeCanvas();
-
-            //    }
-            //}
+            if (m_dragging && m_selectedPanel != NOT_SELECTED)
+            {
+                Point loc = e.GetPosition(this);
+                double deltaX = (loc.X - m_currentDragLoc.X) / m_scale;
+                double deltaY = (loc.Y - m_currentDragLoc.Y) / m_scale;
+                Point currLoc = m_panels[m_selectedPanel].Origin;
+                currLoc.X += deltaX;
+                currLoc.Y += deltaY;
+                m_panels[m_selectedPanel].Origin = currLoc;
+                m_currentDragLoc = loc;
+                InvalidateVisual();
+            }
         }
-
-
     }
 }
