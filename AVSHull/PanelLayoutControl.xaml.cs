@@ -129,11 +129,16 @@ namespace AVSHull
             }
 
             Pen panelPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
-            foreach (Panel panel in m_panels)
+            Pen selectedPen = new Pen(System.Windows.Media.Brushes.Blue, 2.0);
+
+            for (int index=0; index < m_panels.Count; index++)
             {
-                Geometry geom = panel.GetGeometry();
+                Geometry geom = m_panels[index].GetGeometry();
                 geom.Transform = scale;
-                drawingContext.DrawGeometry(null, panelPen, geom);
+                if (index == m_selectedPanel)
+                    drawingContext.DrawGeometry(null, selectedPen, geom);
+                else
+                    drawingContext.DrawGeometry(null, panelPen, geom);
 
             }
         }
