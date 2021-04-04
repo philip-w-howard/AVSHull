@@ -6,12 +6,6 @@
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
         Title="Panel Layout" Height="450" Width="800">
-    <Window.Resources>
-        <!--<ContextMenu x:Key="EditMenu">
-            <MenuItem Header="Add _All" Click="AddAllClick" />
-            <MenuItem Header="Add _Panel" Click="AddPanelClick" />
-        </ContextMenu>-->
-    </Window.Resources>
     
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"  Background="White">
             <ScrollViewer.ContextMenu>

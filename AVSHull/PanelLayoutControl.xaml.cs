@@ -178,15 +178,26 @@ namespace AVSHull
         {
             Point loc = e.GetPosition(this);
 
-            int panel = PanelClicked(loc);
-            if (panel != NOT_SELECTED)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                m_selectedPanel = panel;
-                m_currentDragLoc = loc;
-                m_dragging = true;
-                InvalidateVisual();
+                int panel = PanelClicked(loc);
+                if (panel != NOT_SELECTED)
+                {
+                    m_selectedPanel = panel;
+                    m_currentDragLoc = loc;
+                    m_dragging = true;
+                    InvalidateVisual();
+                }
+                Debug.WriteLine("Layout.MouseDown: {0} {1}", loc, m_selectedPanel);
             }
-            Debug.WriteLine("Layout.MouseDown: {0} {1}", loc, m_selectedPanel);
+            else if (e.RightButton == MouseButtonState.Pressed && m_selectedPanel != NOT_SELECTED)
+            {
+                ContextMenu cm = this.FindResource("panelMenu") as ContextMenu;
+                if (cm != null)
+                {
+                    cm.IsOpen = true;
+                }
+            }
         }
         private void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -232,5 +243,45 @@ namespace AVSHull
                 }
             }
         }
+        private void HorizontalFlipClick(object sender, RoutedEventArgs e)
+        {
+            if (m_selectedPanel != NOT_SELECTED)
+            {
+                m_panels[m_selectedPanel].HorizontalFlip();
+                InvalidateVisual();
+            }
+        }
+
+        private void VerticalFlipClick(object sender, RoutedEventArgs e)
+        {
+            if (m_selectedPanel != NOT_SELECTED)
+            {
+                m_panels[m_selectedPanel].VerticalFlip();
+                InvalidateVisual();
+            }
+
+        }
+
+        private void CopyClick(object sender, RoutedEventArgs e)
+        {
+            if (m_selectedPanel != NOT_SELECTED)
+            {
+                m_panels.Add(m_panels[m_selectedPanel]);
+                m_selectedPanel = m_panels.Count - 1;
+                InvalidateVisual();
+            }
+
+        }
+
+        private void DeleteClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SplitClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 }
