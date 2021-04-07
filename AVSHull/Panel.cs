@@ -306,6 +306,7 @@ namespace AVSHull
 
             newPanel.m_panelPoints = this.m_panelPoints.Clone();
             newPanel.name = this.name;
+            newPanel.m_origin = this.m_origin;
 
             return newPanel;
         }

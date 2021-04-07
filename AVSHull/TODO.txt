@@ -17,5 +17,7 @@ HullControl
 	Displays a DisplayHull
 
 TODO:
-	Selecting panels.
-	    Why aren't the geometries filling?
+	Add individual panel
+	Layout setup
+	Set initial scale of layout based on available window size.
+	

@@ -266,7 +266,7 @@ namespace AVSHull
         {
             if (m_selectedPanel != NOT_SELECTED)
             {
-                m_panels.Add(m_panels[m_selectedPanel]);
+                m_panels.Add((Panel)m_panels[m_selectedPanel].Clone());
                 m_selectedPanel = m_panels.Count - 1;
                 InvalidateVisual();
             }
@@ -275,6 +275,11 @@ namespace AVSHull
 
         private void DeleteClick(object sender, RoutedEventArgs e)
         {
+            if (m_selectedPanel != NOT_SELECTED)
+            {
+                m_panels.RemoveAt(m_selectedPanel);
+                InvalidateVisual();
+            }
 
         }
 
