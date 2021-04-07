@@ -17,19 +17,29 @@ namespace AVSHull
     /// </summary>
     public partial class PanelLayoutWindow : Window
     {
-        public PanelLayoutWindow()
+        public PanelLayoutWindow(Hull myHull)
         {
             InitializeComponent();
+            if (myHull != null)
+            {
+                EditableHull eHull = new EditableHull(myHull);
+                for (int index = 0; index < eHull.Chines.Count / 2; index++)
+                {
+                    m_panels.Add(new Panel(eHull.Chines[index], eHull.Chines[index + 1]));
+                }
+
+                foreach (Bulkhead bulk in eHull.Bulkheads)
+                {
+                    m_panels.Add(new Panel(bulk.Points));
+                }
+            }
+
             m_panels = new List<Panel>();
         }
 
         //private PanelLayoutControl LayoutControl = new PanelLayoutControl();
 
         private List<Panel> m_panels;
-        public void AddPanel(Panel p)
-        {
-            m_panels.Add(p);
-        }
 
         private void AddAllClick(object sender, RoutedEventArgs e)
         {

@@ -114,20 +114,7 @@ namespace AVSHull
 
         private void PanelsClick(object sender, RoutedEventArgs e)
         {
-            PanelLayoutWindow layout = new PanelLayoutWindow();
-            if (myHull != null)
-            {
-                EditableHull eHull = new EditableHull(myHull);
-                for (int index=0; index  < eHull.Chines.Count/2; index++)
-                {
-                    layout.AddPanel(new Panel(eHull.Chines[index], eHull.Chines[index+1]));
-                }
-
-                foreach (Bulkhead bulk in eHull.Bulkheads)
-                {
-                    layout.AddPanel(new Panel(bulk.Points));
-                }
-            }
+            PanelLayoutWindow layout = new PanelLayoutWindow(myHull);
             layout.Show();
         }
 
