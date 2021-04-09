@@ -25,7 +25,37 @@ namespace AVSHull
         private double ROTATE_STEP = Math.PI / 180;
         private int m_selectedPanel = NOT_SELECTED;
         private Point m_currentDragLoc = new Point(0, 0);
+        private Point m_startDragLoc = new Point(-1, -1);
         private bool m_dragging = false;
+        private bool m_doUnselect = false;
+
+        public int SheetsWide { get; set; }
+        public int SheetsHigh { get; set; }
+        public double SheetWidth { get; set; }
+        public double SheetHeight { get; set; }
+
+        private List<Panel> m_panels;
+        public List<Panel> Panels
+        {
+            get { return m_panels; }
+            set
+            {
+                m_panels = value;
+                InvalidateVisual();
+            }
+        }
+
+        private double m_scale = 1.0;
+        public double Scale
+        {
+            get { return m_scale; }
+            set
+            {
+                m_scale = value;
+                InvalidateMeasure();
+                InvalidateVisual();
+            }
+        }
 
         public PanelLayoutControl()
         {
@@ -42,24 +72,6 @@ namespace AVSHull
 
         }
 
-        public int SheetsWide { get; set; }
-        public int SheetsHigh { get; set; }
-        public double SheetWidth { get; set; }
-        public double SheetHeight { get; set; }
-
-        private List<Panel> m_panels;
-
-        private double m_scale = 1.0;
-        public double Scale
-        {
-            get { return m_scale; }
-            set 
-            { 
-                m_scale = value;
-                InvalidateMeasure();
-                InvalidateVisual(); 
-            }
-        }
         public void AddPanel(Panel p)
         {
             m_panels.Add(p);
@@ -68,12 +80,6 @@ namespace AVSHull
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            Debug.WriteLine("PanelLayout.MeasureOverride");
-            //if (Double.IsInfinity(availableSize.Width) || Double.IsNaN(availableSize.Width)) availableSize.Width = 0;
-            //if (Double.IsInfinity(availableSize.Height) || Double.IsNaN(availableSize.Height)) availableSize.Height = 0;
-
-            //double width = Math.Max(availableSize.Width, SheetsWide * SheetWidth * m_scale * 1.05);
-            //double height = Math.Max(availableSize.Height, SheetsHigh * SheetHeight * m_scale * 1.05);
             double width = SheetsWide * SheetWidth * m_scale;
             double height = SheetsHigh * SheetHeight * m_scale;
 
@@ -81,34 +87,8 @@ namespace AVSHull
         }
         protected override Size ArrangeOverride(Size finalSize)
         {
-            Debug.WriteLine("PanelLayoutArrangeOverride");
-            //if (m_editableHull != null)
-            //{
-            //    Geometry chines = m_editableHull.GetChineGeometry();
-            //    Rect bounds = chines.Bounds;
-
-            //    double scale_x = 0.9 * finalSize.Width / bounds.Width;
-            //    double scale_y = 0.9 * finalSize.Height / bounds.Height;
-
-            //    m_scale = Math.Min(scale_x, scale_y);
-
-            //    ScaleTransform scaleXform = new ScaleTransform(m_scale, m_scale);
-            //    double xlate_x = (DesiredSize.Width - bounds.Width * m_scale) / 2;
-            //    double xlate_y = (DesiredSize.Height - bounds.Height * m_scale) / 2;
-
-            //    TranslateTransform xlateXform = new TranslateTransform(xlate_x, xlate_y);
-            //    m_xform = new TransformGroup();
-            //    m_xform.Children.Add(scaleXform);
-            //    m_xform.Children.Add(xlateXform);
-
-            //    // If scale changed, need to recreate handles.
-            //    //if (m_scale != newScale) CreateHandles();
-            //    if (m_RecreateHandles) CreateHandles();
-            //    m_RecreateHandles = false;
-
-
+            // FIXTHIS: need to make sure finalSize is valid
             return finalSize;
-            //return new Size(newScale * bounds.Width, newScale * bounds.Height);
         }
         protected override void OnRender(DrawingContext drawingContext)
         {
@@ -188,6 +168,10 @@ namespace AVSHull
                     m_dragging = true;
                     InvalidateVisual();
                 }
+                else
+                {
+                    m_doUnselect = true;
+                }
                 Debug.WriteLine("Layout.MouseDown: {0} {1}", loc, m_selectedPanel);
             }
             else if (e.RightButton == MouseButtonState.Pressed && m_selectedPanel != NOT_SELECTED)
@@ -201,7 +185,14 @@ namespace AVSHull
         }
         private void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
+            Point loc = e.GetPosition(this);
+            if (m_selectedPanel != NOT_SELECTED && m_doUnselect)
+            {
+                m_selectedPanel = NOT_SELECTED;
+                InvalidateVisual();
+            }
             m_dragging = false;
+            m_doUnselect = false;
 
         }
 
@@ -211,6 +202,8 @@ namespace AVSHull
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                m_doUnselect = false;
+
                 if (m_dragging && m_selectedPanel != NOT_SELECTED)
                 {
                     double deltaX = (loc.X - m_currentDragLoc.X) / m_scale;

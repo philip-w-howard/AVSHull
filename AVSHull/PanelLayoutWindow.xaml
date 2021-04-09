@@ -6,16 +6,40 @@
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
         Title="Panel Layout" Height="450" Width="800">
-    
+
+    <DockPanel>
+        <ToolBarTray Background="White" DockPanel.Dock="Top">
+            <ToolBar Band="0 " BandIndex="1">
+                <Menu >
+                    <MenuItem Header="_File">
+                        <MenuItem Header="_Open" Click="openClick"/>
+                        <MenuItem Header="_Save" Click="saveClick"/>
+                        <MenuItem Header="Output _GCode File" Click="outputGcode" />
+                        <MenuItem Header="Output _Panel Offsets" Click="outputOffsets" />
+                        <MenuItem Header="Output S_TL file" Click="outputSTL" />
+                        <MenuItem Header="Output S_VG file" Click="outputSVG" />
+                    </MenuItem>
+                </Menu>
+            </ToolBar>
+            <ToolBar Band="0" BandIndex="2">
+
+            </ToolBar>
+        </ToolBarTray>
+
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"  Background="White">
             <ScrollViewer.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Add _All" Click="AddAllClick" />
-                    <MenuItem Header="Add _Panel" Click="AddPanelClick" />
+                    <ListBox  Name="PaneSelector" SelectionChanged="PanelSelected">
+                        <ListBoxItem>Panel 1</ListBoxItem>
+                        <ListBoxItem>Panel 2</ListBoxItem>
+                        <ListBoxItem>Panel 3</ListBoxItem>
+                        <ListBoxItem>Panel 4</ListBoxItem>
+                    </ListBox>
                 </ContextMenu>
             </ScrollViewer.ContextMenu>
             <local:PanelLayoutControl x:Name="LayoutControl" SheetsHigh="2" SheetsWide="3" Background="White" />
 
         </ScrollViewer>
-    
+    </DockPanel>
 </Window>

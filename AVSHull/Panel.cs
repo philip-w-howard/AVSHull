@@ -22,9 +22,16 @@ namespace AVSHull
         }
 
         protected PointCollection m_panelPoints;
+        public PointCollection Points
+        { 
+            get { return m_panelPoints; } 
+            set { m_panelPoints = value; }
+        }
+
 
         public Panel()
         {
+            m_panelPoints = new PointCollection();
         }
 
         public Panel(Panel.SerializablePanel panel)
