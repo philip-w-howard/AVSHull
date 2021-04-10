@@ -26,3 +26,4 @@ TODO:
 		gcode
 		etc.
 
+		Merging panelLayoutSetup
