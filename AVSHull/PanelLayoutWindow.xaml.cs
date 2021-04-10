@@ -41,10 +41,13 @@ namespace AVSHull
 
                 foreach (Bulkhead bulk in eHull.Bulkheads)
                 {
-                    Panel p = new Panel(bulk.Points);
-                    p.name = "Bulkhead " + bulkheadIndex;
-                    bulkheadIndex++;
-                    m_panels.Add(p);
+                    if (bulk.type != Bulkhead.BulkheadType.BOW)
+                    {
+                        Panel p = new Panel(bulk.Points);
+                        p.name = "Bulkhead " + bulkheadIndex;
+                        bulkheadIndex++;
+                        m_panels.Add(p);
+                    }
                 }
             }
 

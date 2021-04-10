@@ -18,8 +18,6 @@ HullControl
 
 TODO:
 	Add individual panel
-	Layout setup
-
 	Set initial scale of layout based on available window size.
 	Split panels
 	Output panels
