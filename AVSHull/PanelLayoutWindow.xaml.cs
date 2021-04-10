@@ -212,12 +212,44 @@ namespace AVSHull
 
         private void outputSTL(object sender, RoutedEventArgs e)
         {
+            SaveFileDialog saveDlg = new SaveFileDialog();
 
+            saveDlg.Filter = "STL files (*.stl)|*.stl|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 1;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                STLWriter output = new STLWriter(saveDlg.FileName);
+                foreach (Panel panel in LayoutControl.Panels)
+                {
+                    output.Write(panel);
+                }
+
+                output.Close();
+            }
         }
-
         private void outputSVG(object sender, RoutedEventArgs e)
         {
+            SaveFileDialog saveDlg = new SaveFileDialog();
 
+            saveDlg.Filter = "SVG files (*.svg)|*.svg|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 1;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                SVGWriter output = new SVGWriter(saveDlg.FileName);
+                foreach (Panel panel in LayoutControl.Panels)
+                {
+                    output.Write(panel);
+                }
+
+                output.Close();
+
+            }
         }
 
         private void setupClick(object sender, RoutedEventArgs e)

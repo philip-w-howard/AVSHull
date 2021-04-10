@@ -69,7 +69,6 @@ namespace AVSHull
             PreviewMouseDown += OnPreviewMouseDown;
             PreviewMouseMove += OnPreviewMouseMove;
             PreviewMouseUp += OnPreviewMouseUp;
-
         }
 
         public void AddPanel(Panel p)
