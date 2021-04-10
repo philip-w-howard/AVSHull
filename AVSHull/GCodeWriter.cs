@@ -201,8 +201,8 @@ namespace AVSHull
         public void Write(Panel panel, Point origin)
         {
             double offset = parameters.CutterDiameter / 2;
-            PointCollection points = panel.Points;
-            GeometryOperations.TranslateShape(points, panel.Origin.X, panel.Origin.Y);
+            PointCollection points = panel.Points.Clone();
+            //GeometryOperations.TranslateShape(points, panel.Origin.X, panel.Origin.Y);
 
             Boolean first = true;
             Point firstPoint = new Point(0, 0);
