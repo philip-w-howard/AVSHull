@@ -216,5 +216,11 @@ namespace AVSHull
         {
 
         }
+
+        private void setupClick(object sender, RoutedEventArgs e)
+        {
+            GetLayoutSetup();
+            LayoutControl.InvalidateVisual();
+        }
     }
 }
