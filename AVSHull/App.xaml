@@ -4,7 +4,6 @@
              xmlns:local="clr-namespace:AVSHull"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <!--<local:LayoutSetupData x:Key="MySetupData" panelWidth="96" panelHeight="48" numPanelsHorizontal="3" numPanelsVertical="2" overallScale="3" />-->
         <local:GCodeParameters x:Key="GCodeSetup"
                 PlungeSpeed="5"
                 CutSpeed = "30"
@@ -17,6 +16,7 @@
                 TabDepth = "0.0625"
                 TabWidth = "0.375"
                 Origin = "0" />
+        <local:LayoutSetupData x:Key="LayoutSetup" sheetWidth="96" sheetHeight="48" numSheetsHorizontal="3" numSheetsVertical="2"/>
 
     </Application.Resources>
 </Application>
