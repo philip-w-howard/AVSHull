@@ -120,6 +120,27 @@ namespace AVSHull
             return new Point3D(min_x, min_y, min_z);
         }
 
+        public void Scale(double x, double y, double z)
+        {
+            double[,] scale = new double[3, 3];
+
+            scale[0, 0] = x;
+            scale[1, 1] = y;
+            scale[2, 2] = z;
+
+            UpdateWithMatrix(scale);
+
+            RepositionToZero();
+        }
+
+        private void UpdateWithMatrix(double[,] matrix)
+        {
+            for (int ii = 0; ii < Bulkheads.Count; ii++)
+            {
+                Bulkheads[ii].UpdateWithMatrix(matrix);
+            }
+        }
+
         //*********************************************
         // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;

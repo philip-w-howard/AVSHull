@@ -1,0 +1,39 @@
+﻿<Window x:Class="AVSHull.ResizeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AVSHull"
+        mc:Ignorable="d"
+        Title="ResizeWindow" Height="450" Width="800">
+    <Window.Resources>
+        <local:ResizeWindowData x:Key="ResizeData" Proportional="False" Width="50" Height="10" Length="150" />
+    </Window.Resources>
+    <Grid Margin="5" DataContext="{Binding Source={StaticResource ResizeData}}">
+        <!--https://www.c-sharpcorner.com/article/explain-inotifypropertychanged-in-wpf-mvvm/-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <CheckBox Grid.Row="0" Grid.ColumnSpan="2" Name="proportionalScaline" IsChecked="{Binding Path=Proportional}">Scale Proportionally</CheckBox>
+        <Label Grid.Row="1" Grid.Column="0" >Width</Label>
+        <Label Grid.Row="2" Grid.Column="0">Height</Label>
+        <Label Grid.Row="3" Grid.Column="0">Length</Label>
+        <TextBox  Grid.Row="1" Grid.Column="1" Name="widthValue" Width="40" Text="{Binding Path=Width}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Name="heightValue" Width="40" Text="{Binding Path=Height}" />
+        <TextBox Grid.Row="3" Grid.Column="1" Name="lengthValue" Width="40" Text="{Binding Path=Length}" />
+
+        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Button Margin="20" Click="OKClick" Width="50">OK</Button>
+            <Button Margin="20" Click="CancelClick" Width="50">Cancel</Button>
+        </StackPanel>
+    </Grid>
+
+</Window>

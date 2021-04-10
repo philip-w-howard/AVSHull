@@ -147,7 +147,50 @@ namespace AVSHull
 
             return new Point3D(min_x, min_y, min_z);
         }
-        
+
+        public Size3D GetSize()
+        {
+            double min_x = double.MaxValue;
+            double min_y = double.MaxValue;
+            double min_z = double.MaxValue;
+            double max_x = double.MinValue;
+            double max_y = double.MinValue;
+            double max_z = double.MinValue;
+
+            foreach (Bulkhead bulk in Bulkheads)
+            {
+                foreach (Point3D point in bulk.Points)
+                {
+                    max_x = Math.Max(max_x, point.X);
+                    max_y = Math.Max(max_y, point.Y);
+                    max_z = Math.Max(max_z, point.Z);
+
+                    min_x = Math.Min(min_x, point.X);
+                    min_y = Math.Min(min_y, point.Y);
+                    min_z = Math.Min(min_z, point.Z);
+                }
+
+            }
+            if (Chines != null)
+            {
+                foreach (Point3DCollection chine in Chines)
+                {
+                    foreach (Point3D point in chine)
+                    {
+                        min_x = Math.Min(min_x, point.X);
+                        min_y = Math.Min(min_y, point.Y);
+                        min_z = Math.Min(min_z, point.Z);
+
+                        min_x = Math.Min(min_x, point.X);
+                        min_y = Math.Min(min_y, point.Y);
+                        min_z = Math.Min(min_z, point.Z);
+                    }
+                }
+            }
+
+            return new Size3D(max_x - min_x, max_y - min_y, max_z - min_z);
+        }
+
         private void RepositionToZero()
         {
             Point3D zero = GetMin();
