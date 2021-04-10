@@ -26,6 +26,7 @@ namespace AVSHull
 
             m_panels = new List<Panel>();
 
+            // Initialize the panels
             if (myHull != null && myHull.Bulkheads.Count != 0)
             {
                 EditableHull eHull = new EditableHull(myHull);
@@ -46,13 +47,35 @@ namespace AVSHull
                     m_panels.Add(p);
                 }
             }
-        }
 
-        //private PanelLayoutControl LayoutControl = new PanelLayoutControl();
+            GetLayoutSetup();
+        }
 
         private List<Panel> m_panels;
 
-        private void AddAllClick(object sender, RoutedEventArgs e)
+        private void GetLayoutSetup()
+        {
+            //Get the layout setup
+            PanelLayoutSetup setup = new PanelLayoutSetup();
+            setup.ShowDialog();
+
+            if (setup.OK)
+            {
+                LayoutSetupData parameters = new LayoutSetupData();
+
+                //LayoutSetupData params = new LayoutSetupData();
+                parameters = (LayoutSetupData)Application.Current.FindResource("LayoutSetup");
+                if (parameters != null)
+                {
+                    LayoutControl.SheetWidth = parameters.sheetWidth;
+                    LayoutControl.SheetHeight = parameters.sheetHeight;
+                    LayoutControl.SheetsWide = parameters.numSheetsHorizontal;
+                    LayoutControl.SheetsHigh = parameters.numSheetsVertical;
+                }
+            }
+        }
+
+    private void AddAllClick(object sender, RoutedEventArgs e)
         {
             double x = 10;
             double y = 10;

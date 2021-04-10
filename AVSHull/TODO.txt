@@ -19,10 +19,12 @@ HullControl
 TODO:
 	Add individual panel
 	Layout setup
+		Can't get LayoutSetupData class to be a valid type.
 	Set initial scale of layout based on available window size.
 	Split panels
 	Output panels
 		offsets
 		gcode
 		etc.
+
 
