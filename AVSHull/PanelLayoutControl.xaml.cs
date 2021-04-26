@@ -19,6 +19,16 @@ namespace AVSHull
     /// </summary>
     public partial class PanelLayoutControl : UserControl
     {
+        public class PanelLayoutSetup
+        {
+            public double WindowWidth { get; set; }
+            public double WindowHeight { get; set; }
+            public double SheetWidth { get; set; }
+            public double SheetHeight { get; set; }
+            public int SheetsWide { get; set; }
+            public int SheetsHigh { get; set; }
+            public double Scale { get; set; }
+        }
         private const double CLICK_WIDTH = 1.0;
         private const int NOT_SELECTED = -1;
         private double MIN_ROTATE_DRAG = 3;
@@ -30,51 +40,56 @@ namespace AVSHull
         private bool m_dragging = false;
         private bool m_doUnselect = false;
 
-        private double m_windowWidth = 0;
+        private PanelLayoutSetup m_panelSetup;
+        public PanelLayoutSetup LayoutSetup 
+        { get { return m_panelSetup; }
+          set 
+          { 
+                m_panelSetup = value;
+                InvalidateMeasure(); 
+                InvalidateVisual();
+          }
+        }
+
         public double WindowWidth
         {
-            private get { return m_windowWidth; }
+            get { return LayoutSetup.WindowWidth; }
             set
             {
-                m_windowWidth = value;
+                LayoutSetup.WindowWidth = value;
                 RecomputeScale();
             }
         }
-        private double m_windowHeight = 0;
         public double WindowHeight 
         {
-            private get { return m_windowHeight; }
+            get { return LayoutSetup.WindowHeight; }
             set
             {
-                m_windowHeight = value;
+                LayoutSetup.WindowHeight = value;
                 RecomputeScale();
             }
         }
 
-        private int m_sheetsWide = 1;
         public int SheetsWide 
         {
-            get { return m_sheetsWide; }
-            set { m_sheetsWide = value; RecomputeScale(); } 
+            get { return LayoutSetup.SheetsWide; }
+            set { LayoutSetup.SheetsWide = value; RecomputeScale(); } 
         }
 
-        private int m_sheetsHigh = 1;
         public int SheetsHigh
         {
-            get { return m_sheetsHigh; }
-            set { m_sheetsHigh = value; RecomputeScale(); }
+            get { return LayoutSetup.SheetsHigh; }
+            set { LayoutSetup.SheetsHigh = value; RecomputeScale(); }
         }
-        private double m_sheetWidth = 96;
         public double SheetWidth
         {
-            get { return m_sheetWidth; }
-            set { m_sheetWidth = value; RecomputeScale(); }
+            get { return LayoutSetup.SheetWidth; }
+            set { LayoutSetup.SheetWidth = value; RecomputeScale(); }
         }
-        private double m_sheetHeight = 48;
         public double SheetHeight
         {
-            get { return m_sheetHeight; }
-            set { m_sheetHeight = value; RecomputeScale(); }
+            get { return LayoutSetup.SheetHeight; }
+            set { LayoutSetup.SheetHeight = value; RecomputeScale(); }
         }
 
         private List<Panel> m_panels;
@@ -88,13 +103,12 @@ namespace AVSHull
             }
         }
 
-        private double m_scale = 1.0;
         public double Scale
         {
-            get { return m_scale; }
+            get { return LayoutSetup.Scale; }
             set
             {
-                m_scale = value;
+                LayoutSetup.Scale = value;
                 InvalidateMeasure();
                 InvalidateVisual();
             }
@@ -104,14 +118,19 @@ namespace AVSHull
         {
             InitializeComponent();
             m_panels = new List<Panel>();
-            SheetWidth = 96;
-            SheetHeight = 48;
-            SheetsWide = 1;
-            SheetsHigh = 1;
             MouseWheel += OnMouseWheel;
             PreviewMouseDown += OnPreviewMouseDown;
             PreviewMouseMove += OnPreviewMouseMove;
             PreviewMouseUp += OnPreviewMouseUp;
+
+            LayoutSetup = new PanelLayoutSetup();
+            LayoutSetup.SheetHeight = 48;
+            LayoutSetup.SheetWidth = 96;
+            LayoutSetup.SheetsHigh = 1;
+            LayoutSetup.SheetsWide = 1;
+            LayoutSetup.Scale = 1;
+            LayoutSetup.WindowHeight = 400;
+            LayoutSetup.WindowWidth = 600;
         }
 
         public void AddPanel(Panel p)
@@ -133,22 +152,24 @@ namespace AVSHull
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            double width = SheetsWide * SheetWidth * m_scale;
-            double height = SheetsHigh * SheetHeight * m_scale;
+            double width = SheetsWide * SheetWidth * Scale;
+            double height = SheetsHigh * SheetHeight * Scale;
 
             return new Size(width, height);
         }
         protected override Size ArrangeOverride(Size finalSize)
         {
-            // FIXTHIS: need to make sure finalSize is valid
-            return finalSize;
+            double width = SheetsWide * SheetWidth * Scale;
+            double height = SheetsHigh * SheetHeight * Scale;
+
+            return new Size(width, height);
         }
         protected override void OnRender(DrawingContext drawingContext)
         {
             Rect background = new Rect(new Point(0, 0), new Point(ActualWidth, ActualHeight));
             drawingContext.DrawRectangle(this.Background, null, background);
 
-            ScaleTransform scale = new ScaleTransform(m_scale, m_scale);
+            ScaleTransform scale = new ScaleTransform(LayoutSetup.Scale, LayoutSetup.Scale);
 
             Pen sheetPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
 
@@ -186,13 +207,13 @@ namespace AVSHull
                 Scale *= 1.1;
             else if (e.Delta < 0)
                 Scale /= 1.1;
-            Debug.WriteLine("Delta: {0} Scale: {1}", e.Delta, m_scale);
+            Debug.WriteLine("Delta: {0} Scale: {1}", e.Delta, LayoutSetup.Scale);
         }
 
         private int PanelClicked(Point loc)
         {
             //Pen pen = new Pen(Brushes.Black, CLICK_WIDTH);
-            ScaleTransform scale = new ScaleTransform(m_scale, m_scale);
+            ScaleTransform scale = new ScaleTransform(LayoutSetup.Scale, LayoutSetup.Scale);
 
             for (int index=m_panels.Count-1; index >= 0; index--)
             {
@@ -259,8 +280,8 @@ namespace AVSHull
 
                 if (m_dragging && m_selectedPanel != NOT_SELECTED)
                 {
-                    double deltaX = (loc.X - m_currentDragLoc.X) / m_scale;
-                    double deltaY = (loc.Y - m_currentDragLoc.Y) / m_scale;
+                    double deltaX = (loc.X - m_currentDragLoc.X) / LayoutSetup.Scale;
+                    double deltaY = (loc.Y - m_currentDragLoc.Y) / LayoutSetup.Scale;
                     Point currLoc = m_panels[m_selectedPanel].Origin;
                     currLoc.X += deltaX;
                     currLoc.Y += deltaY;

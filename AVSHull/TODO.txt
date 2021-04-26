@@ -17,11 +17,12 @@ HullControl
 	Displays a DisplayHull
 
 TODO:
-	Panel file should include panel setup
 	Add individual panel
 	Split panels
 	Output panels
 		offsets
 	Add bulkhead
 	Change number of chines
+
+
 		
