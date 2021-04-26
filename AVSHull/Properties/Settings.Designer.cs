@@ -46,5 +46,29 @@ namespace AVSHull.Properties {
                 this["MainWidth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("400")]
+        public double LayoutHeight {
+            get {
+                return ((double)(this["LayoutHeight"]));
+            }
+            set {
+                this["LayoutHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
+        public double LayoutWidth {
+            get {
+                return ((double)(this["LayoutWidth"]));
+            }
+            set {
+                this["LayoutWidth"] = value;
+            }
+        }
     }
 }

@@ -23,16 +23,59 @@ namespace AVSHull
         private const int NOT_SELECTED = -1;
         private double MIN_ROTATE_DRAG = 3;
         private double ROTATE_STEP = Math.PI / 180;
+        private const double SCALE_FACTOR = 1.1;
         private int m_selectedPanel = NOT_SELECTED;
         private Point m_currentDragLoc = new Point(0, 0);
         private Point m_startDragLoc = new Point(-1, -1);
         private bool m_dragging = false;
         private bool m_doUnselect = false;
 
-        public int SheetsWide { get; set; }
-        public int SheetsHigh { get; set; }
-        public double SheetWidth { get; set; }
-        public double SheetHeight { get; set; }
+        private double m_windowWidth = 0;
+        public double WindowWidth
+        {
+            private get { return m_windowWidth; }
+            set
+            {
+                m_windowWidth = value;
+                RecomputeScale();
+            }
+        }
+        private double m_windowHeight = 0;
+        public double WindowHeight 
+        {
+            private get { return m_windowHeight; }
+            set
+            {
+                m_windowHeight = value;
+                RecomputeScale();
+            }
+        }
+
+        private int m_sheetsWide = 1;
+        public int SheetsWide 
+        {
+            get { return m_sheetsWide; }
+            set { m_sheetsWide = value; RecomputeScale(); } 
+        }
+
+        private int m_sheetsHigh = 1;
+        public int SheetsHigh
+        {
+            get { return m_sheetsHigh; }
+            set { m_sheetsHigh = value; RecomputeScale(); }
+        }
+        private double m_sheetWidth = 96;
+        public double SheetWidth
+        {
+            get { return m_sheetWidth; }
+            set { m_sheetWidth = value; RecomputeScale(); }
+        }
+        private double m_sheetHeight = 48;
+        public double SheetHeight
+        {
+            get { return m_sheetHeight; }
+            set { m_sheetHeight = value; RecomputeScale(); }
+        }
 
         private List<Panel> m_panels;
         public List<Panel> Panels
@@ -75,6 +118,17 @@ namespace AVSHull
         {
             m_panels.Add(p);
             InvalidateVisual();
+        }
+
+        protected void RecomputeScale()
+        {
+            double horScale = Double.MaxValue;
+            double vertScale = Double.MaxValue;
+            double width = SCALE_FACTOR * SheetsWide * SheetWidth;
+            double height = SCALE_FACTOR * SheetsHigh * SheetHeight;
+            if (WindowWidth > 0) horScale = WindowWidth / width;
+            if (WindowHeight > 0) vertScale = WindowHeight / height;
+            Scale = Math.Min(horScale, vertScale);
         }
 
         protected override Size MeasureOverride(Size availableSize)

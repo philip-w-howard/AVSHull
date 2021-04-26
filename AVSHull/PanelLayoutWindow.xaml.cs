@@ -74,6 +74,8 @@ namespace AVSHull
                     LayoutControl.SheetHeight = parameters.sheetHeight;
                     LayoutControl.SheetsWide = parameters.numSheetsHorizontal;
                     LayoutControl.SheetsHigh = parameters.numSheetsVertical;
+                    LayoutControl.WindowWidth = Width;
+                    LayoutControl.WindowHeight = Height;
                 }
             }
         }
@@ -207,7 +209,24 @@ namespace AVSHull
 
         private void outputOffsets(object sender, RoutedEventArgs e)
         {
+            // DOES NOT WORK
+            SaveFileDialog saveDlg = new SaveFileDialog();
 
+            saveDlg.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 2;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                using (System.IO.StreamWriter output = new System.IO.StreamWriter(saveDlg.FileName))
+                {
+                    foreach (Panel panel in LayoutControl.Panels)
+                    {
+                        output.Write(panel.ToString());
+                    }
+                }
+            }
         }
 
         private void outputSTL(object sender, RoutedEventArgs e)
