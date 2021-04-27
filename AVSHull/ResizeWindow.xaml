@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
-        Title="ResizeWindow" Height="450" Width="800">
+        Title="ResizeWindow" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <local:ResizeWindowData x:Key="ResizeData" Proportional="False" Width="50" Height="10" Length="150" />
     </Window.Resources>
