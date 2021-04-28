@@ -25,4 +25,4 @@ TODO:
 		gcode
 		etc.
 
-		Merging panelLayoutSetup
+		Merging PanelOutput
