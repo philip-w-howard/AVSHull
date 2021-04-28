@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ResizeWindow" SizeToContent="WidthAndHeight">
     <Window.Resources>
-        <local:ResizeWindowData x:Key="ResizeData" Proportional="False" Width="50" Height="10" Length="150" />
+        <local:ResizeWindowData x:Key="ResizeData" Proportional="True" Width="50" Height="10" Length="150" />
     </Window.Resources>
     <Grid Margin="5" DataContext="{Binding Source={StaticResource ResizeData}}">
         <!--https://www.c-sharpcorner.com/article/explain-inotifypropertychanged-in-wpf-mvvm/-->
