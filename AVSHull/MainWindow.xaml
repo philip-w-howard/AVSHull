@@ -3,13 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:properties="clr-namespace:AVSHull.Properties"
-        xmlns:local="clr-namespace:AVSHull"
+        xmlns:local="clr-namespace:AVSHull" xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
+        x:Name="AVSHullMainWindow"
         Title="AVS Hull" 
         Height="{Binding Source={x:Static properties:Settings.Default}, Path=MainHeight, Mode=TwoWay}" 
         Width="{Binding Source={x:Static properties:Settings.Default}, Path=MainWidth, Mode=TwoWay}" 
         Closed="Window_Closed">
+    <Window.Resources>
+        <sys:String x:Key="Version">main version</sys:String>
+    </Window.Resources>
     <DockPanel>
         <ToolBarTray Background="White" DockPanel.Dock="Top">
             <ToolBar Band="0 " BandIndex="1">
@@ -22,6 +27,9 @@
                     <MenuItem Header="_Tools">
                         <MenuItem Name="PanelsMenu" Header="_Panels" Click="PanelsClick" />
                         <MenuItem Name ="ResizeMenu" Header="_Resize" Click="ResizeClick" />
+                    </MenuItem>
+                    <MenuItem Header="_Help">
+                        <MenuItem Header="_About" Click="AboutClick" />
                     </MenuItem>
                 </Menu>
             </ToolBar>

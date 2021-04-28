@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,11 +28,19 @@ namespace AVSHull
     {
         Hull myHull;
 
+        public Version CurrentVersion
+        {
+            get { return GetVersion();  }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
             myHull = new Hull();
             myHull.PropertyChanged += hull_PropertyChanged;
+
+            Title = "AVS Hull " + GetVersion();
+            this.Resources["Version"] = GetVersion();
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -240,5 +249,28 @@ namespace AVSHull
             }
         }
 
+        private void AboutClick(object sender, RoutedEventArgs e)
+        {
+            About setup = new About();
+            setup.Owner = this;
+            setup.Resources["aboutVersion"] = GetVersion();
+            setup.ShowDialog();
+        }
+
+        private Version GetVersion()
+        {
+            //if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            //{
+            //    return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
+            //}
+            //try
+            //{
+            //    return ApplicationDeployment.CurrentDeployment.CurrentVersion;
+            //}
+            //catch (Exception)
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version;
+            }
+        }
     }
 }
