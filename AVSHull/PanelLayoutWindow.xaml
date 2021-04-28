@@ -3,10 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:properties="clr-namespace:AVSHull.Properties"
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
-        Title="Panel Layout" Height="450" Width="800">
-
+        Title="Panel Layout" 
+        Height="{Binding Source={x:Static properties:Settings.Default}, Path=LayoutHeight, Mode=TwoWay}" 
+        Width="{Binding Source={x:Static properties:Settings.Default}, Path=LayoutWidth, Mode=TwoWay}" 
+        >
+    <Window.Resources>
+        
+    </Window.Resources>
     <DockPanel>
         <ToolBarTray Background="White" DockPanel.Dock="Top">
             <ToolBar Band="0 " BandIndex="1">
@@ -27,7 +33,8 @@
             </ToolBar>
         </ToolBarTray>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"  Background="White">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
+                      HorizontalAlignment="Left" VerticalAlignment="Top"  Background="White">
             <ScrollViewer.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Add _All" Click="AddAllClick" />
@@ -39,7 +46,7 @@
                     </ListBox>
                 </ContextMenu>
             </ScrollViewer.ContextMenu>
-            <local:PanelLayoutControl x:Name="LayoutControl" SheetsHigh="2" SheetsWide="3" Background="White" />
+            <local:PanelLayoutControl x:Name="LayoutControl" Background="White" />
 
         </ScrollViewer>
     </DockPanel>

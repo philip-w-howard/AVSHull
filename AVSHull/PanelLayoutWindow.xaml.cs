@@ -74,6 +74,8 @@ namespace AVSHull
                     LayoutControl.SheetHeight = parameters.sheetHeight;
                     LayoutControl.SheetsWide = parameters.numSheetsHorizontal;
                     LayoutControl.SheetsHigh = parameters.numSheetsVertical;
+                    LayoutControl.WindowWidth = Width;
+                    LayoutControl.WindowHeight = Height;
                 }
             }
         }
@@ -102,6 +104,15 @@ namespace AVSHull
             Debug.WriteLine(e);
         }
 
+        //*****************************************************************
+        // Serialize/Deserialize
+        //*****************************************************************
+        public class AllPanelData
+        {
+            public List<List<Panel>> panelList { get; set; }
+            public PanelLayoutControl.PanelLayoutSetup panelLayout { get; set; }
+        }
+
         private void openClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openDlg = new OpenFileDialog();
@@ -113,18 +124,20 @@ namespace AVSHull
             Nullable<bool> result = openDlg.ShowDialog();
             if (result == true)
             {
-                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<List<Panel>>));
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(AllPanelData));
 
                 using (Stream reader = new FileStream(openDlg.FileName, FileMode.Open))
                 {
-                    List<List<Panel>> panelList;
+                    AllPanelData panelData;
+
                     // Call the Deserialize method to restore the object's state.
-                    panelList = (List<List<Panel>>)serializer.Deserialize(reader);
-                    if (panelList.Count == 2)
+                    panelData = (AllPanelData)serializer.Deserialize(reader);
+                    if (panelData.panelList.Count == 2)
                     {
-                        m_panels = panelList[0];
-                        LayoutControl.Panels = panelList[1];
+                        m_panels = panelData.panelList[0];
+                        LayoutControl.Panels = panelData.panelList[1];
                     }
+                    LayoutControl.LayoutSetup = panelData.panelLayout;
                 }
             }
 
@@ -141,15 +154,18 @@ namespace AVSHull
             Nullable<bool> result = saveDlg.ShowDialog();
             if (result == true)
             {
-                List<List<Panel>> panelList = new List<List<Panel>>();
-                panelList.Add(m_panels);
-                panelList.Add(LayoutControl.Panels);
+                AllPanelData panelData = new AllPanelData();
+                panelData.panelList = new List<List<Panel>>();
+                panelData.panelList.Add(m_panels);
+                panelData.panelList.Add(LayoutControl.Panels);
 
-                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(List<List<Panel>>));
+                //panelData.panelLayout = new PanelLayoutControl.PanelLayoutSetup();
+                panelData.panelLayout = LayoutControl.LayoutSetup;
+                System.Xml.Serialization.XmlSerializer panelWriter = new System.Xml.Serialization.XmlSerializer(typeof(AllPanelData));
 
                 using (FileStream output = new FileStream(saveDlg.FileName, FileMode.Create))
                 {
-                    writer.Serialize(output, panelList);
+                    panelWriter.Serialize(output, panelData);
                 }
             }
         }
@@ -207,17 +223,66 @@ namespace AVSHull
 
         private void outputOffsets(object sender, RoutedEventArgs e)
         {
+            // DOES NOT WORK
+            SaveFileDialog saveDlg = new SaveFileDialog();
 
+            saveDlg.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 2;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                using (System.IO.StreamWriter output = new System.IO.StreamWriter(saveDlg.FileName))
+                {
+                    foreach (Panel panel in LayoutControl.Panels)
+                    {
+                        output.Write(panel.ToString());
+                    }
+                }
+            }
         }
 
         private void outputSTL(object sender, RoutedEventArgs e)
         {
+            SaveFileDialog saveDlg = new SaveFileDialog();
 
+            saveDlg.Filter = "STL files (*.stl)|*.stl|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 1;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                STLWriter output = new STLWriter(saveDlg.FileName);
+                foreach (Panel panel in LayoutControl.Panels)
+                {
+                    output.Write(panel);
+                }
+
+                output.Close();
+            }
         }
-
         private void outputSVG(object sender, RoutedEventArgs e)
         {
+            SaveFileDialog saveDlg = new SaveFileDialog();
 
+            saveDlg.Filter = "SVG files (*.svg)|*.svg|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 1;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                SVGWriter output = new SVGWriter(saveDlg.FileName);
+                foreach (Panel panel in LayoutControl.Panels)
+                {
+                    output.Write(panel);
+                }
+
+                output.Close();
+
+            }
         }
 
         private void setupClick(object sender, RoutedEventArgs e)

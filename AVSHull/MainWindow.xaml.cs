@@ -105,6 +105,7 @@ namespace AVSHull
 
             if (openFileDialog.ShowDialog() == true)
             {
+                if (myHull == null) myHull = new Hull();
                 myHull.LoadFromHullFile(openFileDialog.FileName);
 
                 UpdateViews();
