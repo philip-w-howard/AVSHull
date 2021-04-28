@@ -237,7 +237,9 @@ namespace AVSHull
                 {
                     foreach (Panel panel in LayoutControl.Panels)
                     {
-                        output.Write(panel.ToString());
+                        output.WriteLine(panel.name);
+                        foreach (Point point in panel.Points)
+                        output.WriteLine("   {0} {1}", point.X, point.Y);
                     }
                 }
             }
