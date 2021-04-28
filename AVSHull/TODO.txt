@@ -24,5 +24,10 @@ TODO:
 	Add bulkhead
 	Change number of chines
 
-	Merging PanelOutput
+	Place pop-ups in center of parent. 
+		See about box for sample
+			<Window> WindowStartupLocation="CenterOwner"
+			dlg.Owner = this;
 		
+	UI Standards:
+		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0

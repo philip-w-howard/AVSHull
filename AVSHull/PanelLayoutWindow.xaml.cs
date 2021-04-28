@@ -50,8 +50,6 @@ namespace AVSHull
                     }
                 }
             }
-
-            GetLayoutSetup();
         }
 
         private List<Panel> m_panels;
@@ -60,9 +58,11 @@ namespace AVSHull
         {
             //Get the layout setup
             PanelLayoutSetup setup = new PanelLayoutSetup();
-            setup.ShowDialog();
+            setup.Owner = this;
 
-            if (setup.OK)
+            bool? result = setup.ShowDialog();
+
+            if (result == true)
             {
                 LayoutSetupData parameters = new LayoutSetupData();
 
@@ -289,6 +289,11 @@ namespace AVSHull
         {
             GetLayoutSetup();
             LayoutControl.InvalidateVisual();
+        }
+
+        private void WindowLoaded(object sender, RoutedEventArgs e)
+        {
+            GetLayoutSetup();
         }
     }
 }

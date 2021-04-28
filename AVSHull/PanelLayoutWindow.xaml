@@ -9,6 +9,7 @@
         Title="Panel Layout" 
         Height="{Binding Source={x:Static properties:Settings.Default}, Path=LayoutHeight, Mode=TwoWay}" 
         Width="{Binding Source={x:Static properties:Settings.Default}, Path=LayoutWidth, Mode=TwoWay}" 
+        Loaded="WindowLoaded"
         >
     <Window.Resources>
         
@@ -18,14 +19,14 @@
             <ToolBar Band="0 " BandIndex="1">
                 <Menu >
                     <MenuItem Header="_File">
-                        <MenuItem Header="_Open" Click="openClick"/>
-                        <MenuItem Header="_Save" Click="saveClick"/>
-                        <MenuItem Header="Output _GCode File" Click="outputGcode" />
-                        <MenuItem Header="Output _Panel Offsets" Click="outputOffsets" />
-                        <MenuItem Header="Output S_TL file" Click="outputSTL" />
-                        <MenuItem Header="Output S_VG file" Click="outputSVG" />
+                        <MenuItem Header="_Open..." Click="openClick"/>
+                        <MenuItem Header="_Save..." Click="saveClick"/>
+                        <MenuItem Header="Output _GCode File..." Click="outputGcode" />
+                        <MenuItem Header="Output _Panel Offsets..." Click="outputOffsets" />
+                        <MenuItem Header="Output S_TL file..." Click="outputSTL" />
+                        <MenuItem Header="Output S_VG file..." Click="outputSVG" />
                     </MenuItem>
-                    <MenuItem Header="_Setup" Click="setupClick"/>
+                    <MenuItem Header="_Setup..." Click="setupClick"/>
                 </Menu>
             </ToolBar>
             <ToolBar Band="0" BandIndex="2">
