@@ -17,12 +17,12 @@ HullControl
 	Displays a DisplayHull
 
 TODO:
-	Add individual panel
-		Menu works, Panels are added to the control. They don't show up in window.
+	
 	Split panels
 	Output panels
 		offsets: better formatting, close bulkhead
 	Add bulkhead
+	Move bulkhead
 	Change number of chines
 
 	Place pop-ups in center of parent. 
@@ -32,3 +32,6 @@ TODO:
 		
 	UI Standards:
 		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0
+
+	Split LayoutControl into Layout and Control
+	Fix outputs to use a standard interface (Follow OffsetWriter)

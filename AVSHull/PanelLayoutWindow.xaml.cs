@@ -130,11 +130,6 @@ namespace AVSHull
             }
         }
 
-        private void PanelSelected(object sender, SelectionChangedEventArgs e)
-        {
-            Debug.WriteLine(e);
-        }
-
         //*****************************************************************
         // Serialize/Deserialize
         //*****************************************************************
@@ -254,26 +249,8 @@ namespace AVSHull
 
         private void outputOffsets(object sender, RoutedEventArgs e)
         {
-            // DOES NOT WORK
-            SaveFileDialog saveDlg = new SaveFileDialog();
-
-            saveDlg.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            saveDlg.FilterIndex = 2;
-            saveDlg.RestoreDirectory = true;
-
-            Nullable<bool> result = saveDlg.ShowDialog();
-            if (result == true)
-            {
-                using (System.IO.StreamWriter output = new System.IO.StreamWriter(saveDlg.FileName))
-                {
-                    foreach (Panel panel in LayoutControl.Panels)
-                    {
-                        output.WriteLine(panel.name);
-                        foreach (Point point in panel.Points)
-                        output.WriteLine("   {0} {1}", point.X, point.Y);
-                    }
-                }
-            }
+            OffsetWriter writer = new OffsetWriter(LayoutControl);
+            writer.SaveLayout();
         }
 
         private void outputSTL(object sender, RoutedEventArgs e)
