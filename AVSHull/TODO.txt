@@ -18,9 +18,10 @@ HullControl
 
 TODO:
 	Add individual panel
+		Menu works, Panels are added to the control. They don't show up in window.
 	Split panels
 	Output panels
-		offsets
+		offsets: better formatting, close bulkhead
 	Add bulkhead
 	Change number of chines
 

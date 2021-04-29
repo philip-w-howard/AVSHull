@@ -37,14 +37,8 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
                       HorizontalAlignment="Left" VerticalAlignment="Top"  Background="White">
             <ScrollViewer.ContextMenu>
-                <ContextMenu>
+                <ContextMenu x:Name="PanelContextMenu">
                     <MenuItem Header="Add _All" Click="AddAllClick" />
-                    <ListBox  Name="PaneSelector" SelectionChanged="PanelSelected">
-                        <ListBoxItem>Panel 1</ListBoxItem>
-                        <ListBoxItem>Panel 2</ListBoxItem>
-                        <ListBoxItem>Panel 3</ListBoxItem>
-                        <ListBoxItem>Panel 4</ListBoxItem>
-                    </ListBox>
                 </ContextMenu>
             </ScrollViewer.ContextMenu>
             <local:PanelLayoutControl x:Name="LayoutControl" Background="White" />

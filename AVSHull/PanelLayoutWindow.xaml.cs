@@ -50,6 +50,14 @@ namespace AVSHull
                     }
                 }
             }
+
+            foreach (Panel panel in m_panels)
+            {
+                MenuItem item = new MenuItem();
+                item.Header = panel.name;
+                item.Click += AddPanelClick;
+                PanelContextMenu.Items.Add(item);
+            }
         }
 
         private List<Panel> m_panels;
@@ -84,19 +92,42 @@ namespace AVSHull
         {
             double x = 10;
             double y = 10;
+            double x_size = 0;
+            double y_size = 0;
 
             foreach (Panel p in m_panels)
             {
                 Panel panel = (Panel)p.Clone();
                 panel.Origin = new Point(x, y);
-                y += 10;
+                GeometryOperations.ComputeSize(panel.Points, out x_size, out y_size);
+                y += y_size * 1.1;
                 LayoutControl.AddPanel(panel);
             }
         }
 
         private void AddPanelClick(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine(sender);
+            Debug.WriteLine(e);
+            MenuItem item = (MenuItem)e.Source;
+            String panelName = item.Header.ToString();
 
+            Point loc = Mouse.GetPosition(LayoutControl);
+            Debug.WriteLine("Raw {0}", loc);
+            loc.X /= LayoutControl.Scale;
+            loc.Y /= LayoutControl.Scale;
+            Debug.WriteLine("Scaled {0}", loc);
+
+            foreach (Panel panel in m_panels)
+            {
+                if (panelName == panel.name)
+                {
+                    Panel p = (Panel)panel.Clone();
+                    p.Origin = loc;
+                    LayoutControl.AddPanel(p);
+                    break;
+                }
+            }
         }
 
         private void PanelSelected(object sender, SelectionChangedEventArgs e)

@@ -197,7 +197,6 @@ namespace AVSHull
                     drawingContext.DrawGeometry(null, selectedPen, geom);
                 else
                     drawingContext.DrawGeometry(null, panelPen, geom);
-
             }
         }
 
