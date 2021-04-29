@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -6,11 +7,14 @@ using System.Windows.Media;
 
 namespace AVSHull
 {
-    class SVGWriter
+    class SVGWriter : ILayoutWriter
     {
         private System.IO.StreamWriter svgFile;
 
-        public SVGWriter(string filename)
+        public SVGWriter()
+        { }
+
+        private void Open(string filename)
         {
             svgFile = new System.IO.StreamWriter(filename);
             svgFile.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -21,7 +25,7 @@ namespace AVSHull
             svgFile.WriteLine("     Width=\"96in\" Height=\"48in\" xml:space=\"preserve\">");
         }
 
-        public void Close()
+        private void Close()
         {
             if (svgFile != null)
             {
@@ -30,7 +34,8 @@ namespace AVSHull
             }
         }
 
-        public void Write(Panel panel)
+
+        private void Write(Panel panel)
         {
             PointCollection points = panel.Points;
             svgFile.Write("<polyline points=\"");
@@ -40,6 +45,32 @@ namespace AVSHull
             }
 
             svgFile.WriteLine("\" style=\"fill:none;stroke:black;stroke-width:1\" />");
+        }
+        public PanelLayoutControl Layout { get; set; }
+
+        public bool? SaveLayout()
+        {
+            if (Layout == null) return false;
+
+            SaveFileDialog saveDlg = new SaveFileDialog();
+
+            saveDlg.Filter = "SVG files (*.svg)|*.svg|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 1;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                Open(saveDlg.FileName);
+                foreach (Panel panel in Layout.Panels)
+                {
+                    Write(panel);
+                }
+
+                Close();
+            }
+
+            return result;
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -6,20 +7,25 @@ using System.Windows.Media;
 
 namespace AVSHull
 {
-    class STLWriter
+    class STLWriter : ILayoutWriter
     {
         private System.IO.StreamWriter stlFile;
         private string m_filename = null;
         private double m_depth = 0.25;
 
-        public STLWriter(string filename)
+        public STLWriter()
+        {
+
+        }
+        private void Open(string filename)
         {
             m_filename = filename;
             stlFile = new System.IO.StreamWriter(filename);
             stlFile.WriteLine("solid " + filename);
         }
 
-        public void Close()
+
+        private void Close()
         {
             if (stlFile != null)
             {
@@ -28,7 +34,8 @@ namespace AVSHull
             }
         }
 
-        public void Write(Panel panel)
+
+        private void Write(Panel panel)
         {
             Point lastPoint = new Point(0, 0);
             Point firstPoint = new Point(0, 0);
@@ -81,5 +88,32 @@ namespace AVSHull
             stlFile.WriteLine("endfacet");
         }
 
+        public PanelLayoutControl Layout { get; set; }
+        public bool? SaveLayout()
+        {
+            if (Layout == null) return false;
+
+            SaveFileDialog saveDlg = new SaveFileDialog();
+
+            saveDlg.Filter = "STL files (*.stl)|*.stl|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 1;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                Open(saveDlg.FileName);
+                foreach (Panel panel in Layout.Panels)
+                {
+                    Write(panel);
+                }
+
+                Close();
+                
+                return true;
+            }
+
+            return result;
+        }
     }
 }
