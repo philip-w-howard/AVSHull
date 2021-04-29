@@ -20,7 +20,7 @@ TODO:
 	
 	Split panels
 	Output panels
-		offsets: better formatting, close bulkhead
+		offsets: use spacing
 	Add bulkhead
 	Move bulkhead
 	Change number of chines
@@ -34,4 +34,4 @@ TODO:
 		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0
 
 	Split LayoutControl into Layout and Control
-	Fix outputs to use a standard interface (Follow OffsetWriter)
+	
