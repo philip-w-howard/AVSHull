@@ -198,58 +198,15 @@ namespace AVSHull
 
         private void outputGcode(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveDlg = new SaveFileDialog();
-
-            saveDlg.Filter = "GCode files (*.nc)|*.nc|All files (*.*)|*.*";
-            saveDlg.FilterIndex = 1;
-            saveDlg.RestoreDirectory = true;
-
-            Nullable<bool> result = saveDlg.ShowDialog();
-            if (result == true)
-            {
-                GCodeSetup setup = new GCodeSetup();
-                setup.ShowDialog();
-                Point gcodeOrigin = new Point(0, 0);
-                if (setup.OK)
-                {
-                    GCodeParameters parameters = new GCodeParameters();
-                    parameters = (GCodeParameters)Application.Current.FindResource("GCodeSetup");
-                    if (parameters.OriginTypes[parameters.Origin] == "Panels Bottom Left")
-                    {
-                        double minX = Double.MaxValue;
-                        double maxY = Double.MinValue;
-                        foreach (Panel panel in LayoutControl.Panels)
-                        {
-                            double x, y;
-                            PointCollection points = panel.Points;
-                            GeometryOperations.TopLeft(points, out x, out y);
-                            minX = Math.Min(minX, x);
-                            maxY = Math.Max(maxY, y);
-                        }
-                        gcodeOrigin = new Point(minX, maxY);
-                    }
-                    else if (parameters.OriginTypes[parameters.Origin] == "Sheet Bottom Left")
-                    {
-                        gcodeOrigin = new Point(0, 0);
-                    }
-                    else if (parameters.OriginTypes[parameters.Origin] == "Sheet Center")
-                    {
-                        gcodeOrigin = new Point(LayoutControl.SheetWidth / 2, LayoutControl.SheetHeight/ 2);
-                    }
-                    GCodeWriter output = new GCodeWriter(saveDlg.FileName);
-                    foreach (Panel panel in LayoutControl.Panels)
-                    {
-                        output.Write(panel, gcodeOrigin);
-                    }
-
-                    output.Close();
-                }
-            }
+            GCodeWriter writer = new GCodeWriter();
+            writer.Layout = LayoutControl;
+            writer.SaveLayout();
         }
 
         private void outputOffsets(object sender, RoutedEventArgs e)
         {
-            OffsetWriter writer = new OffsetWriter(LayoutControl);
+            OffsetWriter writer = new OffsetWriter();
+            writer.Layout = LayoutControl;
             writer.SaveLayout();
         }
 

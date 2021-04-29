@@ -7,17 +7,17 @@ using System.Windows;
 
 namespace AVSHull
 {
-    class OffsetWriter
+    class OffsetWriter : ILayoutWriter
     {
-        private PanelLayoutControl m_layout;
-        public OffsetWriter(PanelLayoutControl layout)
+        public OffsetWriter()
         {
-            m_layout = layout;
         }
 
-        public void SaveLayout()
+        public PanelLayoutControl Layout { get; set; }
+
+        public bool? SaveLayout()
         {
-            if (m_layout == null) return;
+            if (Layout == null) return false;
 
             SaveFileDialog saveDlg = new SaveFileDialog();
 
@@ -35,16 +35,19 @@ namespace AVSHull
                 {
                     using (System.IO.StreamWriter output = new System.IO.StreamWriter(saveDlg.FileName))
                     {
-                        foreach (Panel panel in m_layout.Panels)
+                        foreach (Panel panel in Layout.Panels)
                         {
                             output.WriteLine(panel.name);
                             foreach (Point point in panel.Points)
                                 output.WriteLine("   {0}", FormatPoint(point, setup.OutputType));
                         }
                     }
+
+                    return true;
                 }
             }
-
+            
+            return result;
         }
 
         private String Fraction(double value, int denominator)

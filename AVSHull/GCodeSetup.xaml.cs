@@ -17,24 +17,19 @@ namespace AVSHull
     /// </summary>
     public partial class GCodeSetup : Window
     {
-        public bool OK { get; set; }
-
         public GCodeSetup()
         {
             InitializeComponent();
-            OK = false;
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            OK = true;
-            Close();
+            DialogResult = true;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            OK = false;
-            Close();
+            DialogResult = false;
         }
     }
 }

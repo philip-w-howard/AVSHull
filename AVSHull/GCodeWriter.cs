@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -158,7 +159,7 @@ namespace AVSHull
         }
 
     }
-    class GCodeWriter
+    class GCodeWriter : ILayoutWriter
     {
         // Parameters:
         //      Cut speed
@@ -173,7 +174,10 @@ namespace AVSHull
 
         private System.IO.StreamWriter gCodeFile;
 
-        public GCodeWriter(string filename)
+        public GCodeWriter()
+        { }
+
+        private void Open(String filename)
         {
             parameters = (GCodeParameters)Application.Current.FindResource("GCodeSetup");
 
@@ -184,7 +188,8 @@ namespace AVSHull
             gCodeFile.WriteLine("G00 Z0.25 M03");           // 0.25 inches above the surface
         }
 
-        public void Close()
+
+        private void Close()
         {
             if (gCodeFile != null)
             {
@@ -198,7 +203,8 @@ namespace AVSHull
             }
         }
 
-        public void Write(Panel panel, Point origin)
+
+        private void Write(Panel panel, Point origin)
         {
             double offset = parameters.CutterDiameter / 2;
             PointCollection points = panel.Points.Clone();
@@ -241,6 +247,65 @@ namespace AVSHull
             }
             gCodeFile.WriteLine("G01 X{0} Y{1}", firstPoint.X, firstPoint.Y);
             gCodeFile.WriteLine("G01 Z0.25 F{0}", parameters.PlungeSpeed);  // Lift cutter
+        }
+        public PanelLayoutControl Layout { get; set; }
+        public bool? SaveLayout()
+        {
+            if (Layout == null) return false;
+
+            SaveFileDialog saveDlg = new SaveFileDialog();
+
+            saveDlg.Filter = "GCode files (*.nc)|*.nc|All files (*.*)|*.*";
+            saveDlg.FilterIndex = 1;
+            saveDlg.RestoreDirectory = true;
+
+            Nullable<bool> result = saveDlg.ShowDialog();
+            if (result == true)
+            {
+                GCodeSetup setup = new GCodeSetup();
+                result = setup.ShowDialog();
+                Point gcodeOrigin = new Point(0, 0);
+                if (result == true)
+                {
+                    // get and process parameters
+                    GCodeParameters parameters = new GCodeParameters();
+                    parameters = (GCodeParameters)Application.Current.FindResource("GCodeSetup");
+
+                    if (parameters.OriginTypes[parameters.Origin] == "Panels Bottom Left")
+                    {
+                        double minX = Double.MaxValue;
+                        double maxY = Double.MinValue;
+                        foreach (Panel panel in Layout.Panels)
+                        {
+                            double x, y;
+                            PointCollection points = panel.Points;
+                            GeometryOperations.TopLeft(points, out x, out y);
+                            minX = Math.Min(minX, x);
+                            maxY = Math.Max(maxY, y);
+                        }
+                        gcodeOrigin = new Point(minX, maxY);
+                    }
+                    else if (parameters.OriginTypes[parameters.Origin] == "Sheet Bottom Left")
+                    {
+                        gcodeOrigin = new Point(0, 0);
+                    }
+                    else if (parameters.OriginTypes[parameters.Origin] == "Sheet Center")
+                    {
+                        gcodeOrigin = new Point(Layout.SheetWidth / 2, Layout.SheetHeight / 2);
+                    }
+                    
+                    // Do the actual output
+                    Open(saveDlg.FileName);
+                    foreach (Panel panel in Layout.Panels)
+                    {
+                        Write(panel, gcodeOrigin);
+                    }
+
+                    Close();
+                    return true;
+                }
+            }
+            return result;
         }
     }
 }
