@@ -17,6 +17,7 @@
                 TabWidth = "0.375"
                 Origin = "0" />
         <local:LayoutSetupData x:Key="LayoutSetup" sheetWidth="96" sheetHeight="48" numSheetsHorizontal="3" numSheetsVertical="2"/>
+        <local:PanelSplitSetupValues x:Key="SplitSetup" Start="0" NumTongues="3" Depth="3" />
 
     </Application.Resources>
 </Application>

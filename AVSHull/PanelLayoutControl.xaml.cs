@@ -295,12 +295,36 @@ namespace AVSHull
                 Layout.Panels.RemoveAt(m_selectedPanel);
                 InvalidateVisual();
             }
-
         }
 
         private void SplitClick(object sender, RoutedEventArgs e)
         {
+            if (m_selectedPanel != NOT_SELECTED)
+            {
+                PanelSplitSetup setup = new PanelSplitSetup();
+                bool? result = setup.ShowDialog();
 
+                if (result == true)
+                {
+                    Panel panel_1, panel_2;
+                    PanelSplitSetupValues parameters = (PanelSplitSetupValues)Application.Current.FindResource("SplitSetup");
+                    if (parameters == null) return;
+
+                    if (Layout.Panels[m_selectedPanel].Split(parameters.Start, parameters.NumTongues, parameters.Depth, out panel_1, out panel_2))
+                    {
+                        Point origin = Layout.Panels[m_selectedPanel].Origin;
+                        panel_1.Origin = origin;
+                        origin.X += parameters.Start;
+                        panel_2.Origin = origin;
+
+                        Layout.Panels.RemoveAt(m_selectedPanel);
+                        Layout.Panels.Add(panel_1);
+                        Layout.Panels.Add(panel_2);
+                        m_selectedPanel = NOT_SELECTED;
+                        InvalidateVisual();
+                    }
+                }
+            }
         }
 
     }
