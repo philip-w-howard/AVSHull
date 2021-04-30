@@ -34,4 +34,7 @@ TODO:
 		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0
 
 	Split LayoutControl into Layout and Control
+		Who defines the Layout
+		Who gets the Layout to the Control?
+		Check for consistency on where everything lives.
 	

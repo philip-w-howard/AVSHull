@@ -6,7 +6,7 @@ namespace AVSHull
 {
     interface ILayoutWriter
     {
-        PanelLayoutControl Layout { get; set; }
+        PanelLayout Layout { get; set; }
 
         bool? SaveLayout();
     }

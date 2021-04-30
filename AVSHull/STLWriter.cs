@@ -88,7 +88,7 @@ namespace AVSHull
             stlFile.WriteLine("endfacet");
         }
 
-        public PanelLayoutControl Layout { get; set; }
+        public PanelLayout Layout { get; set; }
         public bool? SaveLayout()
         {
             if (Layout == null) return false;

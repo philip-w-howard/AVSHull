@@ -72,18 +72,16 @@ namespace AVSHull
 
             if (result == true)
             {
-                LayoutSetupData parameters = new LayoutSetupData();
+                LayoutSetupData parameters = (LayoutSetupData)Application.Current.FindResource("LayoutSetup");
 
-                //LayoutSetupData params = new LayoutSetupData();
-                parameters = (LayoutSetupData)Application.Current.FindResource("LayoutSetup");
                 if (parameters != null)
                 {
-                    LayoutControl.SheetWidth = parameters.sheetWidth;
-                    LayoutControl.SheetHeight = parameters.sheetHeight;
-                    LayoutControl.SheetsWide = parameters.numSheetsHorizontal;
-                    LayoutControl.SheetsHigh = parameters.numSheetsVertical;
-                    LayoutControl.WindowWidth = Width;
-                    LayoutControl.WindowHeight = Height;
+                    LayoutControl.Layout.SheetWidth = parameters.sheetWidth;
+                    LayoutControl.Layout.SheetHeight = parameters.sheetHeight;
+                    LayoutControl.Layout.SheetsWide = parameters.numSheetsHorizontal;
+                    LayoutControl.Layout.SheetsHigh = parameters.numSheetsVertical;
+                    LayoutControl.Layout.WindowWidth = Width;
+                    LayoutControl.Layout.WindowHeight = Height;
                 }
             }
         }
@@ -114,8 +112,8 @@ namespace AVSHull
 
             Point loc = Mouse.GetPosition(LayoutControl);
             Debug.WriteLine("Raw {0}", loc);
-            loc.X /= LayoutControl.Scale;
-            loc.Y /= LayoutControl.Scale;
+            loc.X /= LayoutControl.Layout.Scale;
+            loc.Y /= LayoutControl.Layout.Scale;
             Debug.WriteLine("Scaled {0}", loc);
 
             foreach (Panel panel in m_panels)
@@ -136,7 +134,7 @@ namespace AVSHull
         public class AllPanelData
         {
             public List<List<Panel>> panelList { get; set; }
-            public PanelLayoutControl.PanelLayoutSetup panelLayout { get; set; }
+            public PanelLayout.PanelLayoutSetup panelLayout { get; set; }
         }
 
         private void openClick(object sender, RoutedEventArgs e)
@@ -161,9 +159,9 @@ namespace AVSHull
                     if (panelData.panelList.Count == 2)
                     {
                         m_panels = panelData.panelList[0];
-                        LayoutControl.Panels = panelData.panelList[1];
+                        LayoutControl.Layout.Panels = panelData.panelList[1];
                     }
-                    LayoutControl.LayoutSetup = panelData.panelLayout;
+                    LayoutControl.Layout.LayoutSetup = panelData.panelLayout;
                 }
             }
 
@@ -183,10 +181,9 @@ namespace AVSHull
                 AllPanelData panelData = new AllPanelData();
                 panelData.panelList = new List<List<Panel>>();
                 panelData.panelList.Add(m_panels);
-                panelData.panelList.Add(LayoutControl.Panels);
+                panelData.panelList.Add(LayoutControl.Layout.Panels);
 
-                //panelData.panelLayout = new PanelLayoutControl.PanelLayoutSetup();
-                panelData.panelLayout = LayoutControl.LayoutSetup;
+                panelData.panelLayout = LayoutControl.Layout.LayoutSetup;
                 System.Xml.Serialization.XmlSerializer panelWriter = new System.Xml.Serialization.XmlSerializer(typeof(AllPanelData));
 
                 using (FileStream output = new FileStream(saveDlg.FileName, FileMode.Create))
@@ -199,27 +196,27 @@ namespace AVSHull
         private void outputGcode(object sender, RoutedEventArgs e)
         {
             GCodeWriter writer = new GCodeWriter();
-            writer.Layout = LayoutControl;
+            writer.Layout = LayoutControl.Layout;
             writer.SaveLayout();
         }
 
         private void outputOffsets(object sender, RoutedEventArgs e)
         {
             OffsetWriter writer = new OffsetWriter();
-            writer.Layout = LayoutControl;
+            writer.Layout = LayoutControl.Layout;
             writer.SaveLayout();
         }
 
         private void outputSTL(object sender, RoutedEventArgs e)
         {
             STLWriter writer = new STLWriter();
-            writer.Layout = LayoutControl;
+            writer.Layout = LayoutControl.Layout;
             writer.SaveLayout();
         }
         private void outputSVG(object sender, RoutedEventArgs e)
         {
             SVGWriter writer = new SVGWriter();
-            writer.Layout = LayoutControl;
+            writer.Layout = LayoutControl.Layout;
             writer.SaveLayout();
         }
 

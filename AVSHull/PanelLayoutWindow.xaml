@@ -26,7 +26,7 @@
                         <MenuItem Header="Output S_TL file..." Click="outputSTL" />
                         <MenuItem Header="Output S_VG file..." Click="outputSVG" />
                     </MenuItem>
-                    <MenuItem Header="_Setup..." Click="setupClick"/>
+                    <MenuItem Header="_Setup" Click="setupClick"/>
                 </Menu>
             </ToolBar>
             <ToolBar Band="0" BandIndex="2">

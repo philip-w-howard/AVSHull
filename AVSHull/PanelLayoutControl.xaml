@@ -10,7 +10,7 @@
         <ContextMenu x:Key="panelMenu">
             <MenuItem Header="_Horizontal Flip" Click="HorizontalFlipClick"/>
             <MenuItem Header="_Vertical Flip" Click="VerticalFlipClick"/>
-            <MenuItem Header="_Copy" Click="CopyClick"/>
+            <MenuItem Header="_Replicate" Click="CopyClick"/>
             <MenuItem Header="_Delete" Click="DeleteClick"/>
             <MenuItem Header="_Split" Click="SplitClick" />
         </ContextMenu>

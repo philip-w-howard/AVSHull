@@ -188,8 +188,7 @@ namespace AVSHull
             gCodeFile.WriteLine("G00 Z0.25 M03");           // 0.25 inches above the surface
         }
 
-
-        private void Close()
+                private void Close()
         {
             if (gCodeFile != null)
             {
@@ -248,7 +247,8 @@ namespace AVSHull
             gCodeFile.WriteLine("G01 X{0} Y{1}", firstPoint.X, firstPoint.Y);
             gCodeFile.WriteLine("G01 Z0.25 F{0}", parameters.PlungeSpeed);  // Lift cutter
         }
-        public PanelLayoutControl Layout { get; set; }
+        public PanelLayout Layout { get; set; }
+
         public bool? SaveLayout()
         {
             if (Layout == null) return false;

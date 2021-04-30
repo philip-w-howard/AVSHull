@@ -46,7 +46,7 @@ namespace AVSHull
 
             svgFile.WriteLine("\" style=\"fill:none;stroke:black;stroke-width:1\" />");
         }
-        public PanelLayoutControl Layout { get; set; }
+        public PanelLayout Layout { get; set; }
 
         public bool? SaveLayout()
         {
