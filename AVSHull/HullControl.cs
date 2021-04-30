@@ -33,13 +33,13 @@ namespace AVSHull
         private bool m_dragging = false;
         private Point m_startDrag = new Point(0, 0);
         private Point m_lastDrag = new Point(0, 0);
+        private bool m_movingBulkhead = false;
 
         public HullControl()
         {
             m_editableHull = null;
             m_bulkheadGeometry = new List<Geometry>();
             m_handles = new List<RectangleGeometry>();
-            Debug.WriteLine("Constructed with Selected Bulkhead: {0}", m_selectedBulkhead);
         }
 
         public EditableHull editableHull
@@ -186,6 +186,7 @@ namespace AVSHull
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
             m_RecreateHandles = false;
+            m_movingBulkhead = false;
 
             Point loc = e.GetPosition(this);
 
@@ -209,7 +210,17 @@ namespace AVSHull
                         m_selectedBulkhead = bulk;
                         m_handles.Clear();
                     }
-
+                    else
+                    {
+                        bool? allowMoves = (bool?)this.FindResource("AllowBulkheadMoves");
+                        Debug.WriteLine("Clicked bulkhead {0} movable: {1}", m_selectedBulkhead, allowMoves);
+                        if (allowMoves == true)
+                        {
+                            m_movingBulkhead = true;
+                            m_startDrag = loc;
+                            m_lastDrag = loc;
+                        }
+                    }
                     Debug.WriteLine("Selected Bulkhead: {0}", m_selectedBulkhead);
                     if (m_selectedBulkhead != NOT_SELECTED)
                     {
@@ -300,6 +311,17 @@ namespace AVSHull
                     geom.Transform = m_xform;
 
                     m_handles[m_draggingHandle] = geom;
+                    InvalidateVisual();
+                }
+                else if (m_movingBulkhead && m_selectedBulkhead != NOT_SELECTED && m_editableHull.Bulkheads[m_selectedBulkhead].type != Bulkhead.BulkheadType.BOW &&
+                    (perspective == PerspectiveType.TOP || perspective == PerspectiveType.SIDE) )
+                {
+                    double deltaX = (loc.X - m_lastDrag.X) / m_scale;
+                    double deltaY = (loc.Y - m_lastDrag.Y) / m_scale;
+                    m_lastDrag = loc;
+                    m_editableHull.UpdateBulkheadPoint(m_selectedBulkhead, NOT_SELECTED, 0, 0, deltaX);
+                    Debug.WriteLine("Moved bulkhead {0} by {1}", m_selectedBulkhead, deltaX);
+
                     InvalidateVisual();
                 }
             }

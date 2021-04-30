@@ -241,7 +241,13 @@ namespace AVSHull
 
         public void UpdateBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
         {
-            m_BaseHull.Bulkheads[bulkhead].UpdateBulkheadPoint(chine, x, y, z);
+            if (chine < 0 && m_BaseHull.Bulkheads[bulkhead].type != Bulkhead.BulkheadType.BOW)
+            {
+                // assume we are shifting the bulkhead in the Z direction
+                m_BaseHull.Bulkheads[bulkhead].MoveZ(z);
+            }
+            else
+                m_BaseHull.Bulkheads[bulkhead].UpdateBulkheadPoint(chine, x, y, z);
         }
 
         //m_selectedBulkhead, m_draggingHandle, x, y, z);

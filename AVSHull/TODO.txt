@@ -39,4 +39,4 @@ TODO:
 	Split panels: small depth:height ratio causes strange split
 	Split: use actual arcs instead of simulated ones.
 
-	rescale panellayout when window changes size.
+	Properly panelize a transom (non-vertical bulkhead)

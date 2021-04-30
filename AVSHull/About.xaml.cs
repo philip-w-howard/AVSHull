@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +21,7 @@ namespace AVSHull
         public About()
         {
             InitializeComponent();
+            Version.Content = Assembly.GetExecutingAssembly().GetName().Version;
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)

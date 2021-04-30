@@ -288,5 +288,16 @@ namespace AVSHull
         {
             return basePoint.Z + (newPoint.Y - basePoint.Y) * Math.Cos(m_transomAngle) / Math.Sin(m_transomAngle);
         }
+
+        public void MoveZ(double deltaZ)
+        {
+            for (int ii=0; ii<m_points.Count; ii++)
+            {
+                Point3D point = m_points[ii];
+                point.Z += deltaZ;
+                m_points[ii] = point;
+            }
+            Notify("Bulkhead");
+        }
     }
  }

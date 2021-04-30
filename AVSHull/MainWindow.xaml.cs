@@ -28,10 +28,7 @@ namespace AVSHull
     {
         Hull myHull;
 
-        public Version CurrentVersion
-        {
-            get { return GetVersion();  }
-        }
+        //public bool AllowBulkheadMoves;
 
         public MainWindow()
         {
@@ -39,8 +36,7 @@ namespace AVSHull
             myHull = new Hull();
             myHull.PropertyChanged += hull_PropertyChanged;
 
-            Title = "AVS Hull " + GetVersion();
-            this.Resources["Version"] = GetVersion();
+            Title = "AVS Hull";
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -253,24 +249,32 @@ namespace AVSHull
         {
             About setup = new About();
             setup.Owner = this;
-            setup.Resources["aboutVersion"] = GetVersion();
             setup.ShowDialog();
         }
 
-        private Version GetVersion()
+        //private Version GetVersion()
+        //{
+        //    //if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+        //    //{
+        //    //    return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
+        //    //}
+        //    //try
+        //    //{
+        //    //    return ApplicationDeployment.CurrentDeployment.CurrentVersion;
+        //    //}
+        //    //catch (Exception)
+        //    {
+        //        return Assembly.GetExecutingAssembly().GetName().Version;
+        //    }
+        //}
+
+        private void MoveChecked(object sender, RoutedEventArgs e)
         {
-            //if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
-            //{
-            //    return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
-            //}
-            //try
-            //{
-            //    return ApplicationDeployment.CurrentDeployment.CurrentVersion;
-            //}
-            //catch (Exception)
-            {
-                return Assembly.GetExecutingAssembly().GetName().Version;
-            }
+            if (BulkheadMoveCheckbox.IsChecked == true)
+                Debug.WriteLine("Allow moves");
+            else
+                Debug.WriteLine("Don't allow moves");
+            Debug.WriteLine("Resource: {0}", this.FindResource("AllowBulkheadMoves"));
         }
     }
 }
