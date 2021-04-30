@@ -18,11 +18,13 @@ HullControl
 
 TODO:
 	
-	Split panels
 	Output panels
 		offsets: use spacing
 	Add bulkhead
 	Move bulkhead
+		Context menu in side/top views?
+		Drag when not on handle?
+
 	Change number of chines
 
 	Place pop-ups in center of parent. 
@@ -32,4 +34,9 @@ TODO:
 		
 	UI Standards:
 		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0
-	Create hull from scratch	
+	Create hull from scratch
+
+	Split panels: small depth:height ratio causes strange split
+	Split: use actual arcs instead of simulated ones.
+
+	rescale panellayout when window changes size.

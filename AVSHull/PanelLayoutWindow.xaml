@@ -10,6 +10,7 @@
         Height="{Binding Source={x:Static properties:Settings.Default}, Path=LayoutHeight, Mode=TwoWay}" 
         Width="{Binding Source={x:Static properties:Settings.Default}, Path=LayoutWidth, Mode=TwoWay}" 
         Loaded="WindowLoaded"
+        SizeChanged="WindowResized"
         >
     <Window.Resources>
         

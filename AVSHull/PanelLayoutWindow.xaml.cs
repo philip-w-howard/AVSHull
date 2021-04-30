@@ -230,5 +230,15 @@ namespace AVSHull
         {
             GetLayoutSetup();
         }
+
+        private void WindowResized(object sender, SizeChangedEventArgs e)
+        {
+            InvalidateMeasure();
+            InvalidateVisual();
+            LayoutControl.Layout.WindowWidth = Width;
+            LayoutControl.Layout.WindowHeight = Height;
+
+            LayoutControl.InvalidateMeasure();
+        }
     }
 }

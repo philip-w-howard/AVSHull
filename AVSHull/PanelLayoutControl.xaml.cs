@@ -72,7 +72,7 @@ namespace AVSHull
                 case "Scale":   // not RecomputeScale
                 case "LayoutSetup":
                     InvalidateMeasure();
-                    InvalidateVisual();
+                    //InvalidateVisual();
                     break;
                 case "Panels":
                     InvalidateVisual();
