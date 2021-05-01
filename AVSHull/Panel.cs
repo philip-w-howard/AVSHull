@@ -55,6 +55,18 @@ namespace AVSHull
             }
             ShiftTo(0, 0);
         }
+        public Panel(Bulkhead bulk)
+        {
+            double scaleFactor = Math.Sin(bulk.TransomAngle);
+            m_panelPoints = new PointCollection();
+
+            foreach (Point3D point in bulk.Points)
+            {
+                // FIXTHIS: only works for VERTICAL bulkheads
+                m_panelPoints.Add(new Point(point.X, point.Y/scaleFactor));
+            }
+            ShiftTo(0, 0);
+        }
         public Panel(PointCollection points)
         {
             m_panelPoints = points.Clone();

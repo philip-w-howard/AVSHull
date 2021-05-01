@@ -21,10 +21,7 @@ TODO:
 	Output panels
 		offsets: use spacing
 	Add bulkhead
-	Move bulkhead
-		Context menu in side/top views?
-		Drag when not on handle?
-
+	
 	Change number of chines
 
 	Place pop-ups in center of parent. 

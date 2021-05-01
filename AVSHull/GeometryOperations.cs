@@ -150,6 +150,15 @@ namespace AVSHull
             leftAngle = 2 * Math.PI - rightAngle;
         }
 
+        // Compute angle P1, P2, P3
+        public static double ComputeAngle(Point3D p1, Point3D p2, Point3D p3)
+        {
+            Vector3D ab = new Vector3D(p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
+            Vector3D bc = new Vector3D(p3.X - p2.X, p3.Y - p2.Y, p3.Z - p2.Z);
+
+            return Vector3D.AngleBetween(ab, bc);
+        }
+
         // Compute the angles going all the way around a closed shape defined by points.
         // leftAngle is the sum of the angles on the left hand side
         // rightAngle is the sum of the angles on the right hand side

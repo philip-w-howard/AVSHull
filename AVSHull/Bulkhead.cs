@@ -125,9 +125,16 @@ namespace AVSHull
                 }
 
                 if (delta_z == 0)
+                {
                     type = BulkheadType.VERTICAL;
+                    m_transomAngle = Math.PI / 2;
+                }
                 else
                     m_transomAngle = Math.Atan2(delta_y, delta_z);
+            }
+            else if (type == BulkheadType.VERTICAL)
+            {
+                m_transomAngle = Math.PI / 2;
             }
         }
 

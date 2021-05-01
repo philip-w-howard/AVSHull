@@ -43,7 +43,7 @@ namespace AVSHull
                 {
                     if (bulk.type != Bulkhead.BulkheadType.BOW)
                     {
-                        Panel p = new Panel(bulk.Points);
+                        Panel p = new Panel(bulk);
                         p.name = "Bulkhead " + bulkheadIndex;
                         bulkheadIndex++;
                         m_panels.Add(p);
