@@ -19,6 +19,7 @@
                     <MenuItem Header="_File">
                         <MenuItem Header="_Open" Click="openClick"/>
                         <MenuItem Header="_Save" Click="saveClick"/>
+                        <MenuItem Header="_Create" Click="createClick" />
                         <MenuItem Header="_Import Carlson HUL file" Click="importClick"/>
                     </MenuItem>
                     <MenuItem Header="_Tools">
@@ -26,7 +27,7 @@
                         <MenuItem Name ="ResizeMenu" Header="_Resize" Click="ResizeClick" />
                         <MenuItem Header="_Change number of chines" Click="ChangeChinesClick" />
                         <CheckBox Name="BulkheadMoveCheckbox" Content="_Allow bulkhead movement" Checked="MoveChecked" Unchecked="MoveChecked"
-                                  DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding AllowBulkheadMoves, Mode=TwoWay}" />
+                                  DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding AllowBulkheadMoves, Mode=TwoWay }" />
                     </MenuItem>
                     <MenuItem Header="_Help">
                         <MenuItem Header="_About" Click="AboutClick" />
@@ -82,7 +83,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label>Chines:</Label>
-                            <TextBox x:Name="NumChines" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NumChines, Mode=TwoWay}" />
+                            <TextBox x:Name="NumChines" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NumChines, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>

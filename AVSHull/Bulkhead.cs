@@ -108,6 +108,50 @@ namespace AVSHull
                 }
             }
         }
+
+        public Bulkhead(Point3DCollection points, BulkheadType type)
+        {
+            m_points = new Point3DCollection();
+            this.type = type;
+
+            if (Math.Abs(points[0].X) < NEAR_ZERO)
+            {
+                // Bottom is on center-line
+                for (int ii = points.Count - 1; ii > 0; ii--)
+                {
+                    m_points.Add(points[ii]);
+                }
+
+                // Force center to zero
+                m_points.Add(new Point3D(0, points[0].Y, points[0].Z));
+
+                // Insert other half of hull
+                for (int ii = 1; ii < points.Count; ii++)
+                {
+                    Point3D point = new Point3D(-points[ii].X, points[ii].Y, points[ii].Z);
+                    m_points.Add(point);
+                }
+            }
+            else
+            {
+                // flat floor: bottom is not on center-line
+                for (int ii = points.Count - 1; ii >= 0; ii--)
+                {
+                    m_points.Add(points[ii]);
+                }
+
+                // Insert other half of hull
+                for (int ii = 1; ii < points.Count; ii++)
+                {
+                    Point3D point = new Point3D(-points[ii].X, points[ii].Y, points[ii].Z);
+                    m_points.Add(point);
+                }
+            }
+
+            ComputeAngle();
+            StraightenBulkhead();
+        }
+
         public void LoadFromHullFile(StreamReader file, int numChines, BulkheadType type)
         {
             this.type = type;

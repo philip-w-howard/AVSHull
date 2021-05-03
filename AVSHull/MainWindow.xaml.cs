@@ -111,14 +111,12 @@ namespace AVSHull
 
             if (openFileDialog.ShowDialog() == true)
             {
-                if (myHull == null) myHull = new Hull();
                 myHull.LoadFromHullFile(openFileDialog.FileName);
 
                 NumChines.Text = ((myHull.Bulkheads[0].NumChines) / 2).ToString();
 
                 UpdateViews();
             }
-
         }
 
         private void PanelsClick(object sender, RoutedEventArgs e)
@@ -287,6 +285,25 @@ namespace AVSHull
         {
             UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
             myHull.ChangeChines(values.NumChines);
+        }
+
+        private void createClick(object sender, RoutedEventArgs e)
+        {
+            CreateHullDialog createHullDialog = new CreateHullDialog();
+
+            if (createHullDialog.ShowDialog() == true)
+            {
+                CreateHullData data = (CreateHullData)this.FindResource("CreateHullData");
+                if (data != null)
+                {
+                    myHull = new Hull(data);
+                    myHull.PropertyChanged += hull_PropertyChanged;
+                    myHull.SetBulkheadHandler();
+
+                    UpdateViews();
+                }
+            }
+
         }
     }
 }

@@ -212,7 +212,8 @@ namespace AVSHull
                     }
                     else
                     {
-                        bool? allowMoves = (bool?)this.FindResource("AllowBulkheadMoves");
+                        UI_Params setup = (UI_Params)this.FindResource("Curr_UI_Params");
+                        bool? allowMoves = setup.AllowBulkheadMoves;
                         Debug.WriteLine("Clicked bulkhead {0} movable: {1}", m_selectedBulkhead, allowMoves);
                         if (allowMoves == true)
                         {
