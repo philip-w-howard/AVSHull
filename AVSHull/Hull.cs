@@ -141,6 +141,15 @@ namespace AVSHull
             }
         }
 
+        public void ChangeChines(int numChines)
+        {
+            for (int ii = 0; ii < Bulkheads.Count; ii++)
+            {
+                Bulkheads[ii] = new Bulkhead(Bulkheads[ii], numChines);
+            }
+
+            Notify("HullData");
+        }
         //*********************************************
         // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;

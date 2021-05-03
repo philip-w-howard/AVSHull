@@ -19,7 +19,8 @@
                 Origin = "0" />
         <local:LayoutSetupData x:Key="LayoutSetup" sheetWidth="96" sheetHeight="48" numSheetsHorizontal="3" numSheetsVertical="2"/>
         <local:PanelSplitSetupValues x:Key="SplitSetup" Start="0" NumTongues="3" Depth="3" />
+        <local:UI_Params x:Key="Curr_UI_Params" AllowBulkheadMoves="false" NumChines="5" />
 
-        <sys:Boolean x:Key="AllowBulkheadMoves">True</sys:Boolean>
+
     </Application.Resources>
 </Application>

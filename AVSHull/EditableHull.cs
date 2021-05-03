@@ -234,7 +234,7 @@ namespace AVSHull
                     chine_data.Add(Bulkheads[bulkhead].GetPoint(chine));
                 }
                 Splines spline = new Splines(chine_data, Splines.RELAXED);
-                spline.GetPoints(points_per_chine, newChine);
+                newChine = spline.GetPoints(points_per_chine);
                 Chines.Add(newChine);
             }
         }

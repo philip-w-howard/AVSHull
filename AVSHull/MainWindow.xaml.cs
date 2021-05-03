@@ -75,6 +75,7 @@ namespace AVSHull
                     UpdateViews();
 
                     PanelsMenu.IsEnabled = true;
+                    NumChines.Text = ((myHull.Bulkheads[0].NumChines)/2).ToString();
                 }
             }
         }
@@ -112,6 +113,8 @@ namespace AVSHull
             {
                 if (myHull == null) myHull = new Hull();
                 myHull.LoadFromHullFile(openFileDialog.FileName);
+
+                NumChines.Text = ((myHull.Bulkheads[0].NumChines) / 2).ToString();
 
                 UpdateViews();
             }
@@ -274,7 +277,16 @@ namespace AVSHull
                 Debug.WriteLine("Allow moves");
             else
                 Debug.WriteLine("Don't allow moves");
-            Debug.WriteLine("Resource: {0}", this.FindResource("AllowBulkheadMoves"));
+
+            UI_Params ui_params;
+            ui_params = (UI_Params)this.FindResource("Curr_UI_Params");
+            Debug.WriteLine("Resource: {0}", ui_params.AllowBulkheadMoves);
+        }
+
+        private void ChangeChinesClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            myHull.ChangeChines(values.NumChines);
         }
     }
 }

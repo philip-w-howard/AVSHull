@@ -35,6 +35,79 @@ namespace AVSHull
             m_points = new Point3DCollection();
         }
 
+        public Bulkhead(Bulkhead original, int num_chines)
+        {
+            const int PRECISION = 10;
+            m_points = new Point3DCollection();
+            Point3DCollection tempPoints = new Point3DCollection();
+
+            if (original.NumChines % 2 == 1)
+            {
+                // centerline bulkhead
+                int useable_chines = original.NumChines / 2 + 1;
+
+                for (int ii = 0; ii < useable_chines; ii++)
+                {
+                    tempPoints.Add(original.Points[ii]);
+                }
+
+                Splines shape = new Splines(tempPoints, Splines.RELAXED);
+                Point3DCollection outline = shape.GetPoints((num_chines + 1) * PRECISION);
+
+                int index = 0;
+                for (int ii = 0; ii < num_chines; ii++)
+                {
+                    m_points.Add(outline[index]);
+                    index += PRECISION;
+                }
+
+                // Add the center point
+                m_points.Add(original.Points[original.NumChines / 2]);
+
+                // Add the other half
+                index = PRECISION * num_chines;
+                for (int ii = 0; ii < num_chines; ii++)
+                {
+                    index -= PRECISION;
+                    Point3D point = outline[index];
+                    point.X = -point.X;
+                    m_points.Add(point);
+                }
+            }
+            else
+            {
+                // flat floor bulkhead
+                int useable_chines = original.NumChines / 2 ;
+
+                for (int ii = 0; ii < useable_chines; ii++)
+                {
+                    tempPoints.Add(original.Points[ii]);
+                }
+
+                Splines shape = new Splines(tempPoints, Splines.RELAXED);
+                Point3DCollection outline = shape.GetPoints((num_chines + 1) * PRECISION);
+
+                int index = 0;
+                for (int ii = 0; ii < num_chines; ii++)
+                {
+                    m_points.Add(outline[index]);
+                    index += PRECISION;
+                }
+
+                // Add the center point
+                m_points.Add(original.Points[original.NumChines / 2]);
+
+                // Add the other half
+                index = PRECISION * num_chines;
+                for (int ii = 0; ii < num_chines; ii++)
+                {
+                    index -= PRECISION;
+                    Point3D point = outline[index];
+                    point.X = -point.X;
+                    m_points.Add(point);
+                }
+            }
+        }
         public void LoadFromHullFile(StreamReader file, int numChines, BulkheadType type)
         {
             this.type = type;
