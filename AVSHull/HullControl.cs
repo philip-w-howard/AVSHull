@@ -24,7 +24,8 @@ namespace AVSHull
         public bool IsEditable = false;
         public PerspectiveType perspective = PerspectiveType.PERSPECTIVE;
         private bool m_RecreateHandles = false;
-
+        private bool m_InsertBulkhead = false;
+ 
         private List<Geometry> m_bulkheadGeometry;
         private List<RectangleGeometry> m_handles;
 
@@ -195,7 +196,15 @@ namespace AVSHull
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     m_draggingHandle = HandleClicked(loc);
-                    if (m_draggingHandle != NOT_SELECTED)
+                    if (m_InsertBulkhead)
+                    {
+                        if (perspective == PerspectiveType.SIDE || perspective == PerspectiveType.TOP)
+                        {
+                            double Z = (loc.X - m_editableHull.Bulkheads[0].Points[0].Z) / m_scale;
+                            m_editableHull.InsertBulkhead(Z);
+                        }
+                    }
+                    else if (m_draggingHandle != NOT_SELECTED)
                     {
                         m_dragging = true;
                         m_startDrag = loc;
@@ -359,5 +368,10 @@ namespace AVSHull
             return true;
         }
 
+        public void InsertBulkhead(double Z)
+        {
+            m_editableHull.InsertBulkhead(Z);
+            //m_InsertBulkhead = true;
+        }
     }
 }

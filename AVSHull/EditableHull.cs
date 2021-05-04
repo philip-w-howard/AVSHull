@@ -217,26 +217,31 @@ namespace AVSHull
             }
         }
 
-        private void PrepareChines(int points_per_chine)
+        private List<Point3DCollection> PrepareChines(Hull hull, int points_per_chine)
         {
-            int nChines = Bulkheads[0].NumChines;
-
-            Debug.WriteLine("Preparing chings");
-            Chines = new List<Point3DCollection>();
+            int nChines = hull.Bulkheads[0].NumChines;
+            List<Point3DCollection> chines = new List<Point3DCollection>();
 
             for (int chine = 0; chine < nChines; chine++)
             {
                 Point3DCollection newChine = new Point3DCollection(points_per_chine);
                 Point3DCollection chine_data = new Point3DCollection(Bulkheads.Count);
 
-                for (int bulkhead = 0; bulkhead < Bulkheads.Count; bulkhead++)
+                for (int bulkhead = 0; bulkhead < hull.Bulkheads.Count; bulkhead++)
                 {
-                    chine_data.Add(Bulkheads[bulkhead].GetPoint(chine));
+                    chine_data.Add(hull.Bulkheads[bulkhead].GetPoint(chine));
                 }
                 Splines spline = new Splines(chine_data, Splines.RELAXED);
                 newChine = spline.GetPoints(points_per_chine);
-                Chines.Add(newChine);
+                chines.Add(newChine);
             }
+
+            return chines;
+        }
+
+        private void PrepareChines(int points_per_chine)
+        {
+            Chines = PrepareChines(this, points_per_chine);
         }
 
         public void UpdateBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
@@ -255,6 +260,39 @@ namespace AVSHull
             Bulkheads.RemoveAt(index);
             m_BaseHull.Bulkheads.RemoveAt(index);
 
+            m_BaseHull.Notify("HullData");
+        }
+
+        public void InsertBulkhead(double Z)
+        {
+            int num_chines = Bulkheads[0].NumChines;
+            if (num_chines % 2 == 1)
+                num_chines = num_chines / 2 + 1;
+            else
+                num_chines /= 2;
+
+            // get points for new bulkhead
+            // First, create chines for base hull
+            List<Point3DCollection> chines = PrepareChines(m_BaseHull, POINTS_PER_CHINE);
+            Point3DCollection points = new Point3DCollection();
+            for (int ii=num_chines-1; ii>=0; ii--)
+            {
+                Point3D point = GeometryOperations.InterpolateFromZ(chines[ii], Z);
+                points.Add(point);
+            }
+
+            // figure out where it goes
+            int index = 0;
+            for (int ii = 0; ii < m_BaseHull.Bulkheads.Count; ii++)
+            {
+                if (m_BaseHull.Bulkheads[ii].GetPoint(0).Z > Z)
+                {
+                    index = ii;
+                    break;
+                }
+            }
+
+            m_BaseHull.Bulkheads.Insert(index, new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL));
             m_BaseHull.Notify("HullData");
         }
         //m_selectedBulkhead, m_draggingHandle, x, y, z);

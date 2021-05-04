@@ -85,9 +85,15 @@
                             <Button Click="RotateClick">-Y</Button>
                             <Button Click="RotateClick">-Z</Button>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label>Chines:</Label>
-                            <TextBox x:Name="NumChines" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NumChines, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Label>Chines:</Label>
+                                <TextBox x:Name="NumChines" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NumChines, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label>New Bulkhead Loc:</Label>
+                                <TextBox x:Name="NewBulkheadLoc" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NewBulkheadLoc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>

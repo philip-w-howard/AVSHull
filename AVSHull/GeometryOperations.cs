@@ -527,5 +527,63 @@ namespace AVSHull
             points.Add(new Point(center.X + Math.Cos(endAngle) * radius, center.Y + Math.Sin(endAngle) * radius));
         }
 
+        static public Point3D InterpolateFromZ(Point3DCollection points, double Z)
+        {
+            // FIX THIS: need to have at least two points
+
+            Point3D left = points[0];
+            Point3D right = points[1];
+
+            if (left.Z < Z)
+            {
+                // assume points are increasing
+                foreach (Point3D point in points)
+                {
+                    if (point.Z >= Z)
+                    {
+                        right = point;
+                        break;
+                    }
+                    else
+                    {
+                        left = point;
+                    }
+                }
+                // FIX THIS: Z was not in range
+            }
+            else if (left.Z > Z)
+            {
+                // assume points are decreasing
+                foreach (Point3D point in points)
+                {
+                    if (point.Z <= Z)
+                    {
+                        right = point;
+                        break;
+                    }
+                    else
+                    {
+                        left = point;
+                    }
+                }
+                // FIX THIS: Z was not in range
+            }
+            else
+            {
+                // landed exactly on the point
+                return points[0];
+            }
+
+            // Need to interpolate
+            if (left.Z == Z) return left;
+            if (right.Z == Z) return right;
+
+            double ratio = Math.Abs((left.Z - Z) / (Z - right.Z));
+
+            double X = left.X + ratio * (right.X - left.X);
+            double Y = left.Y + ratio * (right.Y - left.Y);
+
+            return new Point3D(X, Y, Z);
+        }
     }
 }

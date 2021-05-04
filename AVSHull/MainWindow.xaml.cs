@@ -296,7 +296,8 @@ namespace AVSHull
 
         private void InsertClick(object sender, RoutedEventArgs e)
         {
-
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            PerspectiveView.InsertBulkhead(values.NewBulkheadLoc);
         }
         private void DeleteClick(object sender, RoutedEventArgs e)
         {

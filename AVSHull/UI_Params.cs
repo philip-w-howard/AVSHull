@@ -28,6 +28,13 @@ namespace AVSHull
             set { _numChines = value; Notify("NumChines"); }
         }
 
+        private double _newBulkheadLoc = 40.0;
+        public double NewBulkheadLoc
+        {
+            get { return _newBulkheadLoc; }
+            set { _newBulkheadLoc = value; Notify("NewBulkheadLoc"); }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void Notify(string propName)
         {
