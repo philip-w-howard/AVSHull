@@ -48,7 +48,7 @@ namespace AVSHull
             set 
             { 
                 m_editableHull = value;
-                m_editableHull.PropertyChanged += hull_PropertyChanged;
+                //m_editableHull.PropertyChanged += hull_PropertyChanged;
                 CreateHandles();
             }
         }
@@ -192,44 +192,54 @@ namespace AVSHull
 
             if (IsEditable)
             {
-                m_draggingHandle = HandleClicked(loc);
-                if (m_draggingHandle != NOT_SELECTED)
+                if (e.LeftButton == MouseButtonState.Pressed)
                 {
-                    m_dragging = true;
-                    m_startDrag = loc;
-                    m_lastDrag = loc;
-
-                    Debug.WriteLine("clicked handle {0}", m_draggingHandle);
-                }
-                else
-                {
-                    m_dragging = false;
-                    int bulk = BulkheadClicked(loc);
-                    if (bulk != m_selectedBulkhead)
+                    m_draggingHandle = HandleClicked(loc);
+                    if (m_draggingHandle != NOT_SELECTED)
                     {
-                        m_selectedBulkhead = bulk;
-                        m_handles.Clear();
+                        m_dragging = true;
+                        m_startDrag = loc;
+                        m_lastDrag = loc;
+
+                        Debug.WriteLine("clicked handle {0}", m_draggingHandle);
                     }
                     else
                     {
-                        UI_Params setup = (UI_Params)this.FindResource("Curr_UI_Params");
-                        bool? allowMoves = setup.AllowBulkheadMoves;
-                        Debug.WriteLine("Clicked bulkhead {0} movable: {1}", m_selectedBulkhead, allowMoves);
-                        if (allowMoves == true)
+                        m_dragging = false;
+                        int bulk = BulkheadClicked(loc);
+                        if (bulk != m_selectedBulkhead)
                         {
-                            m_movingBulkhead = true;
-                            m_startDrag = loc;
-                            m_lastDrag = loc;
+                            m_selectedBulkhead = bulk;
+                            m_handles.Clear();
+                        }
+                        else
+                        {
+                            UI_Params setup = (UI_Params)this.FindResource("Curr_UI_Params");
+                            bool? allowMoves = setup.AllowBulkheadMoves;
+                            Debug.WriteLine("Clicked bulkhead {0} movable: {1}", m_selectedBulkhead, allowMoves);
+                            if (allowMoves == true)
+                            {
+                                m_movingBulkhead = true;
+                                m_startDrag = loc;
+                                m_lastDrag = loc;
+                            }
+                        }
+                        Debug.WriteLine("Selected Bulkhead: {0}", m_selectedBulkhead);
+                        if (m_selectedBulkhead != NOT_SELECTED)
+                        {
+                            CreateHandles();
+                            InvalidateVisual();
                         }
                     }
-                    Debug.WriteLine("Selected Bulkhead: {0}", m_selectedBulkhead);
-                    if (m_selectedBulkhead != NOT_SELECTED)
+                }
+                else if (e.RightButton == MouseButtonState.Pressed)
+                {
+                    ContextMenu cm = this.FindResource("hullEditMenu") as ContextMenu;
+                    if (cm != null)
                     {
-                        CreateHandles();
-                        InvalidateVisual();
+                        cm.IsOpen = true;
                     }
                 }
-
                 e.Handled = true;
             }
         }
@@ -332,10 +342,22 @@ namespace AVSHull
             Debug.WriteLine("Control PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
-                Debug.WriteLine("Update chines");
+                Debug.WriteLine("hull_PropertyChanged");
                 CreateHandles();
                 InvalidateVisual();
             }
         }
+
+        public bool DeleteSelectedBulkhead()
+        {
+            if (m_selectedBulkhead == NOT_SELECTED) return false;
+
+            m_editableHull.DeleteBulkhead(m_selectedBulkhead);
+            CreateHandles();
+            InvalidateVisual();
+            
+            return true;
+        }
+
     }
 }

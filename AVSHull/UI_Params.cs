@@ -8,18 +8,20 @@ namespace AVSHull
     class UI_Params : INotifyPropertyChanged
     {
         private bool? _allowBulkheadMoves = false;
-        public bool? AllowBulkheadMoves 
+        public bool? AllowBulkheadMoves
         {
             get { return _allowBulkheadMoves; }
             set { _allowBulkheadMoves = value; Notify("AllowBulkheadMoves"); }
         }
 
-        private int _numChines = 5;
-
-        public UI_Params()
+        private bool? _insertBulkhead = false;
+        public bool? InsertBulkhead
         {
+            get { return _insertBulkhead; }
+            set { _insertBulkhead = value; Notify("InsertBulkhead"); }
         }
 
+        private int _numChines = 5;
         public int NumChines
         {
             get { return _numChines; }

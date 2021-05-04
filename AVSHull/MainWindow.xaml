@@ -12,6 +12,15 @@
         Height="{Binding Source={x:Static properties:Settings.Default}, Path=MainHeight, Mode=TwoWay}" 
         Width="{Binding Source={x:Static properties:Settings.Default}, Path=MainWidth, Mode=TwoWay}" 
         Closed="Window_Closed">
+    <Window.Resources>
+        <ContextMenu x:Key="hullEditMenu">
+            <CheckBox Content="_Allow bulkhead movement" DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding AllowBulkheadMoves, Mode=TwoWay }" />
+            <!--<CheckBox Content="_Insert bulkhead" DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding InsertBulkhead, Mode=TwoWay }" />-->
+            <MenuItem Header="_Insert Bulkhead" Click="InsertClick" />
+            <MenuItem x:Name="DeleteBulkheadItem" Header="_Delete Bulkhead" Click="DeleteClick" />
+        </ContextMenu>
+
+    </Window.Resources>
     <DockPanel>
         <ToolBarTray Background="White" DockPanel.Dock="Top">
             <ToolBar Band="0 " BandIndex="1">
@@ -26,16 +35,11 @@
                         <MenuItem Name="PanelsMenu" Header="_Panels" Click="PanelsClick" />
                         <MenuItem Name ="ResizeMenu" Header="_Resize" Click="ResizeClick" />
                         <MenuItem Header="_Change number of chines" Click="ChangeChinesClick" />
-                        <CheckBox Name="BulkheadMoveCheckbox" Content="_Allow bulkhead movement" Checked="MoveChecked" Unchecked="MoveChecked"
-                                  DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding AllowBulkheadMoves, Mode=TwoWay }" />
                     </MenuItem>
                     <MenuItem Header="_Help">
                         <MenuItem Header="_About" Click="AboutClick" />
                     </MenuItem>
                 </Menu>
-            </ToolBar>
-            <ToolBar Band="0" BandIndex="2">
-
             </ToolBar>
         </ToolBarTray>
 

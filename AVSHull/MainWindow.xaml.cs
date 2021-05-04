@@ -241,7 +241,7 @@ namespace AVSHull
             Debug.WriteLine("PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
-                Debug.WriteLine("Update chines");
+                Debug.WriteLine("MainWindow.hull_PropertyChanged");
                 UpdateViews();
             }
         }
@@ -269,18 +269,6 @@ namespace AVSHull
         //    }
         //}
 
-        private void MoveChecked(object sender, RoutedEventArgs e)
-        {
-            if (BulkheadMoveCheckbox.IsChecked == true)
-                Debug.WriteLine("Allow moves");
-            else
-                Debug.WriteLine("Don't allow moves");
-
-            UI_Params ui_params;
-            ui_params = (UI_Params)this.FindResource("Curr_UI_Params");
-            Debug.WriteLine("Resource: {0}", ui_params.AllowBulkheadMoves);
-        }
-
         private void ChangeChinesClick(object sender, RoutedEventArgs e)
         {
             UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
@@ -304,6 +292,15 @@ namespace AVSHull
                 }
             }
 
+        }
+
+        private void InsertClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void DeleteClick(object sender, RoutedEventArgs e)
+        {
+            PerspectiveView.DeleteSelectedBulkhead();
         }
     }
 }

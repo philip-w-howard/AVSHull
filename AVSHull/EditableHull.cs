@@ -250,6 +250,13 @@ namespace AVSHull
                 m_BaseHull.Bulkheads[bulkhead].UpdateBulkheadPoint(chine, x, y, z);
         }
 
+        public void DeleteBulkhead(int index)
+        {
+            Bulkheads.RemoveAt(index);
+            m_BaseHull.Bulkheads.RemoveAt(index);
+
+            m_BaseHull.Notify("HullData");
+        }
         //m_selectedBulkhead, m_draggingHandle, x, y, z);
         //*************************************************************
         // INotifyPropertyChanged implementation

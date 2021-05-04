@@ -22,8 +22,6 @@ TODO:
 		offsets: use spacing
 	Add bulkhead
 	
-	Change number of chines
-
 	Place pop-ups in center of parent. 
 		See about box for sample
 			<Window> WindowStartupLocation="CenterOwner"
@@ -32,6 +30,7 @@ TODO:
 	UI Standards:
 		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0
 	Create hull from scratch
+		Do something other than straight lines for bulkheads
 
 	Split panels: small depth:height ratio causes strange split
 	Split: use actual arcs instead of simulated ones.
