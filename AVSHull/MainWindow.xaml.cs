@@ -28,10 +28,7 @@ namespace AVSHull
     {
         Hull myHull;
 
-        public Version CurrentVersion
-        {
-            get { return GetVersion();  }
-        }
+        //public bool AllowBulkheadMoves;
 
         public MainWindow()
         {
@@ -39,8 +36,7 @@ namespace AVSHull
             myHull = new Hull();
             myHull.PropertyChanged += hull_PropertyChanged;
 
-            Title = "AVS Hull " + GetVersion();
-            this.Resources["Version"] = GetVersion();
+            Title = "AVS Hull";
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -79,6 +75,7 @@ namespace AVSHull
                     UpdateViews();
 
                     PanelsMenu.IsEnabled = true;
+                    NumChines.Text = ((myHull.Bulkheads[0].NumChines)/2).ToString();
                 }
             }
         }
@@ -114,12 +111,12 @@ namespace AVSHull
 
             if (openFileDialog.ShowDialog() == true)
             {
-                if (myHull == null) myHull = new Hull();
                 myHull.LoadFromHullFile(openFileDialog.FileName);
+
+                NumChines.Text = ((myHull.Bulkheads[0].NumChines) / 2).ToString();
 
                 UpdateViews();
             }
-
         }
 
         private void PanelsClick(object sender, RoutedEventArgs e)
@@ -244,7 +241,7 @@ namespace AVSHull
             Debug.WriteLine("PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
-                Debug.WriteLine("Update chines");
+                Debug.WriteLine("MainWindow.hull_PropertyChanged");
                 UpdateViews();
             }
         }
@@ -253,24 +250,58 @@ namespace AVSHull
         {
             About setup = new About();
             setup.Owner = this;
-            setup.Resources["aboutVersion"] = GetVersion();
             setup.ShowDialog();
         }
 
-        private Version GetVersion()
+        //private Version GetVersion()
+        //{
+        //    //if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+        //    //{
+        //    //    return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
+        //    //}
+        //    //try
+        //    //{
+        //    //    return ApplicationDeployment.CurrentDeployment.CurrentVersion;
+        //    //}
+        //    //catch (Exception)
+        //    {
+        //        return Assembly.GetExecutingAssembly().GetName().Version;
+        //    }
+        //}
+
+        private void ChangeChinesClick(object sender, RoutedEventArgs e)
         {
-            //if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
-            //{
-            //    return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
-            //}
-            //try
-            //{
-            //    return ApplicationDeployment.CurrentDeployment.CurrentVersion;
-            //}
-            //catch (Exception)
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            myHull.ChangeChines(values.NumChines);
+        }
+
+        private void createClick(object sender, RoutedEventArgs e)
+        {
+            CreateHullDialog createHullDialog = new CreateHullDialog();
+
+            if (createHullDialog.ShowDialog() == true)
             {
-                return Assembly.GetExecutingAssembly().GetName().Version;
+                CreateHullData data = (CreateHullData)this.FindResource("CreateHullData");
+                if (data != null)
+                {
+                    myHull = new Hull(data);
+                    myHull.PropertyChanged += hull_PropertyChanged;
+                    myHull.SetBulkheadHandler();
+
+                    UpdateViews();
+                }
             }
+
+        }
+
+        private void InsertClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            PerspectiveView.InsertBulkhead(values.NewBulkheadLoc);
+        }
+        private void DeleteClick(object sender, RoutedEventArgs e)
+        {
+            PerspectiveView.DeleteSelectedBulkhead();
         }
     }
 }

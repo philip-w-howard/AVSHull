@@ -24,7 +24,8 @@ namespace AVSHull
         public bool IsEditable = false;
         public PerspectiveType perspective = PerspectiveType.PERSPECTIVE;
         private bool m_RecreateHandles = false;
-
+        private bool m_InsertBulkhead = false;
+ 
         private List<Geometry> m_bulkheadGeometry;
         private List<RectangleGeometry> m_handles;
 
@@ -33,13 +34,13 @@ namespace AVSHull
         private bool m_dragging = false;
         private Point m_startDrag = new Point(0, 0);
         private Point m_lastDrag = new Point(0, 0);
+        private bool m_movingBulkhead = false;
 
         public HullControl()
         {
             m_editableHull = null;
             m_bulkheadGeometry = new List<Geometry>();
             m_handles = new List<RectangleGeometry>();
-            Debug.WriteLine("Constructed with Selected Bulkhead: {0}", m_selectedBulkhead);
         }
 
         public EditableHull editableHull
@@ -48,7 +49,7 @@ namespace AVSHull
             set 
             { 
                 m_editableHull = value;
-                m_editableHull.PropertyChanged += hull_PropertyChanged;
+                //m_editableHull.PropertyChanged += hull_PropertyChanged;
                 CreateHandles();
             }
         }
@@ -186,38 +187,68 @@ namespace AVSHull
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
             m_RecreateHandles = false;
+            m_movingBulkhead = false;
 
             Point loc = e.GetPosition(this);
 
             if (IsEditable)
             {
-                m_draggingHandle = HandleClicked(loc);
-                if (m_draggingHandle != NOT_SELECTED)
+                if (e.LeftButton == MouseButtonState.Pressed)
                 {
-                    m_dragging = true;
-                    m_startDrag = loc;
-                    m_lastDrag = loc;
+                    m_draggingHandle = HandleClicked(loc);
+                    if (m_InsertBulkhead)
+                    {
+                        if (perspective == PerspectiveType.SIDE || perspective == PerspectiveType.TOP)
+                        {
+                            double Z = (loc.X - m_editableHull.Bulkheads[0].Points[0].Z) / m_scale;
+                            m_editableHull.InsertBulkhead(Z);
+                        }
+                    }
+                    else if (m_draggingHandle != NOT_SELECTED)
+                    {
+                        m_dragging = true;
+                        m_startDrag = loc;
+                        m_lastDrag = loc;
 
-                    Debug.WriteLine("clicked handle {0}", m_draggingHandle);
+                        Debug.WriteLine("clicked handle {0}", m_draggingHandle);
+                    }
+                    else
+                    {
+                        m_dragging = false;
+                        int bulk = BulkheadClicked(loc);
+                        if (bulk != m_selectedBulkhead)
+                        {
+                            m_selectedBulkhead = bulk;
+                            m_handles.Clear();
+                        }
+                        else
+                        {
+                            UI_Params setup = (UI_Params)this.FindResource("Curr_UI_Params");
+                            bool? allowMoves = setup.AllowBulkheadMoves;
+                            Debug.WriteLine("Clicked bulkhead {0} movable: {1}", m_selectedBulkhead, allowMoves);
+                            if (allowMoves == true)
+                            {
+                                m_movingBulkhead = true;
+                                m_startDrag = loc;
+                                m_lastDrag = loc;
+                            }
+                        }
+                        Debug.WriteLine("Selected Bulkhead: {0}", m_selectedBulkhead);
+                        if (m_selectedBulkhead != NOT_SELECTED)
+                        {
+                            CreateHandles();
+                            InvalidateVisual();
+                        }
+                    }
                 }
-                else
+                else if (e.RightButton == MouseButtonState.Pressed)
                 {
-                    m_dragging = false;
-                    int bulk = BulkheadClicked(loc);
-                    if (bulk != m_selectedBulkhead)
+                    ContextMenu cm = this.FindResource("hullEditMenu") as ContextMenu;
+                    if (cm != null)
                     {
-                        m_selectedBulkhead = bulk;
-                        m_handles.Clear();
-                    }
-
-                    Debug.WriteLine("Selected Bulkhead: {0}", m_selectedBulkhead);
-                    if (m_selectedBulkhead != NOT_SELECTED)
-                    {
-                        CreateHandles();
-                        InvalidateVisual();
+                        cm.IsOpen = true;
                     }
                 }
-
                 e.Handled = true;
             }
         }
@@ -302,6 +333,17 @@ namespace AVSHull
                     m_handles[m_draggingHandle] = geom;
                     InvalidateVisual();
                 }
+                else if (m_movingBulkhead && m_selectedBulkhead != NOT_SELECTED && m_editableHull.Bulkheads[m_selectedBulkhead].type != Bulkhead.BulkheadType.BOW &&
+                    (perspective == PerspectiveType.TOP || perspective == PerspectiveType.SIDE) )
+                {
+                    double deltaX = (loc.X - m_lastDrag.X) / m_scale;
+                    double deltaY = (loc.Y - m_lastDrag.Y) / m_scale;
+                    m_lastDrag = loc;
+                    m_editableHull.UpdateBulkheadPoint(m_selectedBulkhead, NOT_SELECTED, 0, 0, deltaX);
+                    Debug.WriteLine("Moved bulkhead {0} by {1}", m_selectedBulkhead, deltaX);
+
+                    InvalidateVisual();
+                }
             }
         }
         private void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -309,10 +351,27 @@ namespace AVSHull
             Debug.WriteLine("Control PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
-                Debug.WriteLine("Update chines");
+                Debug.WriteLine("hull_PropertyChanged");
                 CreateHandles();
                 InvalidateVisual();
             }
+        }
+
+        public bool DeleteSelectedBulkhead()
+        {
+            if (m_selectedBulkhead == NOT_SELECTED) return false;
+
+            m_editableHull.DeleteBulkhead(m_selectedBulkhead);
+            CreateHandles();
+            InvalidateVisual();
+            
+            return true;
+        }
+
+        public void InsertBulkhead(double Z)
+        {
+            m_editableHull.InsertBulkhead(Z);
+            //m_InsertBulkhead = true;
         }
     }
 }

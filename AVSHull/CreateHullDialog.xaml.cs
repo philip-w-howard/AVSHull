@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,19 +13,23 @@ using System.Windows.Shapes;
 namespace AVSHull
 {
     /// <summary>
-    /// Interaction logic for About.xaml
+    /// Interaction logic for CreateHullDialog.xaml
     /// </summary>
-    public partial class About : Window
+    public partial class CreateHullDialog : Window
     {
-        public About()
+        public CreateHullDialog()
         {
             InitializeComponent();
-            Version.Content = Assembly.GetExecutingAssembly().GetName().Version;
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            DialogResult = true;
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
         }
     }
 }

@@ -8,9 +8,6 @@
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
         Title="About" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner">
-    <Window.Resources>
-        <sys:String x:Key="aboutVersion">version__placeholder</sys:String>
-    </Window.Resources>
     
     <StackPanel>
         <Label>AVS Hull</Label>
@@ -18,7 +15,7 @@
         <Label>This software is released under the MIT License</Label>
         <StackPanel Orientation="Horizontal">
             <Label>Version: </Label>
-            <Label DataContext="{DynamicResource aboutVersion}" Content="{Binding}" />
+            <Label Name="Version" />
         </StackPanel>
         <Button HorizontalAlignment="Center" Click="OK_Click">OK</Button>
     </StackPanel>

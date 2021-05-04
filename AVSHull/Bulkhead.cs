@@ -35,6 +35,123 @@ namespace AVSHull
             m_points = new Point3DCollection();
         }
 
+        public Bulkhead(Bulkhead original, int num_chines)
+        {
+            const int PRECISION = 10;
+            m_points = new Point3DCollection();
+            Point3DCollection tempPoints = new Point3DCollection();
+
+            if (original.NumChines % 2 == 1)
+            {
+                // centerline bulkhead
+                int useable_chines = original.NumChines / 2 + 1;
+
+                for (int ii = 0; ii < useable_chines; ii++)
+                {
+                    tempPoints.Add(original.Points[ii]);
+                }
+
+                Splines shape = new Splines(tempPoints, Splines.RELAXED);
+                Point3DCollection outline = shape.GetPoints((num_chines + 1) * PRECISION);
+
+                int index = 0;
+                for (int ii = 0; ii < num_chines; ii++)
+                {
+                    m_points.Add(outline[index]);
+                    index += PRECISION;
+                }
+
+                // Add the center point
+                m_points.Add(original.Points[original.NumChines / 2]);
+
+                // Add the other half
+                index = PRECISION * num_chines;
+                for (int ii = 0; ii < num_chines; ii++)
+                {
+                    index -= PRECISION;
+                    Point3D point = outline[index];
+                    point.X = -point.X;
+                    m_points.Add(point);
+                }
+            }
+            else
+            {
+                // flat floor bulkhead
+                int useable_chines = original.NumChines / 2 ;
+
+                for (int ii = 0; ii < useable_chines; ii++)
+                {
+                    tempPoints.Add(original.Points[ii]);
+                }
+
+                Splines shape = new Splines(tempPoints, Splines.RELAXED);
+                Point3DCollection outline = shape.GetPoints((num_chines + 1) * PRECISION);
+
+                int index = 0;
+                for (int ii = 0; ii < num_chines; ii++)
+                {
+                    m_points.Add(outline[index]);
+                    index += PRECISION;
+                }
+
+                // Add the center point
+                m_points.Add(original.Points[original.NumChines / 2]);
+
+                // Add the other half
+                index = PRECISION * num_chines;
+                for (int ii = 0; ii < num_chines; ii++)
+                {
+                    index -= PRECISION;
+                    Point3D point = outline[index];
+                    point.X = -point.X;
+                    m_points.Add(point);
+                }
+            }
+        }
+
+        public Bulkhead(Point3DCollection points, BulkheadType type)
+        {
+            m_points = new Point3DCollection();
+            this.type = type;
+
+            if (Math.Abs(points[0].X) < NEAR_ZERO)
+            {
+                // Bottom is on center-line
+                for (int ii = points.Count - 1; ii > 0; ii--)
+                {
+                    m_points.Add(points[ii]);
+                }
+
+                // Force center to zero
+                m_points.Add(new Point3D(0, points[0].Y, points[0].Z));
+
+                // Insert other half of hull
+                for (int ii = 1; ii < points.Count; ii++)
+                {
+                    Point3D point = new Point3D(-points[ii].X, points[ii].Y, points[ii].Z);
+                    m_points.Add(point);
+                }
+            }
+            else
+            {
+                // flat floor: bottom is not on center-line
+                for (int ii = points.Count - 1; ii >= 0; ii--)
+                {
+                    m_points.Add(points[ii]);
+                }
+
+                // Insert other half of hull
+                for (int ii = 1; ii < points.Count; ii++)
+                {
+                    Point3D point = new Point3D(-points[ii].X, points[ii].Y, points[ii].Z);
+                    m_points.Add(point);
+                }
+            }
+
+            ComputeAngle();
+            StraightenBulkhead();
+        }
+
         public void LoadFromHullFile(StreamReader file, int numChines, BulkheadType type)
         {
             this.type = type;
@@ -125,9 +242,16 @@ namespace AVSHull
                 }
 
                 if (delta_z == 0)
+                {
                     type = BulkheadType.VERTICAL;
+                    m_transomAngle = Math.PI / 2;
+                }
                 else
                     m_transomAngle = Math.Atan2(delta_y, delta_z);
+            }
+            else if (type == BulkheadType.VERTICAL)
+            {
+                m_transomAngle = Math.PI / 2;
             }
         }
 
@@ -287,6 +411,17 @@ namespace AVSHull
         private double NewZPoint(Point3D basePoint, Point3D newPoint)
         {
             return basePoint.Z + (newPoint.Y - basePoint.Y) * Math.Cos(m_transomAngle) / Math.Sin(m_transomAngle);
+        }
+
+        public void MoveZ(double deltaZ)
+        {
+            for (int ii=0; ii<m_points.Count; ii++)
+            {
+                Point3D point = m_points[ii];
+                point.Z += deltaZ;
+                m_points[ii] = point;
+            }
+            Notify("Bulkhead");
         }
     }
  }

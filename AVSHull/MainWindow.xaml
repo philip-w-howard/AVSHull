@@ -7,13 +7,19 @@
         xmlns:properties="clr-namespace:AVSHull.Properties"
         xmlns:local="clr-namespace:AVSHull" xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
-        x:Name="AVSHullMainWindow"
+        Name="AVSHullMainWindow"
         Title="AVS Hull" 
         Height="{Binding Source={x:Static properties:Settings.Default}, Path=MainHeight, Mode=TwoWay}" 
         Width="{Binding Source={x:Static properties:Settings.Default}, Path=MainWidth, Mode=TwoWay}" 
         Closed="Window_Closed">
     <Window.Resources>
-        <sys:String x:Key="Version">main version</sys:String>
+        <ContextMenu x:Key="hullEditMenu">
+            <CheckBox Content="_Allow bulkhead movement" DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding AllowBulkheadMoves, Mode=TwoWay }" />
+            <!--<CheckBox Content="_Insert bulkhead" DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding InsertBulkhead, Mode=TwoWay }" />-->
+            <MenuItem Header="_Insert Bulkhead" Click="InsertClick" />
+            <MenuItem x:Name="DeleteBulkheadItem" Header="_Delete Bulkhead" Click="DeleteClick" />
+        </ContextMenu>
+
     </Window.Resources>
     <DockPanel>
         <ToolBarTray Background="White" DockPanel.Dock="Top">
@@ -22,19 +28,18 @@
                     <MenuItem Header="_File">
                         <MenuItem Header="_Open" Click="openClick"/>
                         <MenuItem Header="_Save" Click="saveClick"/>
+                        <MenuItem Header="_Create" Click="createClick" />
                         <MenuItem Header="_Import Carlson HUL file" Click="importClick"/>
                     </MenuItem>
                     <MenuItem Header="_Tools">
                         <MenuItem Name="PanelsMenu" Header="_Panels" Click="PanelsClick" />
                         <MenuItem Name ="ResizeMenu" Header="_Resize" Click="ResizeClick" />
+                        <MenuItem Header="_Change number of chines" Click="ChangeChinesClick" />
                     </MenuItem>
                     <MenuItem Header="_Help">
                         <MenuItem Header="_About" Click="AboutClick" />
                     </MenuItem>
                 </Menu>
-            </ToolBar>
-            <ToolBar Band="0" BandIndex="2">
-
             </ToolBar>
         </ToolBarTray>
 
@@ -79,6 +84,16 @@
                             <Button Click="RotateClick">-X</Button>
                             <Button Click="RotateClick">-Y</Button>
                             <Button Click="RotateClick">-Z</Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Label>Chines:</Label>
+                                <TextBox x:Name="NumChines" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NumChines, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label>New Bulkhead Loc:</Label>
+                                <TextBox x:Name="NewBulkheadLoc" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NewBulkheadLoc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>

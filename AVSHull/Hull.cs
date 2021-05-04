@@ -17,6 +17,57 @@ namespace AVSHull
             Bulkheads = new List<Bulkhead>();
         }
 
+        public Hull(CreateHullData setup)
+        {
+            Point3DCollection points = new Point3DCollection();
+            double height = 0;
+            double width = 0;
+            double Z = 0;
+
+            Bulkheads = new List<Bulkhead>();
+
+            if (setup.IncludeBow)
+            {
+                Z = 0;
+                width = 0;
+                for (int ii = 0; ii < setup.NumChines + 1; ii++)
+                {
+                    points.Add(new Point3D(width, height, Z));
+                    height += setup.Height/setup.NumChines;
+                }
+                Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.BOW));
+            }
+
+            // Vertical bulkheads
+            while (Bulkheads.Count < setup.NumBulkheads - 1)
+            {
+                points.Clear();
+                Z = Bulkheads.Count * setup.Length / setup.NumBulkheads;
+                width = 0;
+                height = 0;
+                for (int ii = 0; ii < setup.NumChines + 1; ii++)
+                {
+                    points.Add(new Point3D(width, height, Z));
+                    width += setup.Width / setup.NumChines;
+                    height += setup.Height / setup.NumChines;
+                }
+                Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL));
+            }
+
+            // Transom
+            points.Clear();
+            Z = Bulkheads.Count * setup.Length / setup.NumBulkheads;
+            width = 0;
+            height = 0;
+            for (int ii = 0; ii < setup.NumChines+1; ii++)
+            {
+                points.Add(new Point3D(width, height, Z + height*Math.Cos(Math.PI / 180 * setup.TransomAngle)));
+                width += setup.Width / setup.NumChines;
+                height += setup.Height / setup.NumChines;
+            }
+            Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.TRANSOM));
+        }
+
         public void LoadFromHullFile(string filename)
         {
             Bulkheads = new List<Bulkhead>();
@@ -141,10 +192,19 @@ namespace AVSHull
             }
         }
 
+        public void ChangeChines(int numChines)
+        {
+            for (int ii = 0; ii < Bulkheads.Count; ii++)
+            {
+                Bulkheads[ii] = new Bulkhead(Bulkheads[ii], numChines);
+            }
+
+            Notify("HullData");
+        }
         //*********************************************
         // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void Notify(string propName)
+        public void Notify(string propName)
         {
             if (PropertyChanged != null)
             {

@@ -43,7 +43,7 @@ namespace AVSHull
                 {
                     if (bulk.type != Bulkhead.BulkheadType.BOW)
                     {
-                        Panel p = new Panel(bulk.Points);
+                        Panel p = new Panel(bulk);
                         p.name = "Bulkhead " + bulkheadIndex;
                         bulkheadIndex++;
                         m_panels.Add(p);
@@ -229,6 +229,16 @@ namespace AVSHull
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             GetLayoutSetup();
+        }
+
+        private void WindowResized(object sender, SizeChangedEventArgs e)
+        {
+            InvalidateMeasure();
+            InvalidateVisual();
+            LayoutControl.Layout.WindowWidth = Width;
+            LayoutControl.Layout.WindowHeight = Height;
+
+            LayoutControl.InvalidateMeasure();
         }
     }
 }

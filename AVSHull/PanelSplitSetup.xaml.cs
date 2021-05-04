@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,19 +14,23 @@ using System.Windows.Shapes;
 namespace AVSHull
 {
     /// <summary>
-    /// Interaction logic for About.xaml
+    /// Interaction logic for PanelSplitSetup.xaml
     /// </summary>
-    public partial class About : Window
+    public partial class PanelSplitSetup : Window
     {
-        public About()
+        public PanelSplitSetup()
         {
             InitializeComponent();
-            Version.Content = Assembly.GetExecutingAssembly().GetName().Version;
         }
 
-        private void OK_Click(object sender, RoutedEventArgs e)
+        private void OKClick(object sender, RoutedEventArgs e)
         {
-            Close();
+            DialogResult = true;
+        }
+
+        private void CancelClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
         }
     }
 }

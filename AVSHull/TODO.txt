@@ -18,11 +18,10 @@ HullControl
 
 TODO:
 	
-	Split panels
 	Output panels
 		offsets: use spacing
-	Change number of chines
-
+	Add bulkhead
+	
 	Place pop-ups in center of parent. 
 		See about box for sample
 			<Window> WindowStartupLocation="CenterOwner"
@@ -30,10 +29,10 @@ TODO:
 		
 	UI Standards:
 		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0
+	Create hull from scratch
+		Do something other than straight lines for bulkheads
 
-	Split LayoutControl into Layout and Control
-		Who defines the Layout
-		Who gets the Layout to the Control?
-		Check for consistency on where everything lives.
-	
-	Preparing to merge AdvancedHullEdits
+	Split panels: small depth:height ratio causes strange split
+	Split: use actual arcs instead of simulated ones.
+
+	For Insert Bulkhead: compute location of click relative to drawing. Using m_xform, m_geometry.

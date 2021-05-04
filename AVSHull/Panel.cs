@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel;
 using System.Text;
 using System.Windows;
@@ -54,8 +55,26 @@ namespace AVSHull
             }
             ShiftTo(0, 0);
         }
+        public Panel(Bulkhead bulk)
+        {
+            double scaleFactor = Math.Sin(bulk.TransomAngle);
+            m_panelPoints = new PointCollection();
 
-         protected void Panelize(Point3DCollection chine1, Point3DCollection chine2)
+            foreach (Point3D point in bulk.Points)
+            {
+                // FIXTHIS: only works for VERTICAL bulkheads
+                m_panelPoints.Add(new Point(point.X, point.Y/scaleFactor));
+            }
+            ShiftTo(0, 0);
+        }
+        public Panel(PointCollection points)
+        {
+            m_panelPoints = points.Clone();
+            ShiftTo(0, 0);
+        }
+
+
+        protected void Panelize(Point3DCollection chine1, Point3DCollection chine2)
         {
             double r1, r2;
             Point intersection_a1, intersection_a2;
@@ -289,5 +308,93 @@ namespace AVSHull
 
             return newPanel;
         }
+
+        //****************************************************
+        // Split a panel into two sub-panels
+        public bool Split(double start, double radius, double depth, out Panel panel_1, out Panel panel_2)
+        {
+            bool addTo_1 = true;
+            PointCollection points_1 = new PointCollection();
+            PointCollection points_2 = new PointCollection();
+            Point points_2_start = new Point(0, 0);
+            Point top = new Point();
+            Point bottom = new Point();
+
+
+            for (int ii = 0; ii < Points.Count - 1; ii++)
+            {
+                Point first =Points[ii];
+                Point second = Points[ii + 1];
+                Point startPoint = new Point();
+                double min = Math.Min(first.X, second.X);
+                double max = Math.Max(first.X, second.X);
+                if (min <= start && max >= start)
+                {
+                    if (first.X == start)
+                    {
+                        startPoint = first;
+                    }
+                    else if (second.X == start)
+                    {
+                        startPoint = second;
+                    }
+                    else
+                    {
+                        // need to find point on line between first and second
+                        // NOTE: because of the above conditions, we can't have a vertical line. They are ruled out.
+                        double slope = (second.Y - first.Y) / (second.X - first.X);
+                        startPoint = new Point(start, first.Y + slope * (start - first.X));
+                    }
+
+                    if (addTo_1)
+                    {
+                        top = startPoint;
+                        if (first != startPoint) points_1.Add(first);
+                        points_2.Add(top);
+                    }
+                    else
+                    {
+                        bottom = startPoint;
+
+                        if (first != startPoint) points_2.Add(first);
+                        PointCollection splitter_1 = PanelSplitter.Tongues(top, bottom, (int)radius, depth);
+                        IEnumerable<Point> splitter_2 = splitter_1.Reverse();
+
+                        foreach (Point p in splitter_1)
+                        {
+                            points_1.Add(p);
+                        }
+
+                        foreach (Point p in splitter_2)
+                        {
+                            points_2.Add(p);
+                        }
+                    }
+
+                    addTo_1 = !addTo_1;
+                }
+                else
+                {
+                    if (addTo_1)
+                        points_1.Add(Points[ii]);
+                    else
+                        points_2.Add(Points[ii]);
+                }
+            }
+
+            // close the panels
+            points_1.Add(points_1[0]);
+            //points_2.Add(top);
+
+            panel_1 = new Panel(points_1);
+            panel_2 = new Panel(points_2);
+
+            panel_1.name = name + "A";
+            panel_2.name = name + "B";
+
+            return true;
+        }
+
+
     }
 }

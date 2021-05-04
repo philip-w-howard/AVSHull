@@ -143,9 +143,9 @@ namespace AVSHull
             }
         }
 
-        public int GetPoints(int total_points, Point3DCollection points)
+        public Point3DCollection GetPoints(int total_points)
         {
-            points.Clear();
+            Point3DCollection points = new Point3DCollection();
 
             // B[1-4, segment, axis]
             double[,,] B = new double[4, m_numPoints - 1, 3];
@@ -203,7 +203,7 @@ namespace AVSHull
             // Set the end point
             points.Add(m_points[m_numPoints - 1]);
 
-            return index + 1;
+            return points;
         }
 
         private int m_numPoints;                // N
