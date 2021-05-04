@@ -21,8 +21,6 @@ TODO:
 	Split panels
 	Output panels
 		offsets: use spacing
-	Add bulkhead
-	Move bulkhead
 	Change number of chines
 
 	Place pop-ups in center of parent. 
@@ -38,3 +36,4 @@ TODO:
 		Who gets the Layout to the Control?
 		Check for consistency on where everything lives.
 	
+	Preparing to merge AdvancedHullEdits
