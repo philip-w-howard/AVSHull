@@ -574,11 +574,15 @@ namespace AVSHull
                 return points[0];
             }
 
-            // Need to interpolate
+            // Did we land exactly on a point?
             if (left.Z == Z) return left;
             if (right.Z == Z) return right;
 
-            double ratio = Math.Abs((left.Z - Z) / (Z - right.Z));
+            // If the Zs are the same, can't interpolate
+            if (left.Z == right.Z) return left;
+
+            // Do the interpolation
+            double ratio = (Z - left.Z) / (right.Z - left.Z);
 
             double X = left.X + ratio * (right.X - left.X);
             double Y = left.Y + ratio * (right.Y - left.Y);

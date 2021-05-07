@@ -20,7 +20,6 @@ TODO:
 	
 	Output panels
 		offsets: use spacing
-	Add bulkhead
 	
 	Place pop-ups in center of parent. 
 		See about box for sample
