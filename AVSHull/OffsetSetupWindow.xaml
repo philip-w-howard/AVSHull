@@ -32,13 +32,13 @@
             </ComboBox>
 
             <Label Grid.Row="1" Grid.Column="0">Spacing Style</Label>
-            <ComboBox Name="SpacingStyle_Input" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  SelectedIndex="0" IsEditable="False" IsReadOnly="True" IsEnabled="False">
+            <ComboBox Name="SpacingStyle_Input" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  SelectedIndex="0" IsEditable="False" IsReadOnly="True" >
                 <ComboBoxItem>Every point</ComboBoxItem>
                 <ComboBoxItem>Fixed spacing</ComboBoxItem>
             </ComboBox>
 
             <Label Grid.Row="2" Grid.Column="0">Horizontal Spacing</Label>
-            <ComboBox Name="Spacing_Input" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="1" IsEditable="False" IsReadOnly="True" IsEnabled="False">
+            <ComboBox Name="Spacing_Input" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="1" IsEditable="False" IsReadOnly="True" >
                 <ComboBoxItem>6 inches</ComboBoxItem>
                 <ComboBoxItem>12 inches</ComboBoxItem>
                 <ComboBoxItem>24 inches</ComboBoxItem>

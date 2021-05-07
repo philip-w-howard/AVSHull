@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Windows;
+using System.Windows.Media;
 
 namespace AVSHull
 {
@@ -38,8 +39,26 @@ namespace AVSHull
                         foreach (Panel panel in Layout.Panels)
                         {
                             output.WriteLine(panel.name);
-                            foreach (Point point in panel.Points)
-                                output.WriteLine("   {0}", FormatPoint(point, setup.OutputType));
+
+                            if (setup.SpacingStyle_Input.Text == "Every point")
+                            {
+                                foreach (Point point in panel.Points)
+                                    output.WriteLine("   {0}", FormatPoint(point, setup.OutputType));
+                            }
+                            else
+                            {
+                                for (int ii = 0; ii < panel.Points.Count; ii++)
+                                {
+                                    if (ii == 0 || ii == panel.Points.Count / 2 - 1 || ii == panel.Points.Count / 2 || ii == panel.Points.Count - 2 || ii == panel.Points.Count - 1)
+                                    {
+                                        output.WriteLine("   {0} *", FormatPoint(panel.Points[ii], setup.OutputType));
+                                    }
+                                    else if (ii % 10 == 0)
+                                    {
+                                        output.WriteLine("   {0}", FormatPoint(panel.Points[ii], setup.OutputType));
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -50,6 +69,23 @@ namespace AVSHull
             return result;
         }
 
+        private PointCollection GetPoints(Panel panel, OffsetSetupWindow setup)
+        {
+            if (setup.SpacingStyle_Input.Text == "Every point") 
+                return panel.Points;
+            else 
+            {
+                PointCollection points = new PointCollection();
+                for (int ii=0; ii<panel.Points.Count; ii++)
+                {
+                    if (ii==0 || ii==1 || ii==points.Count/2 || ii==points.Count/2 + 1 || ii % 10 == 0)
+                    {
+                        points.Add(panel.Points[ii]);
+                    }
+                }
+                return points;
+            }
+        }
         private String Fraction(double value, int denominator)
         {
             String result = new string("");
