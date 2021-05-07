@@ -20,7 +20,7 @@ namespace AVSHull
         public int NumChines { get { return m_points.Count; } }
 
         public double m_transomAngle;
-        public double TransomAngle { get { return m_transomAngle; } }
+        public double TransomAngle { get { return m_transomAngle; } set { m_transomAngle = value; } }
 
         private Point3DCollection m_points;
         public Point3DCollection Points { get { return m_points; } }
@@ -223,7 +223,7 @@ namespace AVSHull
 
         protected void ComputeAngle()
         {
-            m_transomAngle = 0;
+            TransomAngle = Math.PI / 2;
             if (type == BulkheadType.TRANSOM)
             {
                 double delta, delta_z, delta_y;
@@ -244,14 +244,14 @@ namespace AVSHull
                 if (delta_z == 0)
                 {
                     type = BulkheadType.VERTICAL;
-                    m_transomAngle = Math.PI / 2;
+                    TransomAngle = Math.PI / 2;
                 }
                 else
-                    m_transomAngle = Math.Atan2(delta_y, delta_z);
+                    TransomAngle = Math.Atan2(delta_y, delta_z);
             }
             else if (type == BulkheadType.VERTICAL)
             {
-                m_transomAngle = Math.PI / 2;
+                TransomAngle = Math.PI / 2;
             }
         }
 
@@ -305,7 +305,7 @@ namespace AVSHull
         {
             Bulkhead copy = new Bulkhead();
             copy.type = type;
-            copy.m_transomAngle = TransomAngle;
+            copy.TransomAngle = TransomAngle;
             copy.m_points = m_points.Clone();
 
             return copy;
@@ -410,7 +410,7 @@ namespace AVSHull
 
         private double NewZPoint(Point3D basePoint, Point3D newPoint)
         {
-            return basePoint.Z + (newPoint.Y - basePoint.Y) * Math.Cos(m_transomAngle) / Math.Sin(m_transomAngle);
+            return basePoint.Z + (newPoint.Y - basePoint.Y) * Math.Cos(TransomAngle) / Math.Sin(TransomAngle);
         }
 
         public void MoveZ(double deltaZ)

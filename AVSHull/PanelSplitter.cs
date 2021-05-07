@@ -154,7 +154,7 @@ namespace AVSHull
 
         public static PointCollection Tongues(Point start, Point end, int numTongues, double depth)
         {
-            const int NUM_POINTS = 180;
+            const int NUM_POINTS = 50;
             double verticalDir;
             double horizontalDir = 1;
 
@@ -164,6 +164,8 @@ namespace AVSHull
             double panelHeight = Math.Abs(start.Y - end.Y);
             double radius = panelHeight / (numTongues + 1) / 2;
 
+            if (depth < 2 * radius) depth = 2 * radius;
+
             if (start.Y > end.Y)
                 verticalDir = -1;
             else
@@ -172,9 +174,13 @@ namespace AVSHull
             splitter.Add(start);
             GeometryOperations.CreateArc(splitter, radius, new Point(start.X + horizontalDir * radius, start.Y), startHalfAngle(verticalDir), endHalfAngle(verticalDir), NUM_POINTS / 2);
 
-            current = new Point(start.X + horizontalDir * (depth / 2 - radius), start.Y + verticalDir * radius);
-            splitter.Add(current);
+            current = splitter[splitter.Count - 1];
 
+            if (depth > radius * 2)
+            {
+                current.X += horizontalDir * depth - radius * 2;
+                splitter.Add(current);
+            }
             horizontalDir *= -1;
 
             for (int ii = 0; ii < numTongues - 1; ii++)
