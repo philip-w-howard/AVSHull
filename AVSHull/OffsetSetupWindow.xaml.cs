@@ -40,9 +40,5 @@ namespace AVSHull
         {
             get { return SpacingStyle_Input.Text; }
         }
-        public String Spacing
-        {
-            get { return Spacing_Input.Text; }
-        }
     }
 }

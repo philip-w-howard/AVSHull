@@ -8,8 +8,11 @@
         Title="Offset Setup" 
         SizeToContent="WidthAndHeight" 
         ResizeMode="NoResize" >
+    <Window.Resources>
+        <local:OffsetWriterSetup x:Key="OffsetSetup" OutputType="0" SpacingStyle="0" HorizontalSpacing="10" MaxAngle="3" />
+    </Window.Resources>
     <StackPanel>
-        <Grid>
+        <Grid DataContext="{DynamicResource OffsetSetup}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="100"/>
@@ -18,11 +21,11 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0">Output Type</Label>
-            <ComboBox Name="OutputType_Input" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" IsEditable="False" IsReadOnly="True">
-                
+            <ComboBox Name="OutputType_Input" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="{Binding OutputType, Mode=TwoWay}" IsEditable="False" IsReadOnly="True">
                 <ComboBoxItem>Eighths</ComboBoxItem>
                 <ComboBoxItem>Sixteenths</ComboBoxItem>
                 <ComboBoxItem>Thirtysecondths</ComboBoxItem>
@@ -32,17 +35,17 @@
             </ComboBox>
 
             <Label Grid.Row="1" Grid.Column="0">Spacing Style</Label>
-            <ComboBox Name="SpacingStyle_Input" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  SelectedIndex="0" IsEditable="False" IsReadOnly="True" >
+            <ComboBox Name="SpacingStyle_Input" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  SelectedIndex="{Binding SpacingStyle, Mode=TwoWay}" IsEditable="False" IsReadOnly="True" >
                 <ComboBoxItem>Every point</ComboBoxItem>
                 <ComboBoxItem>Fixed spacing</ComboBoxItem>
             </ComboBox>
 
             <Label Grid.Row="2" Grid.Column="0">Horizontal Spacing</Label>
-            <ComboBox Name="Spacing_Input" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="1" IsEditable="False" IsReadOnly="True" >
-                <ComboBoxItem>6 inches</ComboBoxItem>
-                <ComboBoxItem>12 inches</ComboBoxItem>
-                <ComboBoxItem>24 inches</ComboBoxItem>
-            </ComboBox>
+            <TextBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Text="{Binding HorizontalSpacing, Mode=TwoWay}" />
+
+            <Label Grid.Row="3" Grid.Column="0">Max Angle</Label>
+            <TextBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Text="{Binding MaxAngle, Mode=TwoWay}" />
+
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Click="OK_Click" Margin="5" IsDefault="True">OK</Button>

@@ -527,6 +527,21 @@ namespace AVSHull
             points.Add(new Point(center.X + Math.Cos(endAngle) * radius, center.Y + Math.Sin(endAngle) * radius));
         }
 
+        static public Point InterpolateFromX(Point left, Point right, double X)
+        {
+            if (left.X == X)
+                return left;
+            else if (right.X == X)
+                return right;
+            else
+            {
+                double ratio = (X - left.X) / (right.X - left.X);
+
+                double Y = left.Y + ratio * (right.Y - left.Y);
+
+                return new Point(X, Y);
+            }
+        }
         static public Point3D InterpolateFromZ(Point3DCollection points, double Z)
         {
             // FIX THIS: need to have at least two points

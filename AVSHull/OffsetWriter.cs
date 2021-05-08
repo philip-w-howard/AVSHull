@@ -8,9 +8,16 @@ using System.Windows.Media;
 
 namespace AVSHull
 {
+    class OffsetWriterSetup
+    {
+        public int OutputType { get; set; }
+        public int SpacingStyle { get; set; }
+        public int HorizontalSpacing { get; set; }
+        public double MaxAngle { get; set; }
+    }
     class OffsetWriter : ILayoutWriter
     {
-        const double MAX_ANGLE = 178 * Math.PI / 180.0;
+        private double MaxAngle = 178 * Math.PI / 180.0;
 
         public OffsetWriter()
         {
@@ -36,6 +43,10 @@ namespace AVSHull
 
                 if (result == true)
                 {
+                    OffsetWriterSetup settings = (OffsetWriterSetup)setup.FindResource("OffsetSetup");
+                    if (settings == null) return false;
+
+                    MaxAngle = (180 - settings.MaxAngle) * Math.PI / 180.0;
                     using (System.IO.StreamWriter output = new System.IO.StreamWriter(saveDlg.FileName))
                     {
                         foreach (Panel panel in Layout.Panels)
@@ -49,9 +60,11 @@ namespace AVSHull
                             }
                             else
                             {
-                                Point next = panel.Points[1];
-                                Point curr = panel.Points[0];
-                                Point prev = panel.Points[panel.Points.Count - 1];
+                                int spacing = settings.HorizontalSpacing;
+
+                                Point next;
+                                Point curr;
+                                Point prev;
 
                                 int index = 0;
                                 while (index < panel.Points.Count)
@@ -72,15 +85,20 @@ namespace AVSHull
                                         double rightAngle = 0;
                                         GeometryOperations.ComputeAngle(prev, curr, next, ref leftAngle, ref rightAngle);
                                         double angle = Math.Min(leftAngle, rightAngle);
-                                        if (angle < MAX_ANGLE)
+                                        if (angle < MaxAngle)
                                         {
                                             output.WriteLine("   {0} {1} ***", FormatPoint(curr, setup.OutputType), index);
                                             output.WriteLine("   {0} {1} ***", FormatPoint(next, setup.OutputType), index);
                                             index += 2;
                                         }
-                                        else if (index % 10 == 0)
+                                        else if ((int)curr.X / spacing != (int)next.X / spacing)
                                         {
-                                            output.WriteLine("   {0} {1}", FormatPoint(panel.Points[index], setup.OutputType), index);
+                                            if (curr.X < next.X)
+                                                curr = GeometryOperations.InterpolateFromX(curr, next, spacing * ((int)next.X / spacing));
+                                            else
+                                                curr = GeometryOperations.InterpolateFromX(next, curr, spacing * ((int)curr.X / spacing));
+
+                                            output.WriteLine("   {0} {1}", FormatPoint(curr, setup.OutputType), index);
                                             index++;
                                         }
                                         else
