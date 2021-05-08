@@ -21,6 +21,7 @@
         <local:PanelSplitSetupValues x:Key="SplitSetup" Start="0" NumTongues="3" Depth="3" />
         <local:UI_Params x:Key="Curr_UI_Params" AllowBulkheadMoves="false" NumChines="5" />
         <local:CreateHullData x:Key="CreateHullData" IncludeBow="True" FlatBottom="False" NumBulkheads="5" NumChines="5" Length="120" Width="30" Height="15" TransomAngle="85" />
+        <local:OffsetWriterSetup x:Key="OffsetSetup" OutputType="0" SpacingStyle="0" HorizontalSpacing="10" MaxAngle="10" />
 
     </Application.Resources>
 </Application>

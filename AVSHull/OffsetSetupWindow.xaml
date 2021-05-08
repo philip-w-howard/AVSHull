@@ -8,9 +8,6 @@
         Title="Offset Setup" 
         SizeToContent="WidthAndHeight" 
         ResizeMode="NoResize" >
-    <Window.Resources>
-        <local:OffsetWriterSetup x:Key="OffsetSetup" OutputType="0" SpacingStyle="0" HorizontalSpacing="10" MaxAngle="3" />
-    </Window.Resources>
     <StackPanel>
         <Grid DataContext="{DynamicResource OffsetSetup}">
             <Grid.ColumnDefinitions>
