@@ -194,6 +194,7 @@ namespace AVSHull
             else if ((string)button.Content == "-Z")
                 PerspectiveView.editableHull.Rotate(0, 0, -5);
 
+            PerspectiveView.perspective = HullControl.PerspectiveType.PERSPECTIVE;
             PerspectiveView.InvalidateVisual();
         }
 
@@ -202,14 +203,17 @@ namespace AVSHull
             EditableHull topView = new EditableHull(myHull);
             topView.Rotate(0, 90, 90);
             TopView.editableHull = topView;
+            TopView.perspective = HullControl.PerspectiveType.TOP;
 
             EditableHull sideView = new EditableHull(myHull);
             sideView.Rotate(0, 90, 180);
             SideView.editableHull = sideView;
+            SideView.perspective = HullControl.PerspectiveType.SIDE;
 
             EditableHull frontView = new EditableHull(myHull);
             frontView.Rotate(0, 0, 180);
             FrontView.editableHull = frontView;
+            FrontView.perspective = HullControl.PerspectiveType.FRONT;
 
             EditableHull perspectiveView = new EditableHull(myHull);
             switch (PerspectiveView.perspective)

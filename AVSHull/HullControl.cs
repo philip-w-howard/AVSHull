@@ -363,9 +363,6 @@ namespace AVSHull
                             m_mouse_X = Y - hullSize.Y/2;
                             m_mouse_Z = X;
                             break;
-                        default:
-                            Debug.WriteLine("Perspective: {0} did not compute coords", perspective);
-                            break;
                     }
 
                     Debug.WriteLine("Mouse: {0} {1} {2}", m_mouse_X, m_mouse_Y, m_mouse_Z);
