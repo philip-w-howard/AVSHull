@@ -20,7 +20,8 @@ TODO:
 	
 	Output panels
 		offsets: use spacing. Can use InterpolateZ like functionality.
-	
+	    see FIX THIS i OffsetWriter.cs
+
 	Place pop-ups in center of parent. 
 		See about box for sample
 			<Window> WindowStartupLocation="CenterOwner"

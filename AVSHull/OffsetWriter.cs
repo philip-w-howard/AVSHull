@@ -10,6 +10,8 @@ namespace AVSHull
 {
     class OffsetWriter : ILayoutWriter
     {
+        const double MAX_ANGLE = 178 * Math.PI / 180.0;
+
         public OffsetWriter()
         {
         }
@@ -47,15 +49,44 @@ namespace AVSHull
                             }
                             else
                             {
-                                for (int ii = 0; ii < panel.Points.Count; ii++)
+                                Point next = panel.Points[1];
+                                Point curr = panel.Points[0];
+                                Point prev = panel.Points[panel.Points.Count - 1];
+
+                                int index = 0;
+                                while (index < panel.Points.Count)
                                 {
-                                    if (ii == 0 || ii == panel.Points.Count / 2 - 1 || ii == panel.Points.Count / 2 || ii == panel.Points.Count - 2 || ii == panel.Points.Count - 1)
+                                    // Always output the first and last points
+                                    if (index == 0 || index == panel.Points.Count - 1)
                                     {
-                                        output.WriteLine("   {0} *", FormatPoint(panel.Points[ii], setup.OutputType));
+                                        output.WriteLine("   {0} {1} *", FormatPoint(panel.Points[index], setup.OutputType), index);
+                                        index++;
                                     }
-                                    else if (ii % 10 == 0)
+                                    else
                                     {
-                                        output.WriteLine("   {0}", FormatPoint(panel.Points[ii], setup.OutputType));
+                                        prev = panel.Points[index - 1];
+                                        curr = panel.Points[index];
+                                        next = panel.Points[index + 1];
+
+                                        double leftAngle = 0;
+                                        double rightAngle = 0;
+                                        GeometryOperations.ComputeAngle(prev, curr, next, ref leftAngle, ref rightAngle);
+                                        double angle = Math.Min(leftAngle, rightAngle);
+                                        if (angle < MAX_ANGLE)
+                                        {
+                                            output.WriteLine("   {0} {1} ***", FormatPoint(curr, setup.OutputType), index);
+                                            output.WriteLine("   {0} {1} ***", FormatPoint(next, setup.OutputType), index);
+                                            index += 2;
+                                        }
+                                        else if (index % 10 == 0)
+                                        {
+                                            output.WriteLine("   {0} {1}", FormatPoint(panel.Points[index], setup.OutputType), index);
+                                            index++;
+                                        }
+                                        else
+                                        {
+                                            index++;
+                                        }
                                     }
                                 }
                             }
