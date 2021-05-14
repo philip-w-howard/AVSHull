@@ -31,7 +31,8 @@ TODO:
 	Create hull from scratch
 		Do something other than straight lines for bulkheads
 
-	Split panels: small depth:height ratio causes strange split
 	Split: use actual arcs instead of simulated ones.
 
 	For Insert Bulkhead: compute location of click relative to drawing. Using m_xform, m_geometry.
+
+	Preparing to merge ComputeXYZOfMouse
