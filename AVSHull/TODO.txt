@@ -18,9 +18,6 @@ HullControl
 
 TODO:
 	
-	Output panels
-		offsets: use spacing
-	
 	Place pop-ups in center of parent. 
 		See about box for sample
 			<Window> WindowStartupLocation="CenterOwner"
@@ -34,5 +31,7 @@ TODO:
 	Split: use actual arcs instead of simulated ones.
 
 	For Insert Bulkhead: compute location of click relative to drawing. Using m_xform, m_geometry.
+	
+	Check on notification settings
 
-	Preparing to merge ComputeXYZOfMouse
+	Make all changes to MyHull go through class to make it easy to do an "undo".

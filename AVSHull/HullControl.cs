@@ -36,6 +36,10 @@ namespace AVSHull
         private Point m_lastDrag = new Point(0, 0);
         private bool m_movingBulkhead = false;
 
+        private double m_mouse_X = 0;
+        private double m_mouse_Y = 0;
+        private double m_mouse_Z = 0;
+
         public HullControl()
         {
             m_editableHull = null;
@@ -310,11 +314,63 @@ namespace AVSHull
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             m_RecreateHandles = false;
+            Point loc = e.GetPosition(this);
+
+            m_mouse_X = 0;
+            m_mouse_Y = 0;
+            m_mouse_Z = 0;
+
+            Rect bounds = new Rect(new Size(0,0));
+            if (m_bulkheadGeometry.Count > 0)
+            {
+                bounds = m_bulkheadGeometry[0].Bounds;
+
+                foreach (Geometry geom in m_bulkheadGeometry)
+                {
+                    Rect bulkBounds = geom.Bounds;
+                    Point topLeft = new Point(0, 0);
+                    topLeft.X = Math.Min(bulkBounds.Left, bounds.Left);
+                    topLeft.Y = Math.Min(bulkBounds.Top, bounds.Top);
+
+                    double right = Math.Max(bulkBounds.Right, bounds.Right);
+                    double bottom = Math.Max(bulkBounds.Bottom, bounds.Bottom);
+                    Size size = new Size(right - topLeft.X, bottom - topLeft.Y);
+
+                    bounds.Size = size;
+                    bounds.Location = topLeft;
+
+                    double X = loc.X - bounds.Left;
+                    double Y = loc.Y - bounds.Top;
+
+                    Size3D hullSize = m_editableHull.GetSize();
+                    double scale_X = hullSize.X / bounds.Width;
+                    double scale_Y = hullSize.Y / bounds.Height;
+
+                    X *= scale_X;
+                    Y *= scale_Y;
+
+                    switch (perspective)
+                    {
+                        case PerspectiveType.FRONT:
+                            m_mouse_X = X - hullSize.X/2;
+                            m_mouse_Y = hullSize.Y - Y;
+                            break;
+                        case PerspectiveType.SIDE:
+                            m_mouse_Y = hullSize.Y - Y;
+                            m_mouse_Z = X;
+                            break;
+                        case PerspectiveType.TOP:
+                            m_mouse_X = Y - hullSize.Y/2;
+                            m_mouse_Z = X;
+                            break;
+                    }
+
+                    Debug.WriteLine("Mouse: {0} {1} {2}", m_mouse_X, m_mouse_Y, m_mouse_Z);
+                }
+            }
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                Point loc = e.GetPosition(this);
-
                 if (m_dragging)
                 {
                     Rect rect = m_handles[m_draggingHandle].Rect;
