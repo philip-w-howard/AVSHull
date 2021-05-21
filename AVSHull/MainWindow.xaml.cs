@@ -44,6 +44,8 @@ namespace AVSHull
             Properties.Settings.Default.Save();
         }
 
+        public static RoutedCommand UndoCommand = new RoutedCommand();
+
         private void openClick(object sender, RoutedEventArgs e)
         {
             // destroy any previous hull
@@ -312,6 +314,25 @@ namespace AVSHull
         private void DeleteClick(object sender, RoutedEventArgs e)
         {
             PerspectiveView.DeleteSelectedBulkhead();
+        }
+
+        private void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+
+        }
+
+        private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+        private void Redo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+
+        }
+
+        private void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
         }
     }
 }
