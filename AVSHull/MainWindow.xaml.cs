@@ -127,6 +127,12 @@ namespace AVSHull
 
         private void ResizeClick(object sender, RoutedEventArgs e)
         {
+            if (myHull.Bulkheads.Count == 0)
+            {
+                MessageBox.Show("Can't resize a non-existant hull.");
+                return;
+            }
+
             EditableHull hull = new EditableHull(myHull);
 
             Size3D originalSize = hull.GetSize();
