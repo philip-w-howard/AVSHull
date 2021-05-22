@@ -26,7 +26,8 @@ namespace AVSHull
     /// </summary>
     public partial class MainWindow : Window
     {
-        Hull myHull;
+        private Hull myHull;
+        private HullLog undoLog;
 
         //public bool AllowBulkheadMoves;
 
@@ -36,7 +37,7 @@ namespace AVSHull
             myHull = new Hull();
             myHull.PropertyChanged += hull_PropertyChanged;
 
-            Title = "AVS Hull";
+            undoLog = (HullLog)this.FindResource("UndoLog");
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -250,9 +251,10 @@ namespace AVSHull
 
         void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //Debug.WriteLine("MainWindow.PropertyChanged: " + e.PropertyName);
+            Debug.WriteLine("MainWindow.PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
+                undoLog.Add(myHull);
                 UpdateViews();
             }
         }
@@ -317,12 +319,16 @@ namespace AVSHull
 
         private void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-
+            e.CanExecute = undoLog.Count > 0;
         }
 
         private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            if (undoLog.Count > 0)
+            {
+                myHull = undoLog.Pop();
+                UpdateViews();
+            }
         }
         private void Redo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {

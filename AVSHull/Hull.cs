@@ -224,7 +224,7 @@ namespace AVSHull
 
             foreach (Bulkhead bulkhead in Bulkheads)
             {
-                Bulkheads.Add((Bulkhead)bulkhead.Clone());
+                copy.Bulkheads.Add((Bulkhead)bulkhead.Clone());
             }
 
             return copy;

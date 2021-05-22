@@ -20,6 +20,8 @@
             <MenuItem x:Name="DeleteBulkheadItem" Header="_Delete Bulkhead" Click="DeleteClick" />
         </ContextMenu>
 
+        <local:HullLog x:Key="UndoLog" />
+        
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Undo" CanExecute="Undo_CanExecute" Executed="Undo_Executed"/>
