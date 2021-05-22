@@ -168,7 +168,6 @@ namespace AVSHull
                 Geometry geom = Layout.Panels[index].GetGeometry();
                 geom.Transform = scale;
 
-                Debug.WriteLine("Panel {0}: {1} loc: {2}", index, geom.Bounds, loc);
                 if (geom.FillContains(loc))
                 {
                     return index;
@@ -194,7 +193,6 @@ namespace AVSHull
                 {
                     m_doUnselect = true;
                 }
-                Debug.WriteLine("Layout.MouseDown: {0} {1}", loc, m_selectedPanel);
             }
             else if (e.RightButton == MouseButtonState.Pressed && m_selectedPanel != NOT_SELECTED)
             {
@@ -241,7 +239,6 @@ namespace AVSHull
                 {
                     // do rotation
                     double distance = loc.X - m_currentDragLoc.X;
-                    Debug.WriteLine("Rotate: {0}", distance);
 
                     if (Math.Abs(distance) > MIN_ROTATE_DRAG)
                     {

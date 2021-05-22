@@ -250,10 +250,9 @@ namespace AVSHull
 
         void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Debug.WriteLine("PropertyChanged: " + e.PropertyName);
+            //Debug.WriteLine("MainWindow.PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
-                Debug.WriteLine("MainWindow.hull_PropertyChanged");
                 UpdateViews();
             }
         }
