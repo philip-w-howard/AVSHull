@@ -303,6 +303,9 @@ namespace AVSHull
                 //FIXTHIS: need to recompute chines?
                 InvalidateVisual();
             }
+
+            HullLog undoLog = (HullLog)this.FindResource("UndoLog");
+            undoLog.Snapshot();
         }
 
         protected override void OnPreviewMouseMove(MouseEventArgs e)
