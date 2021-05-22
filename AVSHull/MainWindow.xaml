@@ -20,7 +20,13 @@
             <MenuItem x:Name="DeleteBulkheadItem" Header="_Delete Bulkhead" Click="DeleteClick" />
         </ContextMenu>
 
+        <local:HullLog x:Key="UndoLog" />
+        <local:HullLog x:Key="RedoLog" />
     </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Undo" CanExecute="Undo_CanExecute" Executed="Undo_Executed"/>
+        <CommandBinding Command="ApplicationCommands.Redo" CanExecute="Redo_CanExecute" Executed="Redo_Executed"/>
+    </Window.CommandBindings>
     <DockPanel>
         <ToolBarTray Background="White" DockPanel.Dock="Top">
             <ToolBar Band="0 " BandIndex="1">

@@ -26,7 +26,9 @@ namespace AVSHull
     /// </summary>
     public partial class MainWindow : Window
     {
-        Hull myHull;
+        private Hull myHull;
+        private HullLog undoLog;
+        private HullLog redoLog;
 
         //public bool AllowBulkheadMoves;
 
@@ -36,13 +38,20 @@ namespace AVSHull
             myHull = new Hull();
             myHull.PropertyChanged += hull_PropertyChanged;
 
-            Title = "AVS Hull";
+            undoLog = (HullLog)this.FindResource("UndoLog");
+            undoLog.Clear();
+            undoLog.Add(myHull);
+
+            redoLog = (HullLog)this.FindResource("RedoLog");
+            redoLog.Clear();
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             Properties.Settings.Default.Save();
         }
+
+        public static RoutedCommand UndoCommand = new RoutedCommand();
 
         private void openClick(object sender, RoutedEventArgs e)
         {
@@ -69,6 +78,10 @@ namespace AVSHull
                     myHull = tempHull;
                     myHull.PropertyChanged += hull_PropertyChanged;
                     myHull.SetBulkheadHandler();
+                    undoLog.Clear();
+                    undoLog.Add(myHull);
+
+                    redoLog.Clear();
 
                     PerspectiveView.perspective = HullControl.PerspectiveType.PERSPECTIVE;
                     PerspectiveView.IsEditable = false;
@@ -99,6 +112,8 @@ namespace AVSHull
                 {
                     writer.Serialize(output, myHull);
                 }
+                undoLog.Snapshot();
+                redoLog.Clear();
             }
 
         }
@@ -114,7 +129,10 @@ namespace AVSHull
                 myHull.LoadFromHullFile(openFileDialog.FileName);
 
                 NumChines.Text = ((myHull.Bulkheads[0].NumChines) / 2).ToString();
+                undoLog.Clear();
+                undoLog.Add(myHull);
 
+                redoLog.Clear();
                 UpdateViews();
             }
         }
@@ -248,10 +266,11 @@ namespace AVSHull
 
         void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Debug.WriteLine("PropertyChanged: " + e.PropertyName);
+            Debug.WriteLine("MainWindow.PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
-                Debug.WriteLine("MainWindow.hull_PropertyChanged");
+                undoLog.Add(myHull);
+                redoLog.Clear();
                 UpdateViews();
             }
         }
@@ -298,6 +317,11 @@ namespace AVSHull
                     myHull.PropertyChanged += hull_PropertyChanged;
                     myHull.SetBulkheadHandler();
 
+                    undoLog.Clear();
+                    undoLog.Add(myHull);
+
+                    redoLog.Clear();
+
                     UpdateViews();
                 }
             }
@@ -312,6 +336,40 @@ namespace AVSHull
         private void DeleteClick(object sender, RoutedEventArgs e)
         {
             PerspectiveView.DeleteSelectedBulkhead();
+        }
+
+        private void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = undoLog.Count > 1;
+        }
+
+        private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (undoLog.Count > 1)
+            {
+                redoLog.Add(undoLog.Pop());
+                myHull = undoLog.Peek();
+                myHull.PropertyChanged += hull_PropertyChanged;
+                myHull.SetBulkheadHandler();
+                UpdateViews();
+            }
+        }
+        private void Redo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = redoLog.Count > 0;
+        }
+
+        private void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (redoLog.Count > 0)
+            {
+                myHull = redoLog.Pop();
+                myHull.PropertyChanged += hull_PropertyChanged;
+                myHull.SetBulkheadHandler();
+                undoLog.Add(myHull);
+
+                UpdateViews();
+            }
         }
     }
 }

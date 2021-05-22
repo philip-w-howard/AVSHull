@@ -65,13 +65,11 @@ namespace AVSHull
             clip.Rect = new Rect(availableSize);
             Clip = clip;
 
-            Debug.WriteLine("MeasureOverride");
             m_RecreateHandles = true;
             return availableSize;
         }
         protected override Size ArrangeOverride(Size finalSize)
         {
-            Debug.WriteLine("ArrangeOverride");
             if (m_editableHull != null)
             {
                 Geometry chines = m_editableHull.GetChineGeometry();
@@ -213,8 +211,6 @@ namespace AVSHull
                         m_dragging = true;
                         m_startDrag = loc;
                         m_lastDrag = loc;
-
-                        Debug.WriteLine("clicked handle {0}", m_draggingHandle);
                     }
                     else
                     {
@@ -229,7 +225,7 @@ namespace AVSHull
                         {
                             UI_Params setup = (UI_Params)this.FindResource("Curr_UI_Params");
                             bool? allowMoves = setup.AllowBulkheadMoves;
-                            Debug.WriteLine("Clicked bulkhead {0} movable: {1}", m_selectedBulkhead, allowMoves);
+
                             if (allowMoves == true)
                             {
                                 m_movingBulkhead = true;
@@ -237,7 +233,7 @@ namespace AVSHull
                                 m_lastDrag = loc;
                             }
                         }
-                        Debug.WriteLine("Selected Bulkhead: {0}", m_selectedBulkhead);
+
                         if (m_selectedBulkhead != NOT_SELECTED)
                         {
                             CreateHandles();
@@ -262,10 +258,8 @@ namespace AVSHull
 
             Point loc = e.GetPosition(this);
 
-            Debug.WriteLine("dropped handle {0} {1}", m_draggingHandle, m_dragging);
             if (m_dragging && m_draggingHandle != NOT_SELECTED)
             {
-                Debug.WriteLine("Updating handle {0} {1}", m_draggingHandle, m_dragging);
                 double x, y, z;
 
                 if (perspective == PerspectiveType.FRONT)
@@ -276,7 +270,7 @@ namespace AVSHull
                     z = 0;
 
                     // Can't change X coordinate on front view of BOW.
-                    if (m_editableHull.Bulkheads[m_selectedBulkhead].type == Bulkhead.BulkheadType.BOW) x = 0;
+                    if (m_editableHull.Bulkheads[m_selectedBulkhead].Type == Bulkhead.BulkheadType.BOW) x = 0;
                 }
                 else if (perspective == PerspectiveType.SIDE)
                 {
@@ -309,6 +303,9 @@ namespace AVSHull
                 //FIXTHIS: need to recompute chines?
                 InvalidateVisual();
             }
+
+            HullLog undoLog = (HullLog)this.FindResource("UndoLog");
+            undoLog.Snapshot();
         }
 
         protected override void OnPreviewMouseMove(MouseEventArgs e)
@@ -364,8 +361,6 @@ namespace AVSHull
                             m_mouse_Z = X;
                             break;
                     }
-
-                    Debug.WriteLine("Mouse: {0} {1} {2}", m_mouse_X, m_mouse_Y, m_mouse_Z);
                 }
             }
 
@@ -379,8 +374,6 @@ namespace AVSHull
                     rect.X += deltaX;
                     rect.Y += deltaY;
 
-                    Debug.WriteLine("Drag: {0} {1} {2} {3} ({4}, {5})", rect.TopLeft, loc, m_lastDrag, m_scale, deltaX, deltaY);
-
                     m_lastDrag = loc;
 
                     RectangleGeometry geom = new RectangleGeometry(rect);
@@ -389,14 +382,13 @@ namespace AVSHull
                     m_handles[m_draggingHandle] = geom;
                     InvalidateVisual();
                 }
-                else if (m_movingBulkhead && m_selectedBulkhead != NOT_SELECTED && m_editableHull.Bulkheads[m_selectedBulkhead].type != Bulkhead.BulkheadType.BOW &&
+                else if (m_movingBulkhead && m_selectedBulkhead != NOT_SELECTED && m_editableHull.Bulkheads[m_selectedBulkhead].Type != Bulkhead.BulkheadType.BOW &&
                     (perspective == PerspectiveType.TOP || perspective == PerspectiveType.SIDE) )
                 {
                     double deltaX = (loc.X - m_lastDrag.X) / m_scale;
                     double deltaY = (loc.Y - m_lastDrag.Y) / m_scale;
                     m_lastDrag = loc;
                     m_editableHull.UpdateBulkheadPoint(m_selectedBulkhead, NOT_SELECTED, 0, 0, deltaX);
-                    Debug.WriteLine("Moved bulkhead {0} by {1}", m_selectedBulkhead, deltaX);
 
                     InvalidateVisual();
                 }
@@ -407,7 +399,6 @@ namespace AVSHull
             Debug.WriteLine("Control PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
-                Debug.WriteLine("hull_PropertyChanged");
                 CreateHandles();
                 InvalidateVisual();
             }

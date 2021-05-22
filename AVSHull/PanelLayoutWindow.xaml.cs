@@ -41,7 +41,7 @@ namespace AVSHull
 
                 foreach (Bulkhead bulk in eHull.Bulkheads)
                 {
-                    if (bulk.type != Bulkhead.BulkheadType.BOW)
+                    if (bulk.Type != Bulkhead.BulkheadType.BOW)
                     {
                         Panel p = new Panel(bulk);
                         p.name = "Bulkhead " + bulkheadIndex;
@@ -105,16 +105,12 @@ namespace AVSHull
 
         private void AddPanelClick(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine(sender);
-            Debug.WriteLine(e);
             MenuItem item = (MenuItem)e.Source;
             String panelName = item.Header.ToString();
 
             Point loc = Mouse.GetPosition(LayoutControl);
-            Debug.WriteLine("Raw {0}", loc);
             loc.X /= LayoutControl.Layout.Scale;
             loc.Y /= LayoutControl.Layout.Scale;
-            Debug.WriteLine("Scaled {0}", loc);
 
             foreach (Panel panel in m_panels)
             {

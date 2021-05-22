@@ -13,7 +13,6 @@ namespace AVSHull
 
     {
         private const int POINTS_PER_CHINE = 50;
-        private const int HANDLE_SIZE = 5;
         public static int NOT_SELECTED = -1;
 
         public List<Point3DCollection> Chines;
@@ -69,8 +68,8 @@ namespace AVSHull
             {
                 for (int chine = 0; chine < bulk.NumChines - 1; chine++)
                 {
-                    Point p1 = new Point(bulk.GetPoint(chine).X, bulk.GetPoint(chine).Y);
-                    Point p2 = new Point(bulk.GetPoint(chine + 1).X, bulk.GetPoint(chine + 1).Y);
+                    Point p1 = new Point(bulk.Points[chine].X, bulk.Points[chine].Y);
+                    Point p2 = new Point(bulk.Points[chine + 1].X, bulk.Points[chine + 1].Y);
 
                     geom.Children.Add(new LineGeometry(p1, p2));
                 }
@@ -124,7 +123,7 @@ namespace AVSHull
             {
                 for (int ii = 0; ii < bulk.NumChines; ii++)
                 {
-                    Point3D point = bulk.GetPoint(ii);
+                    Point3D point = bulk.Points[ii];
                     min_x = Math.Min(min_x, point.X);
                     min_y = Math.Min(min_y, point.Y);
                     min_z = Math.Min(min_z, point.Z);
@@ -224,15 +223,14 @@ namespace AVSHull
 
             for (int chine = 0; chine < nChines; chine++)
             {
-                Point3DCollection newChine = new Point3DCollection(points_per_chine);
                 Point3DCollection chine_data = new Point3DCollection(Bulkheads.Count);
 
                 for (int bulkhead = 0; bulkhead < hull.Bulkheads.Count; bulkhead++)
                 {
-                    chine_data.Add(hull.Bulkheads[bulkhead].GetPoint(chine));
+                    chine_data.Add(hull.Bulkheads[bulkhead].Points[chine]);
                 }
                 Splines spline = new Splines(chine_data, Splines.RELAXED);
-                newChine = spline.GetPoints(points_per_chine);
+                Point3DCollection newChine = spline.GetPoints(points_per_chine);
                 chines.Add(newChine);
             }
 
@@ -246,7 +244,7 @@ namespace AVSHull
 
         public void UpdateBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
         {
-            if (chine < 0 && m_BaseHull.Bulkheads[bulkhead].type != Bulkhead.BulkheadType.BOW)
+            if (chine < 0 && m_BaseHull.Bulkheads[bulkhead].Type != Bulkhead.BulkheadType.BOW)
             {
                 // assume we are shifting the bulkhead in the Z direction
                 m_BaseHull.Bulkheads[bulkhead].MoveZ(z);
@@ -285,7 +283,7 @@ namespace AVSHull
             int index = 0;
             for (int ii = 0; ii < m_BaseHull.Bulkheads.Count; ii++)
             {
-                if (m_BaseHull.Bulkheads[ii].GetPoint(0).Z > Z)
+                if (m_BaseHull.Bulkheads[ii].Points[0].Z > Z)
                 {
                     index = ii;
                     break;
