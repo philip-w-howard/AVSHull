@@ -21,7 +21,7 @@
         </ContextMenu>
 
         <local:HullLog x:Key="UndoLog" />
-        
+        <local:HullLog x:Key="RedoLog" />
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Undo" CanExecute="Undo_CanExecute" Executed="Undo_Executed"/>

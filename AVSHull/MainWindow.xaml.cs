@@ -28,6 +28,7 @@ namespace AVSHull
     {
         private Hull myHull;
         private HullLog undoLog;
+        private HullLog redoLog;
 
         //public bool AllowBulkheadMoves;
 
@@ -40,6 +41,9 @@ namespace AVSHull
             undoLog = (HullLog)this.FindResource("UndoLog");
             undoLog.Clear();
             undoLog.Add(myHull);
+
+            redoLog = (HullLog)this.FindResource("RedoLog");
+            redoLog.Clear();
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -77,6 +81,8 @@ namespace AVSHull
                     undoLog.Clear();
                     undoLog.Add(myHull);
 
+                    redoLog.Clear();
+
                     PerspectiveView.perspective = HullControl.PerspectiveType.PERSPECTIVE;
                     PerspectiveView.IsEditable = false;
                     UpdateViews();
@@ -107,6 +113,7 @@ namespace AVSHull
                     writer.Serialize(output, myHull);
                 }
                 undoLog.Snapshot();
+                redoLog.Clear();
             }
 
         }
@@ -125,6 +132,7 @@ namespace AVSHull
                 undoLog.Clear();
                 undoLog.Add(myHull);
 
+                redoLog.Clear();
                 UpdateViews();
             }
         }
@@ -262,6 +270,7 @@ namespace AVSHull
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
                 undoLog.Add(myHull);
+                redoLog.Clear();
                 UpdateViews();
             }
         }
@@ -311,6 +320,8 @@ namespace AVSHull
                     undoLog.Clear();
                     undoLog.Add(myHull);
 
+                    redoLog.Clear();
+
                     UpdateViews();
                 }
             }
@@ -336,19 +347,25 @@ namespace AVSHull
         {
             if (undoLog.Count > 1)
             {
-                undoLog.Pop();
+                redoLog.Add(undoLog.Pop());
                 myHull = undoLog.Peek();
                 UpdateViews();
             }
         }
         private void Redo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-
+            e.CanExecute = redoLog.Count > 0;
         }
 
         private void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            if (redoLog.Count > 0)
+            {
+                myHull = redoLog.Pop();
+                undoLog.Add(myHull);
 
+                UpdateViews();
+            }
         }
     }
 }
