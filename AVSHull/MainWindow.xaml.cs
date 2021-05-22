@@ -349,6 +349,8 @@ namespace AVSHull
             {
                 redoLog.Add(undoLog.Pop());
                 myHull = undoLog.Peek();
+                myHull.PropertyChanged += hull_PropertyChanged;
+                myHull.SetBulkheadHandler();
                 UpdateViews();
             }
         }
@@ -362,6 +364,8 @@ namespace AVSHull
             if (redoLog.Count > 0)
             {
                 myHull = redoLog.Pop();
+                myHull.PropertyChanged += hull_PropertyChanged;
+                myHull.SetBulkheadHandler();
                 undoLog.Add(myHull);
 
                 UpdateViews();
