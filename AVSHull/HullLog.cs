@@ -43,5 +43,15 @@ namespace AVSHull
 
             return Log.Pop();
         }
+        public Hull Peek()
+        {
+            if (Log.Count == 0) return null;
+
+            return Log.Peek();
+        }
+        public void Clear()
+        {
+            Log.Clear();
+        }
     }
 }

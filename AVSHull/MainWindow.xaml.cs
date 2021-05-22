@@ -38,6 +38,8 @@ namespace AVSHull
             myHull.PropertyChanged += hull_PropertyChanged;
 
             undoLog = (HullLog)this.FindResource("UndoLog");
+            undoLog.Clear();
+            undoLog.Add(myHull);
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -72,6 +74,8 @@ namespace AVSHull
                     myHull = tempHull;
                     myHull.PropertyChanged += hull_PropertyChanged;
                     myHull.SetBulkheadHandler();
+                    undoLog.Clear();
+                    undoLog.Add(myHull);
 
                     PerspectiveView.perspective = HullControl.PerspectiveType.PERSPECTIVE;
                     PerspectiveView.IsEditable = false;
@@ -102,6 +106,7 @@ namespace AVSHull
                 {
                     writer.Serialize(output, myHull);
                 }
+                undoLog.Snapshot();
             }
 
         }
@@ -117,6 +122,8 @@ namespace AVSHull
                 myHull.LoadFromHullFile(openFileDialog.FileName);
 
                 NumChines.Text = ((myHull.Bulkheads[0].NumChines) / 2).ToString();
+                undoLog.Clear();
+                undoLog.Add(myHull);
 
                 UpdateViews();
             }
@@ -301,6 +308,9 @@ namespace AVSHull
                     myHull.PropertyChanged += hull_PropertyChanged;
                     myHull.SetBulkheadHandler();
 
+                    undoLog.Clear();
+                    undoLog.Add(myHull);
+
                     UpdateViews();
                 }
             }
@@ -319,14 +329,15 @@ namespace AVSHull
 
         private void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = undoLog.Count > 0;
+            e.CanExecute = undoLog.Count > 1;
         }
 
         private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (undoLog.Count > 0)
+            if (undoLog.Count > 1)
             {
-                myHull = undoLog.Pop();
+                undoLog.Pop();
+                myHull = undoLog.Peek();
                 UpdateViews();
             }
         }
