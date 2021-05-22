@@ -276,7 +276,7 @@ namespace AVSHull
                     z = 0;
 
                     // Can't change X coordinate on front view of BOW.
-                    if (m_editableHull.Bulkheads[m_selectedBulkhead].type == Bulkhead.BulkheadType.BOW) x = 0;
+                    if (m_editableHull.Bulkheads[m_selectedBulkhead].Type == Bulkhead.BulkheadType.BOW) x = 0;
                 }
                 else if (perspective == PerspectiveType.SIDE)
                 {
@@ -389,7 +389,7 @@ namespace AVSHull
                     m_handles[m_draggingHandle] = geom;
                     InvalidateVisual();
                 }
-                else if (m_movingBulkhead && m_selectedBulkhead != NOT_SELECTED && m_editableHull.Bulkheads[m_selectedBulkhead].type != Bulkhead.BulkheadType.BOW &&
+                else if (m_movingBulkhead && m_selectedBulkhead != NOT_SELECTED && m_editableHull.Bulkheads[m_selectedBulkhead].Type != Bulkhead.BulkheadType.BOW &&
                     (perspective == PerspectiveType.TOP || perspective == PerspectiveType.SIDE) )
                 {
                     double deltaX = (loc.X - m_lastDrag.X) / m_scale;

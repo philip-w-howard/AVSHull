@@ -81,19 +81,16 @@ namespace AVSHull
                 line = file.ReadLine();
                 if (!int.TryParse(line, out num_chines)) throw new Exception("Invalid HUL file format");
 
-                Bulkhead bulkhead = new Bulkhead();
-                bulkhead.LoadFromHullFile(file, num_chines, Bulkhead.BulkheadType.BOW);
+                Bulkhead bulkhead = new Bulkhead(file, num_chines, Bulkhead.BulkheadType.BOW);
                 Bulkheads.Add(bulkhead);
 
                 for (int ii = 1; ii < numBulkheads - 1; ii++)
                 {
-                    bulkhead = new Bulkhead();
-                    bulkhead.LoadFromHullFile(file, num_chines, Bulkhead.BulkheadType.VERTICAL);
+                    bulkhead = new Bulkhead(file, num_chines, Bulkhead.BulkheadType.VERTICAL);
                     Bulkheads.Add(bulkhead);
                 }
 
-                bulkhead = new Bulkhead();
-                bulkhead.LoadFromHullFile(file, num_chines, Bulkhead.BulkheadType.TRANSOM);
+                bulkhead = new Bulkhead(file, num_chines, Bulkhead.BulkheadType.TRANSOM);
                 Bulkheads.Add(bulkhead);
             }
             RepositionToZero();
@@ -139,7 +136,7 @@ namespace AVSHull
             {
                 for (int ii = 0; ii < bulk.NumChines; ii++)
                 {
-                    Point3D point = bulk.GetPoint(ii);
+                    Point3D point = bulk.Points[ii];
                     min_x = Math.Min(min_x, point.X);
                     min_y = Math.Min(min_y, point.Y);
                     min_z = Math.Min(min_z, point.Z);
@@ -160,7 +157,7 @@ namespace AVSHull
             {
                 for (int ii = 0; ii < bulk.NumChines; ii++)
                 {
-                    Point3D point = bulk.GetPoint(ii);
+                    Point3D point = bulk.Points[ii];
                     min_x = Math.Max(min_x, point.X);
                     min_y = Math.Max(min_y, point.Y);
                     min_z = Math.Max(min_z, point.Z);
@@ -182,6 +179,7 @@ namespace AVSHull
             UpdateWithMatrix(scale);
 
             RepositionToZero();
+            Notify("HullScale");
         }
 
         private void UpdateWithMatrix(double[,] matrix)

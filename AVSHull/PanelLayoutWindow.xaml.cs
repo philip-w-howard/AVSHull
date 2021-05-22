@@ -41,7 +41,7 @@ namespace AVSHull
 
                 foreach (Bulkhead bulk in eHull.Bulkheads)
                 {
-                    if (bulk.type != Bulkhead.BulkheadType.BOW)
+                    if (bulk.Type != Bulkhead.BulkheadType.BOW)
                     {
                         Panel p = new Panel(bulk);
                         p.name = "Bulkhead " + bulkheadIndex;

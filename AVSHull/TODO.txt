@@ -35,3 +35,5 @@ TODO:
 	Check on notification settings
 
 	Make all changes to MyHull go through class to make it easy to do an "undo".
+
+	Check if Bulkhead(points, Type) is half hull or full hull.

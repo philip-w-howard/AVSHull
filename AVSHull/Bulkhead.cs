@@ -15,19 +15,28 @@ namespace AVSHull
         private const double NEAR_ZERO = 0.02;
 
         public enum BulkheadType { BOW, VERTICAL, TRANSOM };
-        public BulkheadType type { get; set; }
+        
+        private BulkheadType _type;
+        public BulkheadType Type 
+        {
+            get { return _type; }
+            set { _type = value; Notify("Type"); }
+        }
 
         public int NumChines { get { return m_points.Count; } }
 
-        public double m_transomAngle;
-        public double TransomAngle { get { return m_transomAngle; } }
+        private double m_transomAngle;
+        public double TransomAngle 
+        { 
+            get { return m_transomAngle; }
+            set { m_transomAngle = value; Notify("TransomAngle"); }
+        }
 
         private Point3DCollection m_points;
-        public Point3DCollection Points { get { return m_points; } }
-
-        public Point3D GetPoint(int index)
-        {
-            return m_points[index];
+        public Point3DCollection Points 
+        { 
+            get { return m_points; } 
+            set { m_points = value; Notify("Bulkhead"); }
         }
 
         public Bulkhead()
@@ -112,7 +121,7 @@ namespace AVSHull
         public Bulkhead(Point3DCollection points, BulkheadType type)
         {
             m_points = new Point3DCollection();
-            this.type = type;
+            this.Type = type;
 
             if (Math.Abs(points[0].X) < NEAR_ZERO)
             {
@@ -152,9 +161,10 @@ namespace AVSHull
             StraightenBulkhead();
         }
 
-        public void LoadFromHullFile(StreamReader file, int numChines, BulkheadType type)
+        // Create a bulkhead from a Carlson HUL file
+        public Bulkhead(StreamReader file, int numChines, BulkheadType type)
         {
-            this.type = type;
+            this.Type = type;
             m_points = new Point3DCollection();
 
             string line;
@@ -217,14 +227,12 @@ namespace AVSHull
 
             ComputeAngle();
             StraightenBulkhead();
-
-            Notify("Bulkhead");
         }
 
         protected void ComputeAngle()
         {
             m_transomAngle = 0;
-            if (type == BulkheadType.TRANSOM)
+            if (Type == BulkheadType.TRANSOM)
             {
                 double delta, delta_z, delta_y;
 
@@ -243,13 +251,13 @@ namespace AVSHull
 
                 if (delta_z == 0)
                 {
-                    type = BulkheadType.VERTICAL;
+                    Type = BulkheadType.VERTICAL;
                     m_transomAngle = Math.PI / 2;
                 }
                 else
                     m_transomAngle = Math.Atan2(delta_y, delta_z);
             }
-            else if (type == BulkheadType.VERTICAL)
+            else if (Type == BulkheadType.VERTICAL)
             {
                 m_transomAngle = Math.PI / 2;
             }
@@ -269,7 +277,7 @@ namespace AVSHull
             {
                 m_points[ii] += offset;
             }
-            Notify("ShiftBy");
+            Notify("Bulkhead");
 
         }
 
@@ -279,8 +287,8 @@ namespace AVSHull
 
             for (int chine = 0; chine < NumChines - 1; chine++)
             {
-                Point p1 = new Point(GetPoint(chine).X, GetPoint(chine).Y);
-                Point p2 = new Point(GetPoint(chine + 1).X, GetPoint(chine + 1).Y);
+                Point p1 = new Point(Points[chine].X, Points[chine].Y);
+                Point p2 = new Point(Points[chine + 1].X, Points[chine + 1].Y);
 
                 geom.Children.Add(new LineGeometry(p1, p2));
             }
@@ -293,20 +301,19 @@ namespace AVSHull
         public event PropertyChangedEventHandler PropertyChanged;
         void Notify(string propName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
         //**********************************************
         // IClonable implementation
         public object Clone()
         {
-            Bulkhead copy = new Bulkhead();
-            copy.type = type;
-            copy.m_transomAngle = TransomAngle;
-            copy.m_points = m_points.Clone();
+            Bulkhead copy = new Bulkhead
+            {
+                Type = Type,
+                m_transomAngle = TransomAngle,
+                m_points = m_points.Clone()
+            };
 
             return copy;
         }
@@ -336,7 +343,7 @@ namespace AVSHull
             int otherChine = (m_points.Count - 1) - chine;
             Point3D otherPoint = m_points[otherChine];
 
-            switch (type)
+            switch (Type)
             {
                 case BulkheadType.BOW:
                     point.X += 0;                   // Can't shift BOW points in the X direction
