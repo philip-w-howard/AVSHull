@@ -25,6 +25,10 @@ TODO:
 		See CreateHullDialog as another example
 			Set window (Left,Top) based on mouse position
 
+	Check on notification settings.
+
+	Check if Bulkhead(points, Type) is half hull or full hull.
+
 	UI Standards:
 		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0
 	Create hull from scratch
@@ -33,7 +37,24 @@ TODO:
 	Split: use actual arcs instead of simulated ones.
 
 	For Insert Bulkhead: compute location of click relative to drawing. Using m_xform, m_geometry.
+		compute X,Y,Z is done
 	
-	Check on notification settings.
+	Dialog appearance
+		PanelLayoutSettings
+		gcode setup
+	Dialog positioning
+	Dialog data handling
+	Settings
+	Appearance based on styles
+	Add bulkhead based on click
+	Change number of chines UI
+	Data validation (beyond red rectangle)
+	Rotate perspective with mouse.
 
-	Check if Bulkhead(points, Type) is half hull or full hull.
+	Save vs. SaveAs
+		can use undoLog.Count to determine if there are unsaved changes?
+
+	X,Y,Z displayed (already calculated)
+	Edit bulkhead dialog?
+
+	Is PanelLayout separate app? Window? Tab?
