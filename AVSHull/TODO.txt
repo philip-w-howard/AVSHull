@@ -22,7 +22,9 @@ TODO:
 		See about box for sample
 			<Window> WindowStartupLocation="CenterOwner"
 			dlg.Owner = this;
-		
+		See CreateHullDialog as another example
+			Set window (Left,Top) based on mouse position
+
 	UI Standards:
 		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0
 	Create hull from scratch
@@ -33,7 +35,5 @@ TODO:
 	For Insert Bulkhead: compute location of click relative to drawing. Using m_xform, m_geometry.
 	
 	Check on notification settings.
-
-	Make all changes to MyHull go through class to make it easy to do an "undo".
 
 	Check if Bulkhead(points, Type) is half hull or full hull.

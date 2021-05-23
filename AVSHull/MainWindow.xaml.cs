@@ -304,10 +304,22 @@ namespace AVSHull
             myHull.ChangeChines(values.NumChines);
         }
 
+        private Point GetMousePosition()
+        {
+            // Position of the mouse relative to the window
+            var position = Mouse.GetPosition(this);
+
+            // Add the window position
+            return new Point(position.X + this.Left, position.Y + this.Top);
+        }
         private void createClick(object sender, RoutedEventArgs e)
         {
-            CreateHullDialog createHullDialog = new CreateHullDialog();
 
+            Point loc = GetMousePosition();
+
+            CreateHullDialog createHullDialog = new CreateHullDialog();
+            createHullDialog.Top = loc.Y;
+            createHullDialog.Left = loc.X;
             if (createHullDialog.ShowDialog() == true)
             {
                 CreateHullData data = (CreateHullData)this.FindResource("CreateHullData");
