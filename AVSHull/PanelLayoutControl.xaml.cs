@@ -156,6 +156,8 @@ namespace AVSHull
                 Layout.Scale *= 1.1;
             else if (e.Delta < 0)
                 Layout.Scale /= 1.1;
+
+            InvalidateVisual();
         }
 
         private int PanelClicked(Point loc)
