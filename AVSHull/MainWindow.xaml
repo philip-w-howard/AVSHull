@@ -49,6 +49,15 @@
             </ToolBar>
         </ToolBarTray>
 
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" DataContext="{DynamicResource HullMouseLocation}">
+            <Label>X</Label>
+            <TextBox x:Name="XLoc" Width="40" IsReadOnly="True" VerticalAlignment="Center" Text="{Binding Path=X}" />
+            <Label>Y</Label>
+            <TextBox x:Name="YLoc" Width="40" IsReadOnly="True" VerticalAlignment="Center" Text="{Binding Path=Y}"/>
+            <Label>Z</Label>
+            <TextBox x:Name="ZLoc" Width="40" IsReadOnly="True" VerticalAlignment="Center" Text="{Binding Path=Z}"/>
+        </StackPanel>
+
         <Border BorderBrush="Gray" BorderThickness="3">
             <Grid>
                 <Grid.RowDefinitions>
