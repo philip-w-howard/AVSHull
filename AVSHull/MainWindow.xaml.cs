@@ -15,7 +15,6 @@ namespace AVSHull
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Hull myHull;
         private HullLog undoLog;
         private HullLog redoLog;
 
@@ -24,13 +23,12 @@ namespace AVSHull
         public MainWindow()
         {
             InitializeComponent();
-            myHull = (Hull)this.FindResource("MyHull");
-            myHull.PropertyChanged += hull_PropertyChanged;
-            myHull.SetBulkheadHandler();
+            BaseHull.Instance().PropertyChanged += hull_PropertyChanged;
+            BaseHull.Instance().SetBulkheadHandler();
 
             undoLog = (HullLog)this.FindResource("UndoLog");
             undoLog.Clear();
-            undoLog.Add(myHull);
+            undoLog.Add(BaseHull.Instance());
 
             redoLog = (HullLog)this.FindResource("RedoLog");
             redoLog.Clear();
@@ -63,9 +61,9 @@ namespace AVSHull
                     // Call the Deserialize method to restore the object's state.
                     tempHull = (Hull)serializer.Deserialize(reader);
                     tempHull.CheckTransom();
-                    myHull.Bulkheads = tempHull.Bulkheads;
+                    BaseHull.Instance().Bulkheads = tempHull.Bulkheads;
                     undoLog.Clear();
-                    undoLog.Add(myHull);
+                    undoLog.Add(BaseHull.Instance());
 
                     redoLog.Clear();
 
@@ -74,14 +72,14 @@ namespace AVSHull
                     UpdateViews();
 
                     PanelsMenu.IsEnabled = true;
-                    NumChines.Text = ((myHull.Bulkheads[0].NumChines)/2).ToString();
+                    NumChines.Text = ((BaseHull.Instance().Bulkheads[0].NumChines)/2).ToString();
                 }
             }
         }
 
         private void saveClick(object sender, RoutedEventArgs e)
         {
-            if (myHull == null) return;
+            if (BaseHull.Instance() == null) return;
 
             SaveFileDialog saveDlg = new SaveFileDialog();
 
@@ -96,7 +94,7 @@ namespace AVSHull
 
                 using (FileStream output = new FileStream(saveDlg.FileName, FileMode.Create))
                 {
-                    writer.Serialize(output, myHull);
+                    writer.Serialize(output, BaseHull.Instance());
                 }
                 undoLog.Snapshot();
                 redoLog.Clear();
@@ -112,11 +110,11 @@ namespace AVSHull
 
             if (openFileDialog.ShowDialog() == true)
             {
-                myHull.LoadFromHullFile(openFileDialog.FileName);
+                BaseHull.Instance().LoadFromHullFile(openFileDialog.FileName);
 
-                NumChines.Text = ((myHull.Bulkheads[0].NumChines) / 2).ToString();
+                NumChines.Text = ((BaseHull.Instance().Bulkheads[0].NumChines) / 2).ToString();
                 undoLog.Clear();
-                undoLog.Add(myHull);
+                undoLog.Add(BaseHull.Instance());
 
                 redoLog.Clear();
                 UpdateViews();
@@ -125,19 +123,19 @@ namespace AVSHull
 
         private void PanelsClick(object sender, RoutedEventArgs e)
         {
-            PanelLayoutWindow layout = new PanelLayoutWindow(myHull);
+            PanelLayoutWindow layout = new PanelLayoutWindow(BaseHull.Instance());
             layout.Show();
         }
 
         private void ResizeClick(object sender, RoutedEventArgs e)
         {
-            if (myHull.Bulkheads.Count == 0)
+            if (BaseHull.Instance().Bulkheads.Count == 0)
             {
                 MessageBox.Show("Can't resize a non-existant hull.");
                 return;
             }
 
-            EditableHull hull = new EditableHull(myHull);
+            EditableHull hull = new EditableHull(BaseHull.Instance());
 
             Size3D originalSize = hull.GetSize();
 
@@ -157,7 +155,7 @@ namespace AVSHull
                     scale_y = resizeData.Height / originalSize.Y;
                     scale_z = resizeData.Length / originalSize.Z;
 
-                    myHull.Scale(scale_x, scale_y, scale_z);
+                    BaseHull.Instance().Scale(scale_x, scale_y, scale_z);
                     UpdateViews();
                 }
             }
@@ -213,22 +211,22 @@ namespace AVSHull
         {
             Debug.WriteLine("UpdateViews: {0}", ++UpdateCount);
 
-            EditableHull topView = new EditableHull(myHull);
+            EditableHull topView = new EditableHull(BaseHull.Instance());
             topView.Rotate(0, 90, 90);
             TopView.editableHull = topView;
             TopView.perspective = HullControl.PerspectiveType.TOP;
 
-            EditableHull sideView = new EditableHull(myHull);
+            EditableHull sideView = new EditableHull(BaseHull.Instance());
             sideView.Rotate(0, 90, 180);
             SideView.editableHull = sideView;
             SideView.perspective = HullControl.PerspectiveType.SIDE;
 
-            EditableHull frontView = new EditableHull(myHull);
+            EditableHull frontView = new EditableHull(BaseHull.Instance());
             frontView.Rotate(0, 0, 180);
             FrontView.editableHull = frontView;
             FrontView.perspective = HullControl.PerspectiveType.FRONT;
 
-            EditableHull perspectiveView = new EditableHull(myHull);
+            EditableHull perspectiveView = new EditableHull(BaseHull.Instance());
             switch (PerspectiveView.perspective)
             {
                 case HullControl.PerspectiveType.FRONT:
@@ -258,7 +256,7 @@ namespace AVSHull
             Debug.WriteLine("MainWindow.PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
-                undoLog.Add(myHull);
+                undoLog.Add(BaseHull.Instance());
                 redoLog.Clear();
                 UpdateViews();
             }
@@ -290,7 +288,7 @@ namespace AVSHull
         private void ChangeChinesClick(object sender, RoutedEventArgs e)
         {
             UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
-            myHull.ChangeChines(values.NumChines);
+            BaseHull.Instance().ChangeChines(values.NumChines);
         }
 
         private Point GetMousePosition()
@@ -315,10 +313,10 @@ namespace AVSHull
                 if (data != null)
                 {
                     Hull tempHull = new Hull(data);
-                    myHull.Bulkheads = tempHull.Bulkheads;
+                    BaseHull.Instance().Bulkheads = tempHull.Bulkheads;
 
                     undoLog.Clear();
-                    undoLog.Add(myHull);
+                    undoLog.Add(BaseHull.Instance());
 
                     redoLog.Clear();
 
@@ -348,7 +346,7 @@ namespace AVSHull
             if (undoLog.Count > 1)
             {
                 redoLog.Add(undoLog.Pop());
-                myHull.Bulkheads = undoLog.Peek().Bulkheads;
+                BaseHull.Instance().Bulkheads = undoLog.Peek().Bulkheads;
                 UpdateViews();
             }
         }
@@ -361,8 +359,8 @@ namespace AVSHull
         {
             if (redoLog.Count > 0)
             {
-                myHull.Bulkheads = redoLog.Pop().Bulkheads;
-                undoLog.Add(myHull);
+                BaseHull.Instance().Bulkheads = redoLog.Pop().Bulkheads;
+                undoLog.Add(BaseHull.Instance());
 
                 UpdateViews();
             }
