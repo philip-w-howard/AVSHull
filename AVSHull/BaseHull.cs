@@ -6,7 +6,7 @@ namespace AVSHull
 {
     class BaseHull
     {
-        private static Hull _hull = new Hull();
+        private static readonly Hull _hull = new Hull();
 
         private BaseHull() { }
 

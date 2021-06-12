@@ -17,37 +17,23 @@ namespace AVSHull
 
         public List<Point3DCollection> Chines;
         private int m_SelectedBulkhead;
-        private Hull m_BaseHull;
-
         public int SelectedBulkhead
         {
             get { return m_SelectedBulkhead; }
             set { m_SelectedBulkhead = value; }
         }
 
-        public Hull BaseHull 
-        { 
-            get { return m_BaseHull; } 
-            set 
-            { 
-                m_BaseHull = value;
-                Bulkheads = new List<Bulkhead>();
-
-                foreach (Bulkhead bulkhead in m_BaseHull.Bulkheads)
-                {
-                    Bulkheads.Add((Bulkhead)bulkhead.Clone());
-                }
-
-                PrepareChines(POINTS_PER_CHINE);
-
-                Notify("BaseHull");
-            }
-        }
-
-        public EditableHull(Hull baseHull)
+        public EditableHull()
         {
+            Bulkheads = new List<Bulkhead>();
+
+            foreach (Bulkhead bulkhead in BaseHull.Instance().Bulkheads)
+            {
+                Bulkheads.Add((Bulkhead)bulkhead.Clone());
+            }
+
             m_SelectedBulkhead = NOT_SELECTED;
-            BaseHull = baseHull;
+            PrepareChines(POINTS_PER_CHINE);
         }
 
         public void Rotate(double x, double y, double z)
@@ -244,21 +230,21 @@ namespace AVSHull
 
         public void UpdateBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
         {
-            if (chine < 0 && m_BaseHull.Bulkheads[bulkhead].Type != Bulkhead.BulkheadType.BOW)
+            if (chine < 0 && BaseHull.Instance().Bulkheads[bulkhead].Type != Bulkhead.BulkheadType.BOW)
             {
                 // assume we are shifting the bulkhead in the Z direction
-                m_BaseHull.Bulkheads[bulkhead].MoveZ(z);
+                BaseHull.Instance().Bulkheads[bulkhead].MoveZ(z);
             }
             else
-                m_BaseHull.Bulkheads[bulkhead].UpdateBulkheadPoint(chine, x, y, z);
+                BaseHull.Instance().Bulkheads[bulkhead].UpdateBulkheadPoint(chine, x, y, z);
         }
 
         public void DeleteBulkhead(int index)
         {
             Bulkheads.RemoveAt(index);
-            m_BaseHull.Bulkheads.RemoveAt(index);
+            BaseHull.Instance().Bulkheads.RemoveAt(index);
 
-            m_BaseHull.Notify("HullData");
+            BaseHull.Instance().Notify("HullData");
         }
 
         public void InsertBulkhead(double Z)
@@ -271,7 +257,7 @@ namespace AVSHull
 
             // get points for new bulkhead
             // First, create chines for base hull
-            List<Point3DCollection> chines = PrepareChines(m_BaseHull, POINTS_PER_CHINE);
+            List<Point3DCollection> chines = PrepareChines(BaseHull.Instance(), POINTS_PER_CHINE);
             Point3DCollection points = new Point3DCollection();
             for (int ii=num_chines-1; ii>=0; ii--)
             {
@@ -281,17 +267,17 @@ namespace AVSHull
 
             // figure out where it goes
             int index = 0;
-            for (int ii = 0; ii < m_BaseHull.Bulkheads.Count; ii++)
+            for (int ii = 0; ii < BaseHull.Instance().Bulkheads.Count; ii++)
             {
-                if (m_BaseHull.Bulkheads[ii].Points[0].Z > Z)
+                if (BaseHull.Instance().Bulkheads[ii].Points[0].Z > Z)
                 {
                     index = ii;
                     break;
                 }
             }
 
-            m_BaseHull.Bulkheads.Insert(index, new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL));
-            m_BaseHull.Notify("HullData");
+            BaseHull.Instance().Bulkheads.Insert(index, new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL));
+            BaseHull.Instance().Notify("HullData");
         }
         //m_selectedBulkhead, m_draggingHandle, x, y, z);
         //*************************************************************

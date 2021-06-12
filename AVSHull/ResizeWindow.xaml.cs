@@ -102,7 +102,7 @@ namespace AVSHull
     /// </summary>
     public partial class ResizeWindow : Window
     {
-        public ResizeWindow(EditableHull hull)
+        public ResizeWindow()
         {
             InitializeComponent();
             ResizeWindowData resizeData = (ResizeWindowData)this.FindResource("ResizeData");
@@ -110,6 +110,7 @@ namespace AVSHull
             if (resizeData != null)
             {
                 bool proportional = resizeData.Proportional;
+                EditableHull hull = new EditableHull();
 
                 // Need to turn off Proportional for initial setup
                 resizeData.Proportional = false;

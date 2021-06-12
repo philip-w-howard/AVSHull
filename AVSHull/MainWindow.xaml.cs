@@ -123,7 +123,7 @@ namespace AVSHull
 
         private void PanelsClick(object sender, RoutedEventArgs e)
         {
-            PanelLayoutWindow layout = new PanelLayoutWindow(BaseHull.Instance());
+            PanelLayoutWindow layout = new PanelLayoutWindow();
             layout.Show();
         }
 
@@ -135,11 +135,11 @@ namespace AVSHull
                 return;
             }
 
-            EditableHull hull = new EditableHull(BaseHull.Instance());
+            EditableHull hull = new EditableHull();
 
             Size3D originalSize = hull.GetSize();
 
-            ResizeWindow resize = new ResizeWindow(hull);
+            ResizeWindow resize = new ResizeWindow();
             resize.ShowDialog();
 
             if (resize.OK)
@@ -211,22 +211,22 @@ namespace AVSHull
         {
             Debug.WriteLine("UpdateViews: {0}", ++UpdateCount);
 
-            EditableHull topView = new EditableHull(BaseHull.Instance());
+            EditableHull topView = new EditableHull();
             topView.Rotate(0, 90, 90);
             TopView.editableHull = topView;
             TopView.perspective = HullControl.PerspectiveType.TOP;
 
-            EditableHull sideView = new EditableHull(BaseHull.Instance());
+            EditableHull sideView = new EditableHull();
             sideView.Rotate(0, 90, 180);
             SideView.editableHull = sideView;
             SideView.perspective = HullControl.PerspectiveType.SIDE;
 
-            EditableHull frontView = new EditableHull(BaseHull.Instance());
+            EditableHull frontView = new EditableHull();
             frontView.Rotate(0, 0, 180);
             FrontView.editableHull = frontView;
             FrontView.perspective = HullControl.PerspectiveType.FRONT;
 
-            EditableHull perspectiveView = new EditableHull(BaseHull.Instance());
+            EditableHull perspectiveView = new EditableHull();
             switch (PerspectiveView.perspective)
             {
                 case HullControl.PerspectiveType.FRONT:
