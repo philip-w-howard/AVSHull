@@ -37,9 +37,13 @@ namespace AVSHull
         private bool m_movingBulkhead = false;
 
         private NotifyPoint3D m_mouseLoc;
+        static int SequenceCounter = 0;
+        private int sequence;
 
         public HullControl()
         {
+            sequence = ++SequenceCounter;
+
             m_editableHull = null;
             m_bulkheadGeometry = new List<Geometry>();
             m_handles = new List<RectangleGeometry>();

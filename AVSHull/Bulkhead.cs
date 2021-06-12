@@ -229,6 +229,13 @@ namespace AVSHull
             StraightenBulkhead();
         }
 
+        public void CheckTransomAngle()
+        {
+            if (Type == BulkheadType.TRANSOM && TransomAngle == 0)
+            {
+                ComputeAngle();
+            }
+        }
         protected void ComputeAngle()
         {
             m_transomAngle = 0;

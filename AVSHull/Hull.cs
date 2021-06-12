@@ -10,7 +10,13 @@ namespace AVSHull
 {
     public class Hull : INotifyPropertyChanged, ICloneable
     {
-        public List<Bulkhead> Bulkheads;
+        private List<Bulkhead> m_Bulkheads;
+
+        public List<Bulkhead> Bulkheads
+        {
+            get { return m_Bulkheads; }
+            set { m_Bulkheads = value; SetBulkheadHandler(); Notify("HullData"); }
+        }
 
         public Hull()
         {
@@ -66,6 +72,7 @@ namespace AVSHull
                 height += setup.Height / setup.NumChines;
             }
             Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.TRANSOM));
+            CheckTransom();
         }
 
         public void LoadFromHullFile(string filename)
@@ -94,7 +101,7 @@ namespace AVSHull
                 Bulkheads.Add(bulkhead);
             }
             RepositionToZero();
-
+            CheckTransom();
             SetBulkheadHandler(bulkhead_PropertyChanged);
 
             Notify("HullData");
@@ -198,6 +205,15 @@ namespace AVSHull
             }
 
             Notify("HullData");
+        }
+
+        public void CheckTransom()
+        {
+            for (int ii = 0; ii < Bulkheads.Count; ii++)
+            {
+                Bulkheads[ii].CheckTransomAngle();
+            }
+
         }
         //*********************************************
         // INotifyPropertyChanged implementation

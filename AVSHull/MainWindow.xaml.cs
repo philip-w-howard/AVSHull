@@ -24,8 +24,9 @@ namespace AVSHull
         public MainWindow()
         {
             InitializeComponent();
-            myHull = new Hull();
+            myHull = (Hull)this.FindResource("MyHull");
             myHull.PropertyChanged += hull_PropertyChanged;
+            myHull.SetBulkheadHandler();
 
             undoLog = (HullLog)this.FindResource("UndoLog");
             undoLog.Clear();
@@ -44,9 +45,6 @@ namespace AVSHull
 
         private void openClick(object sender, RoutedEventArgs e)
         {
-            // destroy any previous hull
-            myHull = null;
-
             OpenFileDialog openDlg = new OpenFileDialog();
 
             openDlg.Filter = "AVS Hull files (*.avsh)|*.avsh|All files (*.*)|*.*";
@@ -64,9 +62,8 @@ namespace AVSHull
                 {
                     // Call the Deserialize method to restore the object's state.
                     tempHull = (Hull)serializer.Deserialize(reader);
-                    myHull = tempHull;
-                    myHull.PropertyChanged += hull_PropertyChanged;
-                    myHull.SetBulkheadHandler();
+                    tempHull.CheckTransom();
+                    myHull.Bulkheads = tempHull.Bulkheads;
                     undoLog.Clear();
                     undoLog.Add(myHull);
 
@@ -211,8 +208,11 @@ namespace AVSHull
             PerspectiveView.InvalidateVisual();
         }
 
+        private int UpdateCount = 0;
         private void UpdateViews()
         {
+            Debug.WriteLine("UpdateViews: {0}", ++UpdateCount);
+
             EditableHull topView = new EditableHull(myHull);
             topView.Rotate(0, 90, 90);
             TopView.editableHull = topView;
@@ -314,9 +314,8 @@ namespace AVSHull
                 CreateHullData data = (CreateHullData)this.FindResource("CreateHullData");
                 if (data != null)
                 {
-                    myHull = new Hull(data);
-                    myHull.PropertyChanged += hull_PropertyChanged;
-                    myHull.SetBulkheadHandler();
+                    Hull tempHull = new Hull(data);
+                    myHull.Bulkheads = tempHull.Bulkheads;
 
                     undoLog.Clear();
                     undoLog.Add(myHull);
@@ -349,9 +348,7 @@ namespace AVSHull
             if (undoLog.Count > 1)
             {
                 redoLog.Add(undoLog.Pop());
-                myHull = undoLog.Peek();
-                myHull.PropertyChanged += hull_PropertyChanged;
-                myHull.SetBulkheadHandler();
+                myHull.Bulkheads = undoLog.Peek().Bulkheads;
                 UpdateViews();
             }
         }
@@ -364,9 +361,7 @@ namespace AVSHull
         {
             if (redoLog.Count > 0)
             {
-                myHull = redoLog.Pop();
-                myHull.PropertyChanged += hull_PropertyChanged;
-                myHull.SetBulkheadHandler();
+                myHull.Bulkheads = redoLog.Pop().Bulkheads;
                 undoLog.Add(myHull);
 
                 UpdateViews();

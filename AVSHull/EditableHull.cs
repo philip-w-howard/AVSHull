@@ -96,7 +96,7 @@ namespace AVSHull
             return geom;
         }
     
-    private void UpdateWithMatrix(double[,] matrix)
+        private void UpdateWithMatrix(double[,] matrix)
         {
             for (int ii = 0; ii < Bulkheads.Count; ii++)
             {

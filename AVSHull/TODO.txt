@@ -64,3 +64,5 @@ TODO:
 	Rethink use of BaseHull in EditableHull
 
 	Add BaseHull as a resource in App, which everyone references.
+		Need to update Editable Hull to use resource
+		Editing transom in front view seg faults
