@@ -25,6 +25,11 @@ namespace AVSHull
             set { loc.Z = value; Notify("Z"); }
         }
 
+        public override string ToString()
+        {
+            return loc.ToString();
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         void Notify(string propName)
         {

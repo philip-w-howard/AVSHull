@@ -62,3 +62,5 @@ TODO:
 		relative to mouse
 
 	Rethink use of BaseHull in EditableHull
+
+	Add BaseHull as a resource in App, which everyone references.

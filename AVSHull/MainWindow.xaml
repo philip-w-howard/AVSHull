@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:properties="clr-namespace:AVSHull.Properties"
-        xmlns:local="clr-namespace:AVSHull" xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:local="clr-namespace:AVSHull" 
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         Name="AVSHullMainWindow"
         Title="AVS Hull" 
@@ -58,61 +59,69 @@
             <TextBox x:Name="ZLoc" Width="40" IsReadOnly="True" VerticalAlignment="Center" Text="{Binding Path=Z}"/>
         </StackPanel>
 
-        <Border BorderBrush="Gray" BorderThickness="3">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="3*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition />
-                    <ColumnDefinition  Width="auto"/>
-                    <ColumnDefinition />
-                    <ColumnDefinition  Width="auto"/>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray"  ShowsPreview="true" Width="3"/>
-                <GridSplitter Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="true" Width="3"/>
-                <GridSplitter Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="true" Width="3"/>
-                <GridSplitter Grid.Row="1" Grid.ColumnSpan="7" VerticalAlignment="Center" HorizontalAlignment="Stretch" Background="Gray" ShowsPreview="true" Height="3"/>
+        <TabControl>
+            <TabItem Header="Design">
+                <Border BorderBrush="Gray" BorderThickness="3">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="3*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition  Width="auto"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition  Width="auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray"  ShowsPreview="true" Width="3"/>
+                        <GridSplitter Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="true" Width="3"/>
+                        <GridSplitter Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="true" Width="3"/>
+                        <GridSplitter Grid.Row="1" Grid.ColumnSpan="7" VerticalAlignment="Center" HorizontalAlignment="Stretch" Background="Gray" ShowsPreview="true" Height="3"/>
                 
-                <local:HullControl x:Name="FrontView" Grid.Column="0" Grid.Row="0" ClipToBounds ="False" 
-                                   MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
-                <local:HullControl x:Name="TopView" Grid.Column="2" Grid.Row="0"  ClipToBounds ="True" 
-                                   MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
-                <local:HullControl x:Name="SideView" Grid.Column="4" Grid.Row="0"  ClipToBounds ="True" 
-                                   MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
-                <local:HullControl x:Name="PerspectiveView" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="7" ClipToBounds ="False" 
-                                    HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
+                        <local:HullControl x:Name="FrontView" Grid.Column="0" Grid.Row="0" ClipToBounds ="False" 
+                                           MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
+                        <local:HullControl x:Name="TopView" Grid.Column="2" Grid.Row="0"  ClipToBounds ="True" 
+                                           MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
+                        <local:HullControl x:Name="SideView" Grid.Column="4" Grid.Row="0"  ClipToBounds ="True" 
+                                           MouseDoubleClick="HullMouseDoubleClick" HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
+                        <local:HullControl x:Name="PerspectiveView" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="7" ClipToBounds ="False" 
+                                            HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
 
-                <StackPanel Grid.Column="6" Grid.Row="0">
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Vertical" Margin="5">
-                            <Button Click="RotateClick">+X</Button>
-                            <Button Click="RotateClick">+Y</Button>
-                            <Button Click="RotateClick">+Z</Button>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Margin="5">
-                            <Button Click="RotateClick">-X</Button>
-                            <Button Click="RotateClick">-Y</Button>
-                            <Button Click="RotateClick">-Z</Button>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel Grid.Column="6" Grid.Row="0">
                             <StackPanel Orientation="Horizontal">
-                                <Label>Chines:</Label>
-                                <TextBox x:Name="NumChines" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NumChines, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label>New Bulkhead Loc:</Label>
-                                <TextBox x:Name="NewBulkheadLoc" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NewBulkheadLoc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <StackPanel Orientation="Vertical" Margin="5">
+                                    <Button Click="RotateClick">+X</Button>
+                                    <Button Click="RotateClick">+Y</Button>
+                                    <Button Click="RotateClick">+Z</Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="5">
+                                    <Button Click="RotateClick">-X</Button>
+                                    <Button Click="RotateClick">-Y</Button>
+                                    <Button Click="RotateClick">-Z</Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label>Chines:</Label>
+                                        <TextBox x:Name="NumChines" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NumChines, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label>New Bulkhead Loc:</Label>
+                                        <TextBox x:Name="NewBulkheadLoc" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NewBulkheadLoc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
-        </Border>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+            <local:MyTabItem Header="Panels" TabName="Panels" >
+                <local:PanelsLayoutControl></local:PanelsLayoutControl>
+            </local:MyTabItem>
+        </TabControl>
     </DockPanel>
 </Window>
