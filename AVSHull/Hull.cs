@@ -18,6 +18,13 @@ namespace AVSHull
             set { m_Bulkheads = value; SetBulkheadHandler(); Notify("HullData"); }
         }
 
+        private DateTime _timestamp;
+        public DateTime Timestamp 
+        { 
+            get { return _timestamp; } 
+            set { _timestamp = value; Notify("Timestamp"); }
+        }
+
         public Hull()
         {
             Bulkheads = new List<Bulkhead>();
@@ -31,6 +38,8 @@ namespace AVSHull
             double Z = 0;
 
             Bulkheads = new List<Bulkhead>();
+
+            Timestamp = DateTime.Now;
 
             if (setup.IncludeBow)
             {
@@ -78,6 +87,8 @@ namespace AVSHull
         public void LoadFromHullFile(string filename)
         {
             Bulkheads = new List<Bulkhead>();
+
+            Timestamp = DateTime.Now;
 
             using (StreamReader file = File.OpenText(filename))
             {
@@ -191,6 +202,8 @@ namespace AVSHull
 
         private void UpdateWithMatrix(double[,] matrix)
         {
+            Timestamp = DateTime.Now;
+
             for (int ii = 0; ii < Bulkheads.Count; ii++)
             {
                 Bulkheads[ii].UpdateWithMatrix(matrix);
@@ -199,6 +212,8 @@ namespace AVSHull
 
         public void ChangeChines(int numChines)
         {
+            Timestamp = DateTime.Now;
+
             for (int ii = 0; ii < Bulkheads.Count; ii++)
             {
                 Bulkheads[ii] = new Bulkhead(Bulkheads[ii], numChines);
@@ -229,6 +244,8 @@ namespace AVSHull
         private void bulkhead_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Debug.WriteLine("Hull:Bulkhead PropertyChanged: " + e.PropertyName);
+            Timestamp = DateTime.Now;
+
             Notify(e.PropertyName);
         }
 
@@ -242,6 +259,8 @@ namespace AVSHull
             {
                 copy.Bulkheads.Add((Bulkhead)bulkhead.Clone());
             }
+
+            copy.Timestamp = Timestamp;
 
             return copy;
         }

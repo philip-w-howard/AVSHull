@@ -57,6 +57,7 @@
             <TextBox x:Name="YLoc" Width="40" IsReadOnly="True" VerticalAlignment="Center" Text="{Binding Path=Y}"/>
             <Label>Z</Label>
             <TextBox x:Name="ZLoc" Width="40" IsReadOnly="True" VerticalAlignment="Center" Text="{Binding Path=Z}"/>
+            <TextBlock x:Name="Timestamp" Margin="10,0,0,0" VerticalAlignment="Center" />
         </StackPanel>
 
         <TabControl>

@@ -17,6 +17,6 @@
             <Label>Version: </Label>
             <Label Name="Version" />
         </StackPanel>
-        <Button HorizontalAlignment="Center" Click="OK_Click">OK</Button>
+        <Button HorizontalAlignment="Center" Margin="5" Click="OK_Click" IsDefault="True">OK</Button>
     </StackPanel>
 </Window>

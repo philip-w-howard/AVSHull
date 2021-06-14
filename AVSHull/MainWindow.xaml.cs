@@ -61,7 +61,12 @@ namespace AVSHull
                     // Call the Deserialize method to restore the object's state.
                     tempHull = (Hull)serializer.Deserialize(reader);
                     tempHull.CheckTransom();
+                    
+                    // Make sure we have a timestamp
+                    if (tempHull.Timestamp == DateTime.MinValue) tempHull.Timestamp = DateTime.Now;
+
                     BaseHull.Instance().Bulkheads = tempHull.Bulkheads;
+                    
                     undoLog.Clear();
                     undoLog.Add(BaseHull.Instance());
 
@@ -90,6 +95,8 @@ namespace AVSHull
             Nullable<bool> result = saveDlg.ShowDialog();
             if (result == true)
             {
+                BaseHull.Instance().Timestamp = DateTime.Now;
+
                 System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(Hull));
 
                 using (FileStream output = new FileStream(saveDlg.FileName, FileMode.Create))
@@ -206,11 +213,8 @@ namespace AVSHull
             PerspectiveView.InvalidateVisual();
         }
 
-        private int UpdateCount = 0;
         private void UpdateViews()
         {
-            Debug.WriteLine("UpdateViews: {0}", ++UpdateCount);
-
             EditableHull topView = new EditableHull();
             topView.Rotate(0, 90, 90);
             TopView.editableHull = topView;
@@ -259,6 +263,10 @@ namespace AVSHull
                 undoLog.Add(BaseHull.Instance());
                 redoLog.Clear();
                 UpdateViews();
+            }
+            else if (e.PropertyName == "Timestamp")
+            {
+                Timestamp.Text = BaseHull.Instance().Timestamp.ToString();
             }
         }
 

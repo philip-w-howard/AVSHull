@@ -53,7 +53,6 @@ TODO:
 	Save vs. SaveAs
 		can use undoLog.Count to determine if there are unsaved changes?
 
-	X,Y,Z displayed (already calculated)
 	Edit bulkhead dialog?
 
 	Is PanelLayout separate app? Window? Tab?
@@ -61,8 +60,14 @@ TODO:
 	Panel Layout zoom
 		relative to mouse
 
-	Rethink use of BaseHull in EditableHull
+	Add version/Time to Hull.
+	Object/Property for displaying text in bottom notification panel.
+	Compute X,Y,Z in panel display
+	Get timestamp of panels in panel layout
+		Compare with that of Hull
 
-	Add BaseHull as a resource in App, which everyone references.
-		Need to update Editable Hull to use resource
-		Editing transom in front view seg faults
+	Refactor panel layout mess: MVVM
+
+	Toolbar determined by tab selection
+		slide-out details
+
