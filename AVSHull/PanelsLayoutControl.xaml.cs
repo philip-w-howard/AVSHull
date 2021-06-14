@@ -20,10 +20,16 @@ namespace AVSHull
     /// </summary>
     public partial class PanelsLayoutControl : UserControl
     {
+        private List<Panel> m_panels;
+
         public PanelsLayoutControl()
         {
             InitializeComponent();
+            SetupPanels();
+        }
 
+        private void SetupPanels()
+        {
             m_panels = new List<Panel>();
 
             Hull myHull = BaseHull.Instance();
@@ -61,8 +67,14 @@ namespace AVSHull
             }
         }
 
-        private List<Panel> m_panels;
-
+        public void CheckPanels()
+        {
+            if (m_panels.Count == 0)
+            {
+                GetLayoutSetup();
+                SetupPanels();
+            }
+        }
         private void GetLayoutSetup()
         {
             //Get the layout setup
