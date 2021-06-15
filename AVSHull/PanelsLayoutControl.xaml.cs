@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -11,23 +10,29 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace AVSHull
 {
     /// <summary>
-    /// Interaction logic for PanelLayoutWindow.xaml
+    /// Interaction logic for PanelsLayoutControl.xaml
     /// </summary>
-    public partial class PanelLayoutWindow : Window
+    public partial class PanelsLayoutControl : UserControl
     {
-        public PanelLayoutWindow()
+        private List<Panel> m_panels;
+
+        public PanelsLayoutControl()
         {
             InitializeComponent();
+            SetupPanels();
+        }
 
+        private void SetupPanels()
+        {
             m_panels = new List<Panel>();
 
             Hull myHull = BaseHull.Instance();
-
             // Initialize the panels
             if (myHull != null && myHull.Bulkheads.Count != 0)
             {
@@ -35,7 +40,7 @@ namespace AVSHull
                 for (int index = 0; index < eHull.Chines.Count / 2; index++)
                 {
                     Panel p = new Panel(eHull.Chines[index], eHull.Chines[index + 1]);
-                    p.name = "Panel " + (index+1);
+                    p.name = "Panel " + (index + 1);
                     m_panels.Add(p);
                 }
 
@@ -62,13 +67,18 @@ namespace AVSHull
             }
         }
 
-        private List<Panel> m_panels;
-
+        public void CheckPanels()
+        {
+            if (m_panels.Count == 0)
+            {
+                GetLayoutSetup();
+                SetupPanels();
+            }
+        }
         private void GetLayoutSetup()
         {
             //Get the layout setup
             PanelLayoutSetup setup = new PanelLayoutSetup();
-            setup.Owner = this;
 
             bool? result = setup.ShowDialog();
 
@@ -88,7 +98,7 @@ namespace AVSHull
             }
         }
 
-    private void AddAllClick(object sender, RoutedEventArgs e)
+        private void AddAllClick(object sender, RoutedEventArgs e)
         {
             double x = 10;
             double y = 10;
@@ -238,5 +248,6 @@ namespace AVSHull
 
             LayoutControl.InvalidateMeasure();
         }
+
     }
 }

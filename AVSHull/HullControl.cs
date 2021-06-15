@@ -36,18 +36,22 @@ namespace AVSHull
         private Point m_lastDrag = new Point(0, 0);
         private bool m_movingBulkhead = false;
 
-        private double m_mouse_X = 0;
-        private double m_mouse_Y = 0;
-        private double m_mouse_Z = 0;
+        private NotifyPoint3D m_mouseLoc;
+        static int SequenceCounter = 0;
+        private int sequence;
 
         public HullControl()
         {
+            sequence = ++SequenceCounter;
+
             m_editableHull = null;
             m_bulkheadGeometry = new List<Geometry>();
             m_handles = new List<RectangleGeometry>();
-        }
+        
+            m_mouseLoc = (NotifyPoint3D)FindResource("HullMouseLocation");
+    }
 
-        public EditableHull editableHull
+    public EditableHull editableHull
         {
             get { return m_editableHull; }
             set 
@@ -313,9 +317,9 @@ namespace AVSHull
             m_RecreateHandles = false;
             Point loc = e.GetPosition(this);
 
-            m_mouse_X = 0;
-            m_mouse_Y = 0;
-            m_mouse_Z = 0;
+            m_mouseLoc.X = 0;
+            m_mouseLoc.Y = 0;
+            m_mouseLoc.Z = 0;
 
             Rect bounds = new Rect(new Size(0,0));
             if (m_bulkheadGeometry.Count > 0)
@@ -349,18 +353,19 @@ namespace AVSHull
                     switch (perspective)
                     {
                         case PerspectiveType.FRONT:
-                            m_mouse_X = X - hullSize.X/2;
-                            m_mouse_Y = hullSize.Y - Y;
+                            m_mouseLoc.X = X - hullSize.X/2;
+                            m_mouseLoc.Y = hullSize.Y - Y;
                             break;
                         case PerspectiveType.SIDE:
-                            m_mouse_Y = hullSize.Y - Y;
-                            m_mouse_Z = X;
+                            m_mouseLoc.Y = hullSize.Y - Y;
+                            m_mouseLoc.Z = X;
                             break;
                         case PerspectiveType.TOP:
-                            m_mouse_X = Y - hullSize.Y/2;
-                            m_mouse_Z = X;
+                            m_mouseLoc.X = Y - hullSize.Y/2;
+                            m_mouseLoc.Z = X;
                             break;
                     }
+                    Debug.WriteLine("Mouse Loc {0}", m_mouseLoc);
                 }
             }
 

@@ -10,7 +10,20 @@ namespace AVSHull
 {
     public class Hull : INotifyPropertyChanged, ICloneable
     {
-        public List<Bulkhead> Bulkheads;
+        private List<Bulkhead> m_Bulkheads;
+
+        public List<Bulkhead> Bulkheads
+        {
+            get { return m_Bulkheads; }
+            set { m_Bulkheads = value; SetBulkheadHandler(); Notify("HullData"); }
+        }
+
+        private DateTime _timestamp;
+        public DateTime Timestamp 
+        { 
+            get { return _timestamp; } 
+            set { _timestamp = value; Notify("Timestamp"); }
+        }
 
         public Hull()
         {
@@ -25,6 +38,8 @@ namespace AVSHull
             double Z = 0;
 
             Bulkheads = new List<Bulkhead>();
+
+            Timestamp = DateTime.Now;
 
             if (setup.IncludeBow)
             {
@@ -66,11 +81,14 @@ namespace AVSHull
                 height += setup.Height / setup.NumChines;
             }
             Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.TRANSOM));
+            CheckTransom();
         }
 
         public void LoadFromHullFile(string filename)
         {
             Bulkheads = new List<Bulkhead>();
+
+            Timestamp = DateTime.Now;
 
             using (StreamReader file = File.OpenText(filename))
             {
@@ -94,7 +112,7 @@ namespace AVSHull
                 Bulkheads.Add(bulkhead);
             }
             RepositionToZero();
-
+            CheckTransom();
             SetBulkheadHandler(bulkhead_PropertyChanged);
 
             Notify("HullData");
@@ -184,6 +202,8 @@ namespace AVSHull
 
         private void UpdateWithMatrix(double[,] matrix)
         {
+            Timestamp = DateTime.Now;
+
             for (int ii = 0; ii < Bulkheads.Count; ii++)
             {
                 Bulkheads[ii].UpdateWithMatrix(matrix);
@@ -192,12 +212,23 @@ namespace AVSHull
 
         public void ChangeChines(int numChines)
         {
+            Timestamp = DateTime.Now;
+
             for (int ii = 0; ii < Bulkheads.Count; ii++)
             {
                 Bulkheads[ii] = new Bulkhead(Bulkheads[ii], numChines);
             }
 
             Notify("HullData");
+        }
+
+        public void CheckTransom()
+        {
+            for (int ii = 0; ii < Bulkheads.Count; ii++)
+            {
+                Bulkheads[ii].CheckTransomAngle();
+            }
+
         }
         //*********************************************
         // INotifyPropertyChanged implementation
@@ -213,6 +244,8 @@ namespace AVSHull
         private void bulkhead_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Debug.WriteLine("Hull:Bulkhead PropertyChanged: " + e.PropertyName);
+            Timestamp = DateTime.Now;
+
             Notify(e.PropertyName);
         }
 
@@ -226,6 +259,8 @@ namespace AVSHull
             {
                 copy.Bulkheads.Add((Bulkhead)bulkhead.Clone());
             }
+
+            copy.Timestamp = Timestamp;
 
             return copy;
         }
