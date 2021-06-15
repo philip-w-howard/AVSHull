@@ -73,6 +73,7 @@ namespace AVSHull
             {
                 GetLayoutSetup();
                 SetupPanels();
+                LayoutControl.InvalidateVisual();
             }
         }
         private void GetLayoutSetup()
@@ -229,7 +230,7 @@ namespace AVSHull
             GetLayoutSetup();
         }
 
-        private void WindowResized(object sender, SizeChangedEventArgs e)
+        public void WindowResized(object sender, SizeChangedEventArgs e)
         {
             InvalidateMeasure();
             InvalidateVisual();
