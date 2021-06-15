@@ -61,4 +61,5 @@ TODO:
 	Panel Layout zoom
 		relative to mouse
 
-	Rethink use of BaseHull in EditableHull
+	Rethink use of BaseHull in EditableHull: Converted to singleton
+	Merging tab layout changes
