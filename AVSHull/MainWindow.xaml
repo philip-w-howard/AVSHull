@@ -121,7 +121,7 @@
             </TabItem>
 
             <local:MyTabItem Header="Panels" TabName="Panels" >
-                <local:PanelsLayoutControl></local:PanelsLayoutControl>
+                <local:PanelLayoutScroller></local:PanelLayoutScroller>
             </local:MyTabItem>
         </TabControl>
     </DockPanel>

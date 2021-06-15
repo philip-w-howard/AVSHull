@@ -18,11 +18,11 @@ namespace AVSHull
     /// <summary>
     /// Interaction logic for PanelsLayoutControl.xaml
     /// </summary>
-    public partial class PanelsLayoutControl : UserControl
+    public partial class PanelLayoutScroller : UserControl
     {
         private List<Panel> m_panels;
 
-        public PanelsLayoutControl()
+        public PanelLayoutScroller()
         {
             InitializeComponent();
             SetupPanels();
@@ -84,17 +84,7 @@ namespace AVSHull
 
             if (result == true)
             {
-                LayoutSetupData parameters = (LayoutSetupData)Application.Current.FindResource("LayoutSetup");
-
-                if (parameters != null)
-                {
-                    LayoutControl.Layout.SheetWidth = parameters.sheetWidth;
-                    LayoutControl.Layout.SheetHeight = parameters.sheetHeight;
-                    LayoutControl.Layout.SheetsWide = parameters.numSheetsHorizontal;
-                    LayoutControl.Layout.SheetsHigh = parameters.numSheetsVertical;
-                    LayoutControl.Layout.WindowWidth = Width;
-                    LayoutControl.Layout.WindowHeight = Height;
-                }
+                // Data is copied over automagically through data binding
             }
         }
 
@@ -142,7 +132,7 @@ namespace AVSHull
         public class AllPanelData
         {
             public List<List<Panel>> panelList { get; set; }
-            public PanelLayout.PanelLayoutSetup panelLayout { get; set; }
+            public PanelsLayoutSetup panelLayout { get; set; }
         }
 
         private void openClick(object sender, RoutedEventArgs e)

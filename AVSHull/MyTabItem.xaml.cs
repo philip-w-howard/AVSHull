@@ -21,7 +21,7 @@ namespace AVSHull
             base.OnSelected(e);
             if (TabName == "Panels")
             {
-                PanelsLayoutControl layout = (PanelsLayoutControl)((MyTabItem)e.Source).Content;
+                PanelLayoutScroller layout = (PanelLayoutScroller)((MyTabItem)e.Source).Content;
                 Debug.WriteLine("Updating panels layout");
                 layout.CheckPanels();
             }

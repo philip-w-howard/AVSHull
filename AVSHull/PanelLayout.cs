@@ -2,94 +2,46 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Windows;
 
 namespace AVSHull
 {
+    //**************************************************
+    // PanelLayout implementation
+    // Setup data plus list of panels
     public class PanelLayout : INotifyPropertyChanged
     {
-        public class PanelLayoutSetup : INotifyPropertyChanged
-        {
-            private double _windowWidth;
-            public double WindowWidth 
-            {
-                get { return _windowWidth; }
-                set { _windowWidth = value; Notify("WindowWidth"); }
-            }
-            private double _windowHeight;
-            public double WindowHeight
-            {
-                get { return _windowHeight; }
-                set { _windowHeight = value; Notify("WindowHeighth"); }
-            }
-            private double _sheetWidth;
-            public double SheetWidth
-            {
-                get { return _sheetWidth; }
-                set { _sheetWidth = value; Notify("SheetWidth"); }
-            }
-            private double _sheetHeight;
-            public double SheetHeight
-            {
-                get { return _sheetHeight; }
-                set { _sheetHeight = value; Notify("SheetHeight"); }
-            }
-            private int _sheetsWide;
-            public int SheetsWide
-            {
-                get { return _sheetsWide; }
-                set { _sheetsWide = value; Notify("SheetsWide"); }
-            }
-            private int _sheetsHigh;
-            public int SheetsHigh
-            {
-                get { return _sheetsHigh; }
-                set { _sheetsHigh = value; Notify("SheetsHigh"); }
-            }
-            private double _scale;
-            public double Scale
-            {
-                get { return _scale; }
-                set { _scale = value; Notify("Scale"); }
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-            void Notify(string propName)
-            {
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs(propName));
-                }
-            }
-
-        }
-
-        //**************************************************
-        // PanelLayout implementation
         public PanelLayout()
         {
-            m_panelSetup = new PanelLayoutSetup();
+            m_panelSetup = (PanelsLayoutSetup)Application.Current.FindResource("LayoutSetup");
         }
 
-        private PanelLayoutSetup m_panelSetup;
-        public PanelLayoutSetup LayoutSetup
+        private PanelsLayoutSetup m_panelSetup;
+        public PanelsLayoutSetup LayoutSetup
         {
             get { return m_panelSetup; }
             set
             {
-                m_panelSetup = value;
+                m_panelSetup.SheetWidth = value.SheetWidth;
+                m_panelSetup.SheetHeight = value.SheetHeight;
+                m_panelSetup.SheetsWide = value.SheetsWide;
+                m_panelSetup.SheetsHigh = value.SheetsHigh;
                 Notify("LayoutSetup");
             }
         }
 
+        private double _windowWidth;
         public double WindowWidth
         {
-            get { return LayoutSetup.WindowWidth; }
-            set { LayoutSetup.WindowWidth = value; }
+            get { return _windowWidth; }
+            set { _windowWidth = value; }
         }
+
+        private double _windowHeight;
         public double WindowHeight
         {
-            get { return LayoutSetup.WindowHeight; }
-            set { LayoutSetup.WindowHeight = value; }
+            get { return _windowHeight; }
+            set { _windowHeight = value; }
         }
 
         public int SheetsWide
@@ -125,10 +77,11 @@ namespace AVSHull
             }
         }
 
+        private double _scale;
         public double Scale
         {
-            get { return LayoutSetup.Scale; }
-            set { LayoutSetup.Scale = value; }
+            get { return _scale; }
+            set { _scale = value; }
         }
 
         //****************************************************************
