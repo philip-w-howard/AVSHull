@@ -66,7 +66,7 @@ TODO:
 	Get timestamp of panels in panel layout
 		Compare with that of Hull
 
-	Refactor panel layout mess: MVVM
+	Refactor panel layout mess: MVVM: Prepare to merge Panel Layout Refactor
 
 	Toolbar determined by tab selection
 		slide-out details
