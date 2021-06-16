@@ -84,3 +84,7 @@ TODO:
 		LayoutScroller
 			ScrollViewer with a LayoutControl inside
 		PanelLayoutWindow: No longer used
+
+		Get menus/toolbars working
+
+		Check Notifications on panel hierarcy

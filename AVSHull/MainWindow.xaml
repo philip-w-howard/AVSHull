@@ -61,7 +61,7 @@
         </StackPanel>
 
         <TabControl>
-            <TabItem Header="Design">
+            <local:ATabItem Header="Design" TabName="Design">
                 <Border BorderBrush="Gray" BorderThickness="3">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -118,11 +118,11 @@
                         </StackPanel>
                     </Grid>
                 </Border>
-            </TabItem>
+            </local:ATabItem>
 
-            <local:MyTabItem Header="Panels" TabName="Panels" >
-                <local:PanelLayoutScroller/>
-            </local:MyTabItem>
+            <local:ATabItem Header="Panels" TabName="Panels" >
+                <local:PanelLayoutScroller x:Name="foo"/>
+            </local:ATabItem>
         </TabControl>
     </DockPanel>
 </Window>

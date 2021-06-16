@@ -34,36 +34,36 @@ namespace AVSHull
         public double WindowWidth
         {
             get { return _windowWidth; }
-            set { _windowWidth = value; }
+            set { _windowWidth = value; Notify("WindowWidth"); }
         }
 
         private double _windowHeight;
         public double WindowHeight
         {
             get { return _windowHeight; }
-            set { _windowHeight = value; }
+            set { _windowHeight = value; Notify("WindowHeight"); }
         }
 
         public int SheetsWide
         {
             get { return LayoutSetup.SheetsWide; }
-            set { LayoutSetup.SheetsWide = value; }
+            set { LayoutSetup.SheetsWide = value; Notify("SheetsWide"); }
         }
 
         public int SheetsHigh
         {
             get { return LayoutSetup.SheetsHigh; }
-            set { LayoutSetup.SheetsHigh = value; }
+            set { LayoutSetup.SheetsHigh = value; Notify("SheetsHigh"); }
         }
         public double SheetWidth
         {
             get { return LayoutSetup.SheetWidth; }
-            set { LayoutSetup.SheetWidth = value; }
+            set { LayoutSetup.SheetWidth = value; Notify("WheetWidth"); }
         }
         public double SheetHeight
         {
             get { return LayoutSetup.SheetHeight; }
-            set { LayoutSetup.SheetHeight = value; }
+            set { LayoutSetup.SheetHeight = value; Notify("SheetHeight"); }
         }
 
         private List<Panel> m_panels;
@@ -81,7 +81,7 @@ namespace AVSHull
         public double Scale
         {
             get { return _scale; }
-            set { _scale = value; }
+            set { _scale = value; Notify("Scale"); }
         }
 
         //****************************************************************

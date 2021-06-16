@@ -1,27 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Windows.Controls;
 
 namespace AVSHull
 {
-    /// <summary>
-    /// Interaction logic for MyTabItem.xaml
-    /// </summary>
-    public partial class MyTabItem : TabItem
+    class ATabItem : TabItem
     {
         public String TabName { get; set; }
 
-        public MyTabItem()
-        {
-            InitializeComponent();
-        }
-
-        protected override void OnSelected(System.Windows.RoutedEventArgs e)
+         protected override void OnSelected(System.Windows.RoutedEventArgs e)
         {
             base.OnSelected(e);
             if (TabName == "Panels")
             {
-                PanelLayoutScroller layout = (PanelLayoutScroller)((MyTabItem)e.Source).Content;
+                PanelLayoutScroller layout = (PanelLayoutScroller)((ATabItem)e.Source).Content;
                 Debug.WriteLine("Updating panels layout");
                 layout.CheckPanels();
             }
@@ -34,4 +28,3 @@ namespace AVSHull
         }
     }
 }
-
