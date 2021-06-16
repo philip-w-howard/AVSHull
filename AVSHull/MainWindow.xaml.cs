@@ -31,12 +31,28 @@ namespace AVSHull
 
         private void openClick(object sender, RoutedEventArgs e)
         {
-            DesignWindow.openClick(sender, e);
+            ATabItem tab = (ATabItem)MyTabs.SelectedItem;
+            if (tab.TabName == "Design")
+            {
+                DesignWindow.openClick(sender, e);
+            }
+            else if (tab.TabName == "Panels")
+            {
+                LayoutWindow.openClick(sender, e);
+            }
         }
 
         private void saveClick(object sender, RoutedEventArgs e)
         {
-            DesignWindow.saveClick(sender, e);
+            ATabItem tab = (ATabItem)MyTabs.SelectedItem;
+            if (tab.TabName == "Design")
+            {
+                DesignWindow.saveClick(sender, e);
+            }
+            else if (tab.TabName == "Panels")
+            {
+                LayoutWindow.saveClick(sender, e);
+            }
         }
 
         private void importClick(object sender, RoutedEventArgs e)

@@ -136,7 +136,7 @@ namespace AVSHull
             public PanelsLayoutSetup panelLayout { get; set; }
         }
 
-        private void openClick(object sender, RoutedEventArgs e)
+        public void openClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openDlg = new OpenFileDialog();
 
@@ -166,7 +166,7 @@ namespace AVSHull
 
         }
 
-        private void saveClick(object sender, RoutedEventArgs e)
+        public void saveClick(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveDlg = new SaveFileDialog();
 

@@ -88,11 +88,7 @@ TODO:
 
 		Check Notifications on panel hierarcy
 
-	Undo/Redo is broken. I think Bulkhead updates are re-entering undo list
 	Add Undo/Redo to Layout
-	Pass undo/redo to appropriate tab
-		Create/Implement IUndoable interface
-	Have Load/Save pass to current tab
 
 	Move Tools to toolbar inside tab
 	Implement tool slide-out: Expander
