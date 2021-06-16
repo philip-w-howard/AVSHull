@@ -351,6 +351,7 @@ namespace AVSHull
 
         private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            ATabItem tab = (ATabItem)MyTabs.SelectedItem;
             if (undoLog.Count > 1)
             {
                 redoLog.Add(undoLog.Pop());
