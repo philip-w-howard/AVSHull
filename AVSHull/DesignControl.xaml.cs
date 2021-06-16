@@ -26,7 +26,6 @@ namespace AVSHull
         private HullLog undoLog;
         private HullLog redoLog;
 
-
         public DesignControl()
         {
             InitializeComponent();
@@ -132,7 +131,7 @@ namespace AVSHull
         void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Debug.WriteLine("MainWindow.PropertyChanged: " + e.PropertyName);
-            if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
+            if (e.PropertyName == "HullData" || e.PropertyName == "Bulkhead" || e.PropertyName == "HullScale")
             {
                 undoLog.Add(BaseHull.Instance());
                 redoLog.Clear();

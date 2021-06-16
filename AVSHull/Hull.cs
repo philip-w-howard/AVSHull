@@ -15,7 +15,7 @@ namespace AVSHull
         public List<Bulkhead> Bulkheads
         {
             get { return m_Bulkheads; }
-            set { m_Bulkheads = value; SetBulkheadHandler(); Notify("HullData"); }
+            set { m_Bulkheads = value; SetBulkheadHandler(); Notify("Bulkheads"); }
         }
 
         private DateTime _timestamp;
