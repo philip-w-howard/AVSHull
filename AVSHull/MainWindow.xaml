@@ -35,8 +35,8 @@
                     <MenuItem Header="_File">
                         <MenuItem Header="_Open" Click="openClick"/>
                         <MenuItem Header="_Save" Click="saveClick"/>
-                        <MenuItem Header="_Create" Click="createClick" />
-                        <MenuItem Header="_Import Carlson HUL file" Click="importClick"/>
+                        <MenuItem Header="_Create" Click="createClick" Name="CreateMenu"/>
+                        <MenuItem Header="_Import Carlson HUL file" Name="ImportMenu" Click="importClick"/>
                     </MenuItem>
                     <MenuItem Header="_Tools">
                         <MenuItem Name="PanelsMenu" Header="_Panels" Click="PanelsClick" />
@@ -60,8 +60,8 @@
             <TextBlock x:Name="Timestamp" Margin="10,0,0,0" VerticalAlignment="Center" />
         </StackPanel>
 
-        <TabControl>
-            <TabItem Header="Design">
+        <TabControl x:Name="MyTabs">
+            <local:ATabItem Header="Design" TabName="Design">
                 <Border BorderBrush="Gray" BorderThickness="3">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -118,11 +118,11 @@
                         </StackPanel>
                     </Grid>
                 </Border>
-            </TabItem>
+            </local:ATabItem>
 
-            <local:MyTabItem Header="Panels" TabName="Panels" >
-                <local:PanelsLayoutControl></local:PanelsLayoutControl>
-            </local:MyTabItem>
+            <local:ATabItem Header="Panels" TabName="Panels" >
+                <local:PanelLayoutScroller x:Name="foo"/>
+            </local:ATabItem>
         </TabControl>
     </DockPanel>
 </Window>

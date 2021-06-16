@@ -43,19 +43,7 @@ namespace AVSHull
             ShiftTo(0, 0);
         }
 
-        // Project a bulkhead onto its 2D shape.
-        // NOTE: This assumes the bulkhead is within a plane.
-        public Panel(Point3DCollection points)
-        {
-            m_panelPoints = new PointCollection();
-            foreach (Point3D point in points)
-            {
-                // FIXTHIS: only works for VERTICAL bulkheads
-                m_panelPoints.Add(new Point(point.X, point.Y));
-            }
-            ShiftTo(0, 0);
-        }
-        public Panel(Bulkhead bulk)
+         public Panel(Bulkhead bulk)
         {
             double scaleFactor = 1;
             if (bulk.Type == Bulkhead.BulkheadType.TRANSOM) scaleFactor = Math.Sin(bulk.TransomAngle);
@@ -68,7 +56,7 @@ namespace AVSHull
             }
             ShiftTo(0, 0);
         }
-        public Panel(PointCollection points)
+        protected Panel(PointCollection points)
         {
             m_panelPoints = points.Clone();
             ShiftTo(0, 0);
@@ -186,7 +174,7 @@ namespace AVSHull
             }
         }
 
-        public void HorizontalizePanel()
+        private void HorizontalizePanel()
         {
             double x = m_panelPoints[m_panelPoints.Count / 2].X - m_panelPoints[0].X;
             double y = m_panelPoints[m_panelPoints.Count / 2].Y - m_panelPoints[0].Y;
@@ -291,10 +279,7 @@ namespace AVSHull
         public event PropertyChangedEventHandler PropertyChanged;
         void Notify(string propName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
         //**************************************************
@@ -395,7 +380,5 @@ namespace AVSHull
 
             return true;
         }
-
-
     }
 }

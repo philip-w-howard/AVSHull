@@ -66,8 +66,25 @@ TODO:
 	Get timestamp of panels in panel layout
 		Compare with that of Hull
 
-	Refactor panel layout mess: MVVM: Prepare to merge Panel Layout Refactor
-
 	Toolbar determined by tab selection
 		slide-out details
 
+	Refactor panel layout mess: MVVM
+		panel: points for single panel
+			shift, rotate, split
+		PanelsLayoutSetup
+			sheet size
+			Sheet layout
+			PanelLayoutSetup (window)
+		PanelLayout
+			Setup
+			list of panels
+		PanelLayoutControl
+			Add visuals to Layout
+		LayoutScroller
+			ScrollViewer with a LayoutControl inside
+		PanelLayoutWindow: No longer used
+
+		Get menus/toolbars working
+
+		Check Notifications on panel hierarcy

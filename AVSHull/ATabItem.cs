@@ -1,29 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace AVSHull
 {
-    /// <summary>
-    /// Interaction logic for MyTabItem.xaml
-    /// </summary>
-    public partial class MyTabItem : TabItem
+    class ATabItem : TabItem
     {
         public String TabName { get; set; }
 
-        public MyTabItem()
+         protected override void OnSelected(System.Windows.RoutedEventArgs e)
         {
-            InitializeComponent();
-        }
+            MainWindow main = (MainWindow)Application.Current.MainWindow;
 
-        protected override void OnSelected(System.Windows.RoutedEventArgs e)
-        {
             base.OnSelected(e);
             if (TabName == "Panels")
             {
-                PanelsLayoutControl layout = (PanelsLayoutControl)((MyTabItem)e.Source).Content;
+                main.CreateMenu.IsEnabled = false;
+                main.ImportMenu.IsEnabled = false;
+                PanelLayoutScroller layout = (PanelLayoutScroller)((ATabItem)e.Source).Content;
                 Debug.WriteLine("Updating panels layout");
                 layout.CheckPanels();
+            }
+            else if (TabName == "Design")
+            {
+                main.CreateMenu.IsEnabled = true;
+                main.ImportMenu.IsEnabled = true;
             }
             Debug.WriteLine("Selected {0} {1}", TabName, TabName.Length);
         }
@@ -34,4 +38,3 @@ namespace AVSHull
         }
     }
 }
-

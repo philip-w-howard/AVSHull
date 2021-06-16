@@ -26,12 +26,12 @@
             <Label Grid.Row="0" Grid.Column="2">Height</Label>
 
             <Label Grid.Row="1" Grid.Column="0">Panel Size</Label>
-            <TextBox Name="PanelWidth_Input" Grid.Row="1" Grid.Column="1" Text="{Binding sheetWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right"/>
-            <TextBox Name="PanelHeight_Input" Grid.Row="1" Grid.Column="2" Text="{Binding sheetHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Right"/>
+            <TextBox Name="PanelWidth_Input" Grid.Row="1" Grid.Column="1" Text="{Binding SheetWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right"/>
+            <TextBox Name="PanelHeight_Input" Grid.Row="1" Grid.Column="2" Text="{Binding SheetHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Right"/>
 
             <Label Grid.Row="2" Grid.Column="0">Panel Arrangement</Label>
-            <TextBox Name="NumWidth_Input" Grid.Row="2" Grid.Column="1" Text="{Binding numSheetsHorizontal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" />
-            <TextBox Name="NumHeight_Input" Grid.Row="2" Grid.Column="2" Text="{Binding numSheetsVertical, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Right"/>
+            <TextBox Name="NumWidth_Input" Grid.Row="2" Grid.Column="1" Text="{Binding SheetsWide, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" />
+            <TextBox Name="NumHeight_Input" Grid.Row="2" Grid.Column="2" Text="{Binding SheetsHigh, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Right"/>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Click="OK_Click" Margin="5" IsDefault="True">OK</Button>

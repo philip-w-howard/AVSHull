@@ -48,10 +48,6 @@ namespace AVSHull
             PreviewMouseMove += OnPreviewMouseMove;
             PreviewMouseUp += OnPreviewMouseUp;
 
-            Layout.SheetHeight = 48;
-            Layout.SheetWidth = 96;
-            Layout.SheetsHigh = 1;
-            Layout.SheetsWide = 1;
             Layout.Scale = 1;
             Layout.WindowHeight = 400;
             Layout.WindowWidth = 600;

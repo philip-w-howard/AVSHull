@@ -74,17 +74,18 @@ namespace AVSHull
 
             if (result == true)
             {
-                LayoutSetupData parameters = (LayoutSetupData)Application.Current.FindResource("LayoutSetup");
+                // handled by data binding
+                //PanelsLayoutSetup parameters = (PanelsLayoutSetup)Application.Current.FindResource("LayoutSetup");
 
-                if (parameters != null)
-                {
-                    LayoutControl.Layout.SheetWidth = parameters.sheetWidth;
-                    LayoutControl.Layout.SheetHeight = parameters.sheetHeight;
-                    LayoutControl.Layout.SheetsWide = parameters.numSheetsHorizontal;
-                    LayoutControl.Layout.SheetsHigh = parameters.numSheetsVertical;
-                    LayoutControl.Layout.WindowWidth = Width;
-                    LayoutControl.Layout.WindowHeight = Height;
-                }
+                //if (parameters != null)
+                //{
+                //    LayoutControl.Layout.SheetWidth = parameters.sheetWidth;
+                //    LayoutControl.Layout.SheetHeight = parameters.sheetHeight;
+                //    LayoutControl.Layout.SheetsWide = parameters.numSheetsHorizontal;
+                //    LayoutControl.Layout.SheetsHigh = parameters.numSheetsVertical;
+                //    LayoutControl.Layout.WindowWidth = Width;
+                //    LayoutControl.Layout.WindowHeight = Height;
+                //}
             }
         }
 
@@ -132,7 +133,7 @@ namespace AVSHull
         public class AllPanelData
         {
             public List<List<Panel>> panelList { get; set; }
-            public PanelLayout.PanelLayoutSetup panelLayout { get; set; }
+            public PanelsLayoutSetup panelLayout { get; set; }
         }
 
         private void openClick(object sender, RoutedEventArgs e)
