@@ -217,9 +217,14 @@ namespace AVSHull
 
         private void outputGcode(object sender, RoutedEventArgs e)
         {
+            //UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            //values.GCodeSetupExapnded = true;
+
             GCodeWriter writer = new GCodeWriter();
             writer.Layout = LayoutControl.Layout;
             writer.SaveLayout();
+
+            //values.GCodeSetupExapnded = false;
         }
 
         private void outputOffsets(object sender, RoutedEventArgs e)
@@ -263,5 +268,10 @@ namespace AVSHull
             LayoutControl.InvalidateMeasure();
         }
 
+        private void GCodeClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.GCodeSetupExapnded = !values.GCodeSetupExapnded;
+        }
     }
 }

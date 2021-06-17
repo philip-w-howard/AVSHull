@@ -7,6 +7,20 @@ namespace AVSHull
 {
     class UI_Params : INotifyPropertyChanged
     {
+        private bool? _gCodeSetupExapnded = false;
+        public bool? GCodeSetupExapnded
+        {
+            get { return _gCodeSetupExapnded; }
+            set { _gCodeSetupExapnded = value; Notify("GCodeSetupExapnded"); }
+        }
+
+        private bool? _offsetSetupExapnded = false;
+        public bool? OffsetSetupExapnded
+        {
+            get { return _offsetSetupExapnded; }
+            set { _offsetSetupExapnded = value; Notify("OffsetSetupExapnded"); }
+        }
+
         private bool? _allowBulkheadMoves = false;
         public bool? AllowBulkheadMoves
         {
