@@ -59,6 +59,10 @@ namespace AVSHull
         {
             DesignWindow.importClick(sender, e);
         }
+        private void exportClick(object sender, RoutedEventArgs e)
+        {
+            LayoutWindow.exportClick(sender, e);
+        }
 
         private void PanelsClick(object sender, RoutedEventArgs e)
         {

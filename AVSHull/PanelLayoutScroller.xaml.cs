@@ -191,6 +191,29 @@ namespace AVSHull
                 }
             }
         }
+        public void exportClick(object sender, RoutedEventArgs e)
+        {
+            MenuItem menu = (MenuItem)sender;
+
+            if (menu != null)
+            {
+                switch (menu.Header)
+                {
+                    case "_GCode":
+                        outputGcode(sender, e);
+                        break;
+                    case "_Offsets":
+                        outputOffsets(sender, e);
+                        break;
+                    case "S_VG":
+                        outputSVG(sender, e);
+                        break;
+                    case "S_TL":
+                        outputSTL(sender, e);
+                        break;
+                }
+            }
+        }
 
         private void outputGcode(object sender, RoutedEventArgs e)
         {

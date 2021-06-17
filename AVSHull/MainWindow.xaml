@@ -35,6 +35,12 @@
                         <MenuItem Header="_Save" Click="saveClick"/>
                         <MenuItem Header="_Create" Click="createClick" Name="CreateMenu"/>
                         <MenuItem Header="_Import Carlson HUL file" Name="ImportMenu" Click="importClick"/>
+                        <MenuItem Header="_Export" Name="ExportMenu">
+                            <MenuItem Header="_GCode" Click="exportClick" />
+                            <MenuItem Header="_Offsets" Click="exportClick" />
+                            <MenuItem Header="S_VG" Click="exportClick" />
+                            <MenuItem Header="S_TL" Click="exportClick" />
+                        </MenuItem>
                     </MenuItem>
                     <MenuItem Header="_Tools">
                         <MenuItem Name="PanelsMenu" Header="_Panels" Click="PanelsClick" />

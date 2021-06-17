@@ -84,11 +84,29 @@ TODO:
 		LayoutScroller
 			ScrollViewer with a LayoutControl inside
 
-		Get menus/toolbars working
-
 		Check Notifications on panel hierarcy
 
 	Add Undo/Redo to Layout
 
 	Move Tools to toolbar inside tab
 	Implement tool slide-out: Expander
+
+		Design
+			Resize
+			Chines
+			Bulkhead
+				Allow Movement
+				Insert
+				Delete
+    
+		Panels
+			Setup (sheet layout)
+			GCode Setup
+			Offset Setup
+			Panel Ops
+				Rotate
+				Duplicate
+				Split
+				Flip
+
+	Add Export to File menu: Only operative in Panel mode

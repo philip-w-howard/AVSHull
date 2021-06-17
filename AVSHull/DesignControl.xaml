@@ -12,7 +12,7 @@
     </UserControl.Resources>
     <DockPanel>
         <StackPanel DataContext="{DynamicResource Curr_UI_Params}" Background="Gray">
-            <Button Name="ResizeButton" Content="Resize" Click="ResizeClick" />
+            <Button Name="ResizeButton" Content="Resize" Click="ResizeClick" ToolTip="Resize hull"/>
             <!--<Popup IsOpen="{Binding Path=ResizeExpanded}"
                    PlacementTarget="{Binding ElementName=FrontView}"
                    Placement="Relative"
