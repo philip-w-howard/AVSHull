@@ -269,6 +269,40 @@ namespace AVSHull
                 }
             }
         }
+        public void ResizeClick(object sender, RoutedEventArgs e)
+        {
+            if (BaseHull.Instance().Bulkheads.Count == 0)
+            {
+                MessageBox.Show("Can't resize a non-existant hull.");
+                return;
+            }
+
+            EditableHull hull = new EditableHull();
+
+            Size3D originalSize = hull.GetSize();
+
+            ResizeWindow resize = new ResizeWindow();
+            resize.ShowDialog();
+
+            if (resize.OK)
+            {
+                ResizeWindowData resizeData = (ResizeWindowData)resize.FindResource("ResizeData");
+                double scale_x = 1.0;
+                double scale_y = 1.0;
+                double scale_z = 1.0;
+
+                if (resizeData != null)
+                {
+                    scale_x = resizeData.Width / originalSize.X;
+                    scale_y = resizeData.Height / originalSize.Y;
+                    scale_z = resizeData.Length / originalSize.Z;
+
+                    BaseHull.Instance().Scale(scale_x, scale_y, scale_z);
+                    UpdateViews();
+                }
+            }
+
+        }
         public void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = undoLog.Count > 1;
@@ -299,14 +333,5 @@ namespace AVSHull
             }
         }
 
-        private void ResizeClick(object sender, RoutedEventArgs e)
-        {
-            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
-            values.ResizeExpanded = !values.ResizeExpanded;
-            if (values.ResizeExpanded == true)
-            {
-                Resize.InitResize();
-            }
-        }
     }
 }

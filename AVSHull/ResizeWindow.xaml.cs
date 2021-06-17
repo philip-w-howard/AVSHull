@@ -100,27 +100,17 @@ namespace AVSHull
     /// <summary>
     /// Interaction logic for ResizeWindow.xaml
     /// </summary>
-    public partial class ResizeWindow : UserControl
+    public partial class ResizeWindow : Window
     {
-        private ResizeWindowData resizeData;
-
-        private Size3D originalSize;
-
         public ResizeWindow()
         {
             InitializeComponent();
-        }
-
-        public void InitResize()
-        {
-            resizeData = (ResizeWindowData)this.FindResource("ResizeData");
+            ResizeWindowData resizeData = (ResizeWindowData)this.FindResource("ResizeData");
 
             if (resizeData != null)
             {
                 bool proportional = resizeData.Proportional;
                 EditableHull hull = new EditableHull();
-
-                originalSize = hull.GetSize();
 
                 // Need to turn off Proportional for initial setup
                 resizeData.Proportional = false;
@@ -136,30 +126,18 @@ namespace AVSHull
             }
         }
 
+        public bool OK { get; set; }
+
         private void OKClick(object sender, RoutedEventArgs e)
         {
-            ResizeWindowData resizeData = (ResizeWindowData)this.FindResource("ResizeData");
-            double scale_x = 1.0;
-            double scale_y = 1.0;
-            double scale_z = 1.0;
-
-            if (resizeData != null)
-            {
-                scale_x = resizeData.Width / originalSize.X;
-                scale_y = resizeData.Height / originalSize.Y;
-                scale_z = resizeData.Length / originalSize.Z;
-
-                BaseHull.Instance().Scale(scale_x, scale_y, scale_z);
-
-            }
-            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
-            values.ResizeExpanded = false;
+            OK = true;
+            this.Close();
         }
 
         private void CancelClick(object sender, RoutedEventArgs e)
         {
-            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
-            values.ResizeExpanded = false;
+            OK = false;
+            this.Close();
         }
     }
 }

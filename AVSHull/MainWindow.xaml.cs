@@ -66,6 +66,12 @@ namespace AVSHull
             layout.Show();
         }
 
+        private void ResizeClick(object sender, RoutedEventArgs e)
+        {
+            DesignWindow.ResizeClick(sender, e);
+        }
+
+
         private void InsertClick(object sender, RoutedEventArgs e)
         {
             //UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
