@@ -7,6 +7,12 @@ namespace AVSHull
 {
     class UI_Params : INotifyPropertyChanged
     {
+        private bool? _resizeExpanded = false;
+        public bool? ResizeExpanded
+        {
+            get { return _resizeExpanded; }
+            set { _resizeExpanded = value; Notify("ResizeExpanded"); }
+        }
         private bool? _allowBulkheadMoves = false;
         public bool? AllowBulkheadMoves
         {
