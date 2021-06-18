@@ -100,6 +100,7 @@ TODO:
 				Delete
     
 		Panels
+			Use GCode Setup as template
 			Setup (sheet layout)
 			GCode Setup
 			Offset Setup

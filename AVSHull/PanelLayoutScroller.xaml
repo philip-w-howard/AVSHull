@@ -30,14 +30,14 @@
         <StackPanel DataContext="{DynamicResource Curr_UI_Params}" Background="Gray">
             <Button Content="GCode" Click="GCodeClick" ToolTip="Set GCode parameters"/>
             <Popup IsOpen="{Binding Path=GCodeSetupExapnded}"
-                   PlacementTarget="{Binding ElementName=FrontView}"
+                   PlacementTarget="{Binding ElementName=Scroller}"
                    Placement="Relative"
                    PopupAnimation="Slide">
                 <local:GCodeSetup/>
             </Popup>
         </StackPanel>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="White">
+        <ScrollViewer Name="Scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="White">
             <ScrollViewer.ContextMenu>
                 <ContextMenu x:Name="PanelContextMenu">
                     <MenuItem Header="Add _All" Click="AddAllClick" />
