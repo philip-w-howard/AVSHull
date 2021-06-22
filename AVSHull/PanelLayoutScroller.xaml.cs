@@ -71,24 +71,10 @@ namespace AVSHull
         {
             if (m_panels.Count == 0)
             {
-                GetLayoutSetup();
                 SetupPanels();
                 LayoutControl.InvalidateVisual();
             }
         }
-        private void GetLayoutSetup()
-        {
-            //Get the layout setup
-            PanelLayoutSetup setup = new PanelLayoutSetup();
-
-            bool? result = setup.ShowDialog();
-
-            if (result == true)
-            {
-                // Data is copied over automagically through data binding
-            }
-        }
-
         private void AddAllClick(object sender, RoutedEventArgs e)
         {
             double x = 10;
@@ -247,17 +233,6 @@ namespace AVSHull
             writer.SaveLayout();
         }
 
-        private void setupClick(object sender, RoutedEventArgs e)
-        {
-            GetLayoutSetup();
-            LayoutControl.InvalidateVisual();
-        }
-
-        private void WindowLoaded(object sender, RoutedEventArgs e)
-        {
-            GetLayoutSetup();
-        }
-
         public void WindowResized(object sender, SizeChangedEventArgs e)
         {
             InvalidateMeasure();
@@ -271,7 +246,13 @@ namespace AVSHull
         private void GCodeClick(object sender, RoutedEventArgs e)
         {
             UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
-            values.GCodeSetupExapnded = !values.GCodeSetupExapnded;
+            values.GCodeSetupExpanded = !values.GCodeSetupExpanded;
+        }
+
+        private void LayoutClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.LayoutSetupExpanded = !values.LayoutSetupExpanded;
         }
     }
 }

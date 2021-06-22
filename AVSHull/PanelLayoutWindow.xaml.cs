@@ -66,27 +66,27 @@ namespace AVSHull
 
         private void GetLayoutSetup()
         {
-            //Get the layout setup
-            PanelLayoutSetup setup = new PanelLayoutSetup();
-            setup.Owner = this;
+            ////Get the layout setup
+            //PanelLayoutSetup setup = new PanelLayoutSetup();
+            //setup.Owner = this;
 
-            bool? result = setup.ShowDialog();
+            //bool? result = setup.ShowDialog();
 
-            if (result == true)
-            {
-                // handled by data binding
-                //PanelsLayoutSetup parameters = (PanelsLayoutSetup)Application.Current.FindResource("LayoutSetup");
+            //if (result == true)
+            //{
+            //    // handled by data binding
+            //    //PanelsLayoutSetup parameters = (PanelsLayoutSetup)Application.Current.FindResource("LayoutSetup");
 
-                //if (parameters != null)
-                //{
-                //    LayoutControl.Layout.SheetWidth = parameters.sheetWidth;
-                //    LayoutControl.Layout.SheetHeight = parameters.sheetHeight;
-                //    LayoutControl.Layout.SheetsWide = parameters.numSheetsHorizontal;
-                //    LayoutControl.Layout.SheetsHigh = parameters.numSheetsVertical;
-                //    LayoutControl.Layout.WindowWidth = Width;
-                //    LayoutControl.Layout.WindowHeight = Height;
-                //}
-            }
+            //    //if (parameters != null)
+            //    //{
+            //    //    LayoutControl.Layout.SheetWidth = parameters.sheetWidth;
+            //    //    LayoutControl.Layout.SheetHeight = parameters.sheetHeight;
+            //    //    LayoutControl.Layout.SheetsWide = parameters.numSheetsHorizontal;
+            //    //    LayoutControl.Layout.SheetsHigh = parameters.numSheetsVertical;
+            //    //    LayoutControl.Layout.WindowWidth = Width;
+            //    //    LayoutControl.Layout.WindowHeight = Height;
+            //    //}
+            //}
         }
 
     private void AddAllClick(object sender, RoutedEventArgs e)
@@ -221,13 +221,13 @@ namespace AVSHull
 
         private void setupClick(object sender, RoutedEventArgs e)
         {
-            GetLayoutSetup();
+            //GetLayoutSetup();
             LayoutControl.InvalidateVisual();
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            GetLayoutSetup();
+            //GetLayoutSetup();
         }
 
         private void WindowResized(object sender, SizeChangedEventArgs e)

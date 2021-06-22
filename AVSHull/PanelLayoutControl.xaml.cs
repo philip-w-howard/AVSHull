@@ -62,7 +62,7 @@ namespace AVSHull
                 case "SheetWidth":
                 case "SheetHeight":
                 case "SheetsHigh":
-                case "WheetsWide":
+                case "SheetsWide":
                     RecomputeScale();
                     break;
                 case "Scale":   // not RecomputeScale

@@ -26,7 +26,7 @@ namespace AVSHull
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
-            values.GCodeSetupExapnded = false;
+            values.GCodeSetupExpanded = false;
         }
     }
 }

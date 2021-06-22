@@ -7,18 +7,25 @@ namespace AVSHull
 {
     class UI_Params : INotifyPropertyChanged
     {
-        private bool? _gCodeSetupExapnded = false;
-        public bool? GCodeSetupExapnded
+        private bool? _layoutSetupExpanded = false;
+        public bool? LayoutSetupExpanded
         {
-            get { return _gCodeSetupExapnded; }
-            set { _gCodeSetupExapnded = value; Notify("GCodeSetupExapnded"); }
+            get { return _layoutSetupExpanded; }
+            set { _layoutSetupExpanded = value; Notify("LayoutSetupExpanded"); }
         }
 
-        private bool? _offsetSetupExapnded = false;
-        public bool? OffsetSetupExapnded
+        private bool? _gCodeSetupExpanded = false;
+        public bool? GCodeSetupExpanded
         {
-            get { return _offsetSetupExapnded; }
-            set { _offsetSetupExapnded = value; Notify("OffsetSetupExapnded"); }
+            get { return _gCodeSetupExpanded; }
+            set { _gCodeSetupExpanded = value; Notify("GCodeSetupExpanded"); }
+        }
+
+        private bool? _offsetSetupExpanded = false;
+        public bool? OffsetSetupExpanded
+        {
+            get { return _offsetSetupExpanded; }
+            set { _offsetSetupExpanded = value; Notify("OffsetSetupExpanded"); }
         }
 
         private bool? _allowBulkheadMoves = false;
