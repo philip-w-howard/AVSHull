@@ -15,7 +15,8 @@ namespace AVSHull
     /// <summary>
     /// Interaction logic for GCodeSetup.xaml
     /// </summary>
-    public partial class GCodeSetup : Window
+    public partial class GCodeSetup : UserControl
+
     {
         public GCodeSetup()
         {
@@ -24,12 +25,8 @@ namespace AVSHull
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
-        }
-
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.GCodeSetupExpanded = false;
         }
     }
 }

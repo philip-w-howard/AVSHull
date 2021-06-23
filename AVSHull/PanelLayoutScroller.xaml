@@ -26,7 +26,32 @@
             </ToolBar>
         </ToolBarTray>-->
 
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="White">
+    <DockPanel>
+        <StackPanel DataContext="{DynamicResource Curr_UI_Params}" Background="Gray">
+            <Button Content="Layout" Click="LayoutClick" ToolTip="Sheet Layout"/>
+            <Popup IsOpen="{Binding Path=LayoutSetupExpanded}"
+                   PlacementTarget="{Binding ElementName=Scroller}"
+                   Placement="Relative"
+                   PopupAnimation="Slide">
+                <local:PanelLayoutSetup/>
+            </Popup>
+            <Button Content="GCode" Click="GCodeClick" ToolTip="Set GCode output parameters"/>
+            <Popup IsOpen="{Binding Path=GCodeSetupExpanded}"
+                   PlacementTarget="{Binding ElementName=Scroller}"
+                   Placement="Relative"
+                   PopupAnimation="Slide">
+                <local:GCodeSetup/>
+            </Popup>
+            <Button Content="Offsets" Click="OffsetsClick" ToolTip="Set Offset Output parameters"/>
+            <Popup IsOpen="{Binding Path=OffsetsSetupExpanded}"
+                   PlacementTarget="{Binding ElementName=Scroller}"
+                   Placement="Relative"
+                   PopupAnimation="Slide">
+                <local:OffsetSetupWindow/>
+            </Popup>
+        </StackPanel>
+
+        <ScrollViewer Name="Scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="White">
             <ScrollViewer.ContextMenu>
                 <ContextMenu x:Name="PanelContextMenu">
                     <MenuItem Header="Add _All" Click="AddAllClick" />
@@ -35,5 +60,5 @@
             <local:PanelLayoutControl x:Name="LayoutControl" Background="White" />
 
         </ScrollViewer>
-    <!--</DockPanel>-->
+    </DockPanel>
 </UserControl>

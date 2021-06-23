@@ -188,7 +188,7 @@ namespace AVSHull
             gCodeFile.WriteLine("G00 Z0.25 M03");           // 0.25 inches above the surface
         }
 
-                private void Close()
+        private void Close()
         {
             if (gCodeFile != null)
             {
@@ -262,49 +262,45 @@ namespace AVSHull
             Nullable<bool> result = saveDlg.ShowDialog();
             if (result == true)
             {
-                GCodeSetup setup = new GCodeSetup();
-                result = setup.ShowDialog();
                 Point gcodeOrigin = new Point(0, 0);
-                if (result == true)
-                {
-                    // get and process parameters
-                    GCodeParameters parameters = new GCodeParameters();
-                    parameters = (GCodeParameters)Application.Current.FindResource("GCodeSetup");
 
-                    if (parameters.OriginTypes[parameters.Origin] == "Panels Bottom Left")
-                    {
-                        double minX = Double.MaxValue;
-                        double maxY = Double.MinValue;
-                        foreach (Panel panel in Layout.Panels)
-                        {
-                            double x, y;
-                            PointCollection points = panel.Points;
-                            GeometryOperations.TopLeft(points, out x, out y);
-                            minX = Math.Min(minX, x);
-                            maxY = Math.Max(maxY, y);
-                        }
-                        gcodeOrigin = new Point(minX, maxY);
-                    }
-                    else if (parameters.OriginTypes[parameters.Origin] == "Sheet Bottom Left")
-                    {
-                        gcodeOrigin = new Point(0, 0);
-                    }
-                    else if (parameters.OriginTypes[parameters.Origin] == "Sheet Center")
-                    {
-                        gcodeOrigin = new Point(Layout.SheetWidth / 2, Layout.SheetHeight / 2);
-                    }
-                    
-                    // Do the actual output
-                    Open(saveDlg.FileName);
+                // get and process parameters
+                GCodeParameters parameters = Application.Current.FindResource("GCodeSetup") as GCodeParameters;
+
+                if (parameters.OriginTypes[parameters.Origin] == "Panels Bottom Left")
+                {
+                    double minX = Double.MaxValue;
+                    double maxY = Double.MinValue;
                     foreach (Panel panel in Layout.Panels)
                     {
-                        Write(panel, gcodeOrigin);
+                        double x, y;
+                        PointCollection points = panel.Points;
+                        GeometryOperations.TopLeft(points, out x, out y);
+                        minX = Math.Min(minX, x);
+                        maxY = Math.Max(maxY, y);
                     }
-
-                    Close();
-                    return true;
+                    gcodeOrigin = new Point(minX, maxY);
                 }
+                else if (parameters.OriginTypes[parameters.Origin] == "Sheet Bottom Left")
+                {
+                    gcodeOrigin = new Point(0, 0);
+                }
+                else if (parameters.OriginTypes[parameters.Origin] == "Sheet Center")
+                {
+                    gcodeOrigin = new Point(Layout.SheetWidth / 2, Layout.SheetHeight / 2);
+                }
+                    
+                // Do the actual output
+                Open(saveDlg.FileName);
+                foreach (Panel panel in Layout.Panels)
+                {
+                    Write(panel, gcodeOrigin);
+                }
+
+                Close();
+                return true;
             }
+
             return result;
         }
     }

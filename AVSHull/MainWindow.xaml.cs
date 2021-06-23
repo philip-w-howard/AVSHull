@@ -64,12 +64,6 @@ namespace AVSHull
             LayoutWindow.exportClick(sender, e);
         }
 
-        private void PanelsClick(object sender, RoutedEventArgs e)
-        {
-            PanelLayoutWindow layout = new PanelLayoutWindow();
-            layout.Show();
-        }
-
         private void InsertClick(object sender, RoutedEventArgs e)
         {
             //UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");

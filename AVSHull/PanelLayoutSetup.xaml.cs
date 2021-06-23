@@ -13,10 +13,10 @@ using System.Windows.Shapes;
 
 namespace AVSHull
 {
-     /// <summary>
+    /// <summary>
     /// Interaction logic for PanelLayoutSetup.xaml
     /// </summary>
-    public partial class PanelLayoutSetup : Window
+    public partial class PanelLayoutSetup : UserControl
     {
         public PanelLayoutSetup()
         {
@@ -25,12 +25,8 @@ namespace AVSHull
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
-        }
-
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.LayoutSetupExpanded = false;
         }
     }
 }
