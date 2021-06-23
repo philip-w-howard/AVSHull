@@ -42,11 +42,6 @@
                             <MenuItem Header="S_TL" Click="exportClick" />
                         </MenuItem>
                     </MenuItem>
-                    <MenuItem Header="_Tools">
-                        <MenuItem Name="PanelsMenu" Header="_Panels" Click="PanelsClick" />
-                        <!--<MenuItem Name ="ResizeMenu" Header="_Resize" Click="ResizeClick" />-->
-                        <!--<MenuItem Header="_Change number of chines" Click="ChangeChinesClick" />-->
-                    </MenuItem>
                     <MenuItem Header="_Help">
                         <MenuItem Header="_About" Click="AboutClick" />
                     </MenuItem>
