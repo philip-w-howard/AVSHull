@@ -104,6 +104,7 @@ TODO:
 			Setup (sheet layout)
 			GCode Setup
 			Offset Setup
+				Got pop-up working. Need to get data binding right.
 			Panel Ops
 				Rotate
 				Duplicate

@@ -1,14 +1,13 @@
-﻿<Window x:Class="AVSHull.OffsetSetupWindow"
+﻿<UserControl x:Class="AVSHull.OffsetSetupWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
-        Title="Offset Setup" 
-        SizeToContent="WidthAndHeight" 
-        ResizeMode="NoResize" >
-    <StackPanel>
+        >
+
+    <StackPanel Background="White" DataContext="{DynamicResource OffsetParameters}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -21,8 +20,7 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0">Output Type</Label>
-            <ComboBox Name="OutputType_Input" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" IsEditable="False" IsReadOnly="True">
-                
+            <ComboBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" IsEditable="False" IsReadOnly="True" SelectedItem="{Binding Path=OutputTypeString}">
                 <ComboBoxItem>Eighths</ComboBoxItem>
                 <ComboBoxItem>Sixteenths</ComboBoxItem>
                 <ComboBoxItem>Thirtysecondths</ComboBoxItem>
@@ -32,7 +30,7 @@
             </ComboBox>
 
             <Label Grid.Row="1" Grid.Column="0">Spacing Style</Label>
-            <ComboBox Name="SpacingStyle_Input" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  SelectedIndex="0" IsEditable="False" IsReadOnly="True" IsEnabled="False">
+            <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  SelectedIndex="0" IsEditable="False" IsReadOnly="True" IsEnabled="False">
                 <ComboBoxItem>Every point</ComboBoxItem>
                 <ComboBoxItem>Fixed spacing</ComboBoxItem>
             </ComboBox>
@@ -45,8 +43,7 @@
             </ComboBox>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Click="OK_Click" Margin="5" IsDefault="True">OK</Button>
-            <Button Click="Cancel_Click" Margin="5" IsCancel="True">Cancel</Button>
+            <Button Click="OK_Click" Margin="5" >OK</Button>
         </StackPanel>
     </StackPanel>
-</Window>
+</UserControl>

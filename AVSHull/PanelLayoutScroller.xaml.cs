@@ -254,5 +254,11 @@ namespace AVSHull
             UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
             values.LayoutSetupExpanded = !values.LayoutSetupExpanded;
         }
+
+        private void OffsetsClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.OffsetsSetupExpanded = !values.OffsetsSetupExpanded;
+        }
     }
 }

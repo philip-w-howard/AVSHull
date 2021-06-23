@@ -35,12 +35,19 @@
                    PopupAnimation="Slide">
                 <local:PanelLayoutSetup/>
             </Popup>
-            <Button Content="GCode" Click="GCodeClick" ToolTip="Set GCode parameters"/>
+            <Button Content="GCode" Click="GCodeClick" ToolTip="Set GCode output parameters"/>
             <Popup IsOpen="{Binding Path=GCodeSetupExpanded}"
                    PlacementTarget="{Binding ElementName=Scroller}"
                    Placement="Relative"
                    PopupAnimation="Slide">
                 <local:GCodeSetup/>
+            </Popup>
+            <Button Content="Offsets" Click="OffsetsClick" ToolTip="Set Offset Output parameters"/>
+            <Popup IsOpen="{Binding Path=OffsetsSetupExpanded}"
+                   PlacementTarget="{Binding ElementName=Scroller}"
+                   Placement="Relative"
+                   PopupAnimation="Slide">
+                <local:OffsetSetupWindow/>
             </Popup>
         </StackPanel>
 

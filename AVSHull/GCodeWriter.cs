@@ -188,7 +188,7 @@ namespace AVSHull
             gCodeFile.WriteLine("G00 Z0.25 M03");           // 0.25 inches above the surface
         }
 
-                private void Close()
+        private void Close()
         {
             if (gCodeFile != null)
             {

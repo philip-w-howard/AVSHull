@@ -7,6 +7,13 @@ namespace AVSHull
 {
     class UI_Params : INotifyPropertyChanged
     {
+        private bool? _offsetsSetupExpanded = false;
+        public bool? OffsetsSetupExpanded
+        {
+            get { return _offsetsSetupExpanded; }
+            set { _offsetsSetupExpanded = value; Notify("OffsetsSetupExpanded"); }
+        }
+
         private bool? _layoutSetupExpanded = false;
         public bool? LayoutSetupExpanded
         {
