@@ -69,7 +69,7 @@ TODO:
 	Toolbar determined by tab selection
 		slide-out details
 
-	Refactor panel layout mess: MVVM
+	Refactor panel layout mess: MVVM: Preparing to merge panel tab handling
 		panel: points for single panel
 			shift, rotate, split
 		PanelsLayoutSetup
