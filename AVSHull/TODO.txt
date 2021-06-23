@@ -83,8 +83,34 @@ TODO:
 			Add visuals to Layout
 		LayoutScroller
 			ScrollViewer with a LayoutControl inside
-		PanelLayoutWindow: No longer used
-
-		Get menus/toolbars working
 
 		Check Notifications on panel hierarcy
+
+	Add Undo/Redo to Layout
+
+	Move Tools to toolbar inside tab
+	Implement tool slide-out: Expander
+
+		Design
+			Resize
+			Chines
+			Bulkhead
+				Allow Movement
+				Insert
+				Delete
+    
+		Panels
+			Use GCode Setup as template
+			Setup (sheet layout)
+			GCode Setup
+			Offset Setup
+				Got pop-up working. Need to get data binding right.
+			Panel Ops
+				Rotate
+				Duplicate
+				Split
+				Flip
+
+	Add Export to File menu: Only operative in Panel mode: Preparing to merge this.
+
+

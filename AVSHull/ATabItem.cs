@@ -20,16 +20,16 @@ namespace AVSHull
             {
                 main.CreateMenu.IsEnabled = false;
                 main.ImportMenu.IsEnabled = false;
+                main.ExportMenu.IsEnabled = true;
                 PanelLayoutScroller layout = (PanelLayoutScroller)((ATabItem)e.Source).Content;
-                Debug.WriteLine("Updating panels layout");
                 layout.CheckPanels();
             }
             else if (TabName == "Design")
             {
                 main.CreateMenu.IsEnabled = true;
                 main.ImportMenu.IsEnabled = true;
+                main.ExportMenu.IsEnabled = false;
             }
-            Debug.WriteLine("Selected {0} {1}", TabName, TabName.Length);
         }
         protected override void OnUnselected(System.Windows.RoutedEventArgs e)
         {

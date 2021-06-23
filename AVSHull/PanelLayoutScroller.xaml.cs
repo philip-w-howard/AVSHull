@@ -71,24 +71,10 @@ namespace AVSHull
         {
             if (m_panels.Count == 0)
             {
-                GetLayoutSetup();
                 SetupPanels();
                 LayoutControl.InvalidateVisual();
             }
         }
-        private void GetLayoutSetup()
-        {
-            //Get the layout setup
-            PanelLayoutSetup setup = new PanelLayoutSetup();
-
-            bool? result = setup.ShowDialog();
-
-            if (result == true)
-            {
-                // Data is copied over automagically through data binding
-            }
-        }
-
         private void AddAllClick(object sender, RoutedEventArgs e)
         {
             double x = 10;
@@ -136,7 +122,7 @@ namespace AVSHull
             public PanelsLayoutSetup panelLayout { get; set; }
         }
 
-        private void openClick(object sender, RoutedEventArgs e)
+        public void openClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openDlg = new OpenFileDialog();
 
@@ -166,7 +152,7 @@ namespace AVSHull
 
         }
 
-        private void saveClick(object sender, RoutedEventArgs e)
+        public void saveClick(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveDlg = new SaveFileDialog();
 
@@ -191,12 +177,40 @@ namespace AVSHull
                 }
             }
         }
+        public void exportClick(object sender, RoutedEventArgs e)
+        {
+            MenuItem menu = (MenuItem)sender;
+
+            if (menu != null)
+            {
+                switch (menu.Header)
+                {
+                    case "_GCode":
+                        outputGcode(sender, e);
+                        break;
+                    case "_Offsets":
+                        outputOffsets(sender, e);
+                        break;
+                    case "S_VG":
+                        outputSVG(sender, e);
+                        break;
+                    case "S_TL":
+                        outputSTL(sender, e);
+                        break;
+                }
+            }
+        }
 
         private void outputGcode(object sender, RoutedEventArgs e)
         {
+            //UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            //values.GCodeSetupExapnded = true;
+
             GCodeWriter writer = new GCodeWriter();
             writer.Layout = LayoutControl.Layout;
             writer.SaveLayout();
+
+            //values.GCodeSetupExapnded = false;
         }
 
         private void outputOffsets(object sender, RoutedEventArgs e)
@@ -219,17 +233,6 @@ namespace AVSHull
             writer.SaveLayout();
         }
 
-        private void setupClick(object sender, RoutedEventArgs e)
-        {
-            GetLayoutSetup();
-            LayoutControl.InvalidateVisual();
-        }
-
-        private void WindowLoaded(object sender, RoutedEventArgs e)
-        {
-            GetLayoutSetup();
-        }
-
         public void WindowResized(object sender, SizeChangedEventArgs e)
         {
             InvalidateMeasure();
@@ -240,5 +243,22 @@ namespace AVSHull
             LayoutControl.InvalidateMeasure();
         }
 
+        private void GCodeClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.GCodeSetupExpanded = !values.GCodeSetupExpanded;
+        }
+
+        private void LayoutClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.LayoutSetupExpanded = !values.LayoutSetupExpanded;
+        }
+
+        private void OffsetsClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.OffsetsSetupExpanded = !values.OffsetsSetupExpanded;
+        }
     }
 }

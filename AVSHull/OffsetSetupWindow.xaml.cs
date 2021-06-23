@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +16,7 @@ namespace AVSHull
     /// <summary>
     /// Interaction logic for OffsetSetupWindow.xaml
     /// </summary>
-    public partial class OffsetSetupWindow : Window
+    public partial class OffsetSetupWindow : UserControl
     {
         public OffsetSetupWindow()
         {
@@ -24,25 +25,43 @@ namespace AVSHull
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.OffsetsSetupExpanded = false;
         }
 
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
-        }
+        //public String OutputType
+        //{
+        //    get { return OutputType_Input.Text; }
+        //}
+        //public String SpacingStyle
+        //{
+        //    get { return SpacingStyle_Input.Text; }
+        //}
+        //public String Spacing
+        //{
+        //    get { return Spacing_Input.Text; }
+        //}
 
-        public String OutputType
+        private void OutputTypeChanged(object sender, SelectionChangedEventArgs e)
         {
-            get { return OutputType_Input.Text; }
-        }
-        public String SpacingStyle
-        {
-            get { return SpacingStyle_Input.Text; }
-        }
-        public String Spacing
-        {
-            get { return Spacing_Input.Text; }
+            ComboBox box = sender as ComboBox;
+            switch (box.SelectedItem.ToString())
+            {
+                case "Eighths":
+                    break;
+                case "Sixteenths":
+                    break;
+                case "Thirtysecondths":
+                    break;
+                case "Decimal 2-digits":
+                    break;
+                case "Decimal 3-digits":
+                    break;
+                case "Decimal 4-digits":
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
