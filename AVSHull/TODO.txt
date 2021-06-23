@@ -109,4 +109,6 @@ TODO:
 				Split
 				Flip
 
-	Add Export to File menu: Only operative in Panel mode
+	Add Export to File menu: Only operative in Panel mode: Preparing to merge this.
+
+
