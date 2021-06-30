@@ -173,7 +173,6 @@ namespace AVSHull
                 {
                     // Call the Deserialize method to restore the object's state.
                     tempHull = (Hull)serializer.Deserialize(reader);
-                    tempHull.CheckTransom();
 
                     // Make sure we have a timestamp
                     if (tempHull.Timestamp == DateTime.MinValue) tempHull.Timestamp = DateTime.Now;

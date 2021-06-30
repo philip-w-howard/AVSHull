@@ -219,7 +219,7 @@ namespace AVSHull
             Notify("HullData");
         }
 
-        public void CheckTransom()
+        private void CheckTransom()
         {
             for (int ii = 0; ii < Bulkheads.Count; ii++)
             {
