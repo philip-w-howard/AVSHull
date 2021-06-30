@@ -31,7 +31,6 @@ namespace AVSHull
             InitializeComponent();
 
             BaseHull.Instance().PropertyChanged += hull_PropertyChanged;
-            BaseHull.Instance().SetBulkheadHandler();
 
             undoLog = (HullLog)this.FindResource("UndoLog");
             undoLog.Clear();

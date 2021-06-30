@@ -41,7 +41,7 @@ HullControl
 		Create (empty)
 		Create (from Setup data)
 		LoadFromHullFile
-		SetBulkheadHandler (can be optimized away?)
+***		SetBulkheadHandler (can be optimized away?)
 		Scale
 		ChangeChines (change number of chines)
 		CheckTransom (wrapper for Bulkhead function)

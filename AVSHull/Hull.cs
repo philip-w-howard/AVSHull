@@ -82,6 +82,7 @@ namespace AVSHull
             }
             Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.TRANSOM));
             CheckTransom();
+            SetBulkheadHandler();
         }
 
         public Hull(string filename)
@@ -113,16 +114,14 @@ namespace AVSHull
             }
             RepositionToZero();
             CheckTransom();
-            SetBulkheadHandler(bulkhead_PropertyChanged);
+            SetBulkheadHandler();
         }
 
-        public void SetBulkheadHandler(PropertyChangedEventHandler handler = null)
+        private void SetBulkheadHandler()
         {
-            if (handler == null) handler = bulkhead_PropertyChanged;
-
             foreach (Bulkhead bulk in Bulkheads)
             {
-                bulk.PropertyChanged += handler;
+                bulk.PropertyChanged += bulkhead_PropertyChanged;
             }
         }
         private void RepositionToZero()
