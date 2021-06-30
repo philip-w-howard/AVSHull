@@ -24,6 +24,11 @@ TODO:
 		See CreateHullDialog as another example
 			Set window (Left,Top) based on mouse position
 
+		About (in center)
+		CreateHull
+		Open/Save/Import/Export
+		Resize
+
 	Check on notification settings.
 
 	Check if Bulkhead(points, Type) is half hull or full hull.
@@ -65,9 +70,6 @@ TODO:
 	Compute X,Y,Z in panel display
 	Get timestamp of panels in panel layout
 		Compare with that of Hull
-
-	Toolbar determined by tab selection
-		slide-out details
 
 	Refactor panel layout mess: MVVM: Preparing to merge panel tab handling
 		panel: points for single panel
@@ -111,6 +113,8 @@ TODO:
 				Split
 				Flip
 
-	Add Export to File menu: Only operative in Panel mode: Preparing to merge this.
-
+	Make HullControl.IsEditable a property. 
+		Based on perspective?
+		Tie to editableHull property?
+		Enable/Disable context menu based on property value.
 

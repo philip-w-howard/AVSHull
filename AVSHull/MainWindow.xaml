@@ -13,15 +13,6 @@
         Height="{Binding Source={x:Static properties:Settings.Default}, Path=MainHeight, Mode=TwoWay}" 
         Width="{Binding Source={x:Static properties:Settings.Default}, Path=MainWidth, Mode=TwoWay}" 
         Closed="Window_Closed">
-    <Window.Resources>
-        <ContextMenu x:Key="hullEditMenu">
-            <CheckBox Content="_Allow bulkhead movement" DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding AllowBulkheadMoves, Mode=TwoWay }" />
-            <!--<CheckBox Content="_Insert bulkhead" DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding InsertBulkhead, Mode=TwoWay }" />-->
-            <MenuItem Header="_Insert Bulkhead" Click="InsertClick" />
-            <MenuItem x:Name="DeleteBulkheadItem" Header="_Delete Bulkhead" Click="DeleteClick" />
-        </ContextMenu>
-
-     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Undo" CanExecute="Undo_CanExecute" Executed="Undo_Executed"/>
         <CommandBinding Command="ApplicationCommands.Redo" CanExecute="Redo_CanExecute" Executed="Redo_Executed"/>

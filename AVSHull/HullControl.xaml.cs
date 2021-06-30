@@ -5,13 +5,21 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace AVSHull
 {
-    public class HullControl : Control
+    /// <summary>
+    /// Interaction logic for HullControl.xaml
+    /// </summary>
+    public partial class HullControl : UserControl
     {
         public enum PerspectiveType { FRONT, TOP, SIDE, PERSPECTIVE };
         private const double CLICK_WIDTH = 5.0;
@@ -25,7 +33,7 @@ namespace AVSHull
         public PerspectiveType perspective = PerspectiveType.PERSPECTIVE;
         private bool m_RecreateHandles = false;
         private bool m_InsertBulkhead = false;
- 
+
         private List<Geometry> m_bulkheadGeometry;
         private List<RectangleGeometry> m_handles;
 
@@ -42,20 +50,22 @@ namespace AVSHull
 
         public HullControl()
         {
+            InitializeComponent();
+
             sequence = ++SequenceCounter;
 
             m_editableHull = null;
             m_bulkheadGeometry = new List<Geometry>();
             m_handles = new List<RectangleGeometry>();
-        
-            m_mouseLoc = (NotifyPoint3D)FindResource("HullMouseLocation");
-    }
 
-    public EditableHull editableHull
+            m_mouseLoc = (NotifyPoint3D)FindResource("HullMouseLocation");
+        }
+
+        public EditableHull editableHull
         {
             get { return m_editableHull; }
-            set 
-            { 
+            set
+            {
                 m_editableHull = value;
                 //m_editableHull.PropertyChanged += hull_PropertyChanged;
                 CreateHandles();
@@ -82,7 +92,7 @@ namespace AVSHull
                 double scale_x = 0.9 * finalSize.Width / bounds.Width;
                 double scale_y = 0.9 * finalSize.Height / bounds.Height;
 
-                m_scale =  Math.Min(scale_x, scale_y);
+                m_scale = Math.Min(scale_x, scale_y);
 
                 ScaleTransform scaleXform = new ScaleTransform(m_scale, m_scale);
                 double xlate_x = (DesiredSize.Width - bounds.Width * m_scale) / 2;
@@ -152,8 +162,8 @@ namespace AVSHull
                 foreach (Point3D point in bulk.Points)
                 {
                     Rect rect = new Rect();
-                    rect.Height = HANDLE_SIZE/m_scale;
-                    rect.Width = HANDLE_SIZE/m_scale;
+                    rect.Height = HANDLE_SIZE / m_scale;
+                    rect.Width = HANDLE_SIZE / m_scale;
                     rect.X = point.X - HANDLE_SIZE / m_scale / 2;
                     rect.Y = point.Y - HANDLE_SIZE / m_scale / 2;
                     RectangleGeometry geom = new RectangleGeometry(rect);
@@ -165,7 +175,7 @@ namespace AVSHull
         private int BulkheadClicked(Point loc)
         {
             Pen pen = new Pen(Brushes.Black, CLICK_WIDTH);
-            for (int index=0; index< m_bulkheadGeometry.Count; index++)
+            for (int index = 0; index < m_bulkheadGeometry.Count; index++)
             {
                 if (m_bulkheadGeometry[index].StrokeContains(pen, loc))
                 {
@@ -245,15 +255,15 @@ namespace AVSHull
                         }
                     }
                 }
-                else if (e.RightButton == MouseButtonState.Pressed)
-                {
-                    ContextMenu cm = this.FindResource("hullEditMenu") as ContextMenu;
-                    if (cm != null)
-                    {
-                        cm.IsOpen = true;
-                    }
-                }
-                e.Handled = true;
+                //else if (e.RightButton == MouseButtonState.Pressed)
+                //{
+                //    ContextMenu cm = this.FindResource("hullEditMenu") as ContextMenu;
+                //    if (cm != null)
+                //    {
+                //        cm.IsOpen = true;
+                //    }
+                //}
+                //e.Handled = true;
             }
         }
         protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
@@ -321,7 +331,7 @@ namespace AVSHull
             m_mouseLoc.Y = 0;
             m_mouseLoc.Z = 0;
 
-            Rect bounds = new Rect(new Size(0,0));
+            Rect bounds = new Rect(new Size(0, 0));
             if (m_bulkheadGeometry.Count > 0)
             {
                 bounds = m_bulkheadGeometry[0].Bounds;
@@ -353,7 +363,7 @@ namespace AVSHull
                     switch (perspective)
                     {
                         case PerspectiveType.FRONT:
-                            m_mouseLoc.X = X - hullSize.X/2;
+                            m_mouseLoc.X = X - hullSize.X / 2;
                             m_mouseLoc.Y = hullSize.Y - Y;
                             break;
                         case PerspectiveType.SIDE:
@@ -361,7 +371,7 @@ namespace AVSHull
                             m_mouseLoc.Z = X;
                             break;
                         case PerspectiveType.TOP:
-                            m_mouseLoc.X = Y - hullSize.Y/2;
+                            m_mouseLoc.X = Y - hullSize.Y / 2;
                             m_mouseLoc.Z = X;
                             break;
                     }
@@ -388,7 +398,7 @@ namespace AVSHull
                     InvalidateVisual();
                 }
                 else if (m_movingBulkhead && m_selectedBulkhead != NOT_SELECTED && m_editableHull.Bulkheads[m_selectedBulkhead].Type != Bulkhead.BulkheadType.BOW &&
-                    (perspective == PerspectiveType.TOP || perspective == PerspectiveType.SIDE) )
+                    (perspective == PerspectiveType.TOP || perspective == PerspectiveType.SIDE))
                 {
                     double deltaX = (loc.X - m_lastDrag.X) / m_scale;
                     double deltaY = (loc.Y - m_lastDrag.Y) / m_scale;
@@ -409,21 +419,20 @@ namespace AVSHull
             }
         }
 
-        public bool DeleteSelectedBulkhead()
+        private void InsertClick(object sender, RoutedEventArgs e)
         {
-            if (m_selectedBulkhead == NOT_SELECTED) return false;
-
-            m_editableHull.DeleteBulkhead(m_selectedBulkhead);
-            CreateHandles();
-            InvalidateVisual();
-            
-            return true;
+            UI_Params values = this.FindResource("Curr_UI_Params") as UI_Params;
+            m_editableHull.InsertBulkhead(values.NewBulkheadLoc);
         }
 
-        public void InsertBulkhead(double Z)
+        private void DeleteClick(object sender, RoutedEventArgs e)
         {
-            m_editableHull.InsertBulkhead(Z);
-            //m_InsertBulkhead = true;
+            if (m_selectedBulkhead != NOT_SELECTED)
+            {
+                m_editableHull.DeleteBulkhead(m_selectedBulkhead);
+                CreateHandles();
+                InvalidateVisual();
+            }
         }
     }
 }

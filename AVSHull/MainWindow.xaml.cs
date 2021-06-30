@@ -64,16 +64,6 @@ namespace AVSHull
             LayoutWindow.exportClick(sender, e);
         }
 
-        private void InsertClick(object sender, RoutedEventArgs e)
-        {
-            //UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
-            //PerspectiveView.InsertBulkhead(values.NewBulkheadLoc);
-        }
-        private void DeleteClick(object sender, RoutedEventArgs e)
-        {
-            //PerspectiveView.DeleteSelectedBulkhead();
-        }
-
         private void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             DesignWindow.Undo_CanExecute(sender, e);

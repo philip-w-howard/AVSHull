@@ -14,6 +14,7 @@ namespace AVSHull
     /// </summary>
     public partial class App : Application
     {
+        // Referenced in All.xaml (commented out)
         void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
