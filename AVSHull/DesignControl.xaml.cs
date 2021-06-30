@@ -155,11 +155,6 @@ namespace AVSHull
         //    }
         //}
 
-        private void ChangeChinesClick(object sender, RoutedEventArgs e)
-        {
-            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
-            BaseHull.Instance().ChangeChines(values.NumChines);
-        }
         public void openClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openDlg = new OpenFileDialog();
@@ -229,20 +224,27 @@ namespace AVSHull
 
         public void importClick(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Hull files (*.hul)|*.hul|All files (*.*)|*.*";
-            //openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            OpenFileDialog openDlg = new OpenFileDialog();
+            openDlg.Filter = "Hull files (*.hul)|*.hul|All files (*.*)|*.*";
+            openDlg.FilterIndex = 0;
+            openDlg.RestoreDirectory = true;
 
-            if (openFileDialog.ShowDialog() == true)
+            if (openDlg.ShowDialog() == true)
             {
-                BaseHull.Instance().LoadFromHullFile(openFileDialog.FileName);
+                Hull tempHull = new Hull(openDlg.FileName);
 
-                NumChines.Text = ((BaseHull.Instance().Bulkheads[0].NumChines) / 2).ToString();
+                BaseHull.Instance().Bulkheads = tempHull.Bulkheads;
+
+                PerspectiveView.perspective = HullControl.PerspectiveType.PERSPECTIVE;
+                PerspectiveView.IsEditable = false;
+
                 undoLog.Clear();
                 undoLog.Add(BaseHull.Instance());
 
                 redoLog.Clear();
                 UpdateViews();
+
+                NumChines.Text = ((BaseHull.Instance().Bulkheads[0].NumChines) / 2).ToString();
             }
         }
         public void createClick(object sender, RoutedEventArgs e)

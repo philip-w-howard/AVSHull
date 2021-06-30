@@ -84,7 +84,7 @@ namespace AVSHull
             CheckTransom();
         }
 
-        public void LoadFromHullFile(string filename)
+        public Hull(string filename)
         {
             Bulkheads = new List<Bulkhead>();
 
@@ -114,8 +114,6 @@ namespace AVSHull
             RepositionToZero();
             CheckTransom();
             SetBulkheadHandler(bulkhead_PropertyChanged);
-
-            Notify("HullData");
         }
 
         public void SetBulkheadHandler(PropertyChangedEventHandler handler = null)

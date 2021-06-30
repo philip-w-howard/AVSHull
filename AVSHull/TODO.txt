@@ -15,6 +15,80 @@ DisplayHull
 HullControl
 	Displays a DisplayHull
 
+6-30-2021
+	Bulkhead ops:
+		Create (empty)
+		Create (points)
+		Create (copy + change chines)
+		Create (HUL file)
+    
+		CheckTransomAngle (called after creating Hull from AVSH file)
+		StraightenBulkhead (not implemented)
+    
+		ShiftBy (used to zero)
+    
+		GetGeometry (depends only on Points property)
+    
+		Clone
+		UpdateWithMatrix (rotation and scaling)
+		UpdateBulkheadPoint (move single point)
+		MoveZ (deltaZ)
+    
+	Hull
+		list of Bulkheads
+		Timestamp
+    
+		Create (empty)
+		Create (from Setup data)
+		LoadFromHullFile
+		SetBulkheadHandler (can be optimized away?)
+		Scale
+		ChangeChines (change number of chines)
+		CheckTransom (wrapper for Bulkhead function)
+    
+		Clone
+    
+	EditableHull
+		SelectedBulkhead
+		Create (from BaseHull)
+		Rotate
+		GetBulkheadGeometry (not used)
+		GetChineGeometry
+		GetSize
+		UpdateBulkheadPoint (some translation from screen to hull coordinates)
+		DeleteBulkhead
+		InsertBulkhead
+    
+	HullControl
+		Reference to EditableHull
+		Update HullMouseLocation
+		MeasureOverride
+		ArrangeOverride
+		OnRender
+    
+		BulkheadClicked
+		HandleClicked
+		OnPreviewMouseDown
+		OnPreviewMouseUp
+		OnPreviewMouseMove
+    
+		hull_PropertyChanged
+		InsertClick
+		DeleteClick
+    
+	DesignControl
+		grid of HullControl's
+		DoubleClick (set perspective view)
+		RotateClick
+		UpdateViews (simplify: only perspective should change)
+		hull_PropertyChanged
+		openClick
+		saveClick
+		importClick
+		createClick
+		ResizeClick
+		Undo/Redo
+    
 TODO:
 	
 	Place pop-ups in center of parent. 
