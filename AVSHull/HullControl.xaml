@@ -11,6 +11,7 @@
             <CheckBox Content="_Allow bulkhead movement" DataContext="{DynamicResource Curr_UI_Params}" IsChecked="{Binding AllowBulkheadMoves, Mode=TwoWay }" />
             <MenuItem Header="_Insert Bulkhead" Click="InsertClick" />
             <MenuItem x:Name="DeleteBulkheadItem" Header="_Delete Bulkhead" Click="DeleteClick" />
+            <MenuItem Header="_Change Chines" Click="ChinesClick" />
         </ContextMenu>
     </UserControl.ContextMenu>
 

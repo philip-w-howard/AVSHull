@@ -59,6 +59,8 @@ HullControl
 		UpdateBulkheadPoint (some translation from screen to hull coordinates)
 		DeleteBulkhead
 		InsertBulkhead
+		ChangeChines
+***			Undo doesn't always work
     
 	HullControl
 		Reference to EditableHull

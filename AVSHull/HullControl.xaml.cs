@@ -127,18 +127,13 @@ namespace AVSHull
             Pen bulkheadPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
             Pen chinePen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
 
-            m_bulkheadGeometry.Clear();
-            foreach (Bulkhead bulk in m_editableHull.Bulkheads)
-            {
-                Geometry bulkGeom = bulk.GetGeometry();
-                bulkGeom.Transform = m_xform;
-                m_bulkheadGeometry.Add(bulkGeom);
-            }
-
+            m_bulkheadGeometry = m_editableHull.GetBulkheadGeometry();
             foreach (Geometry geom in m_bulkheadGeometry)
             {
+                geom.Transform = m_xform;
                 drawingContext.DrawGeometry(null, bulkheadPen, geom);
             }
+
 
             Geometry chines = m_editableHull.GetChineGeometry();
             chines.Transform = m_xform;
@@ -433,6 +428,12 @@ namespace AVSHull
                 CreateHandles();
                 InvalidateVisual();
             }
+        }
+
+        private void ChinesClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = this.FindResource("Curr_UI_Params") as UI_Params;
+            m_editableHull.ChangeChines(values.NumChines);
         }
     }
 }

@@ -207,7 +207,7 @@ namespace AVSHull
             }
         }
 
-        public void ChangeChines(int numChines)
+        public virtual void ChangeChines(int numChines)
         {
             Timestamp = DateTime.Now;
 

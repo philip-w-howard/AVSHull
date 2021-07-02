@@ -46,12 +46,14 @@ namespace AVSHull
             RepositionToZero();
         }
 
-        public Geometry GetBulkheadGeometry()
+        public List<Geometry> GetBulkheadGeometry()
         {
-            GeometryGroup geom = new GeometryGroup();
+            List<Geometry> geom_list = new List<Geometry>();
 
             foreach (Bulkhead bulk in Bulkheads)
             {
+                GeometryGroup geom = new GeometryGroup();
+
                 for (int chine = 0; chine < bulk.NumChines - 1; chine++)
                 {
                     Point p1 = new Point(bulk.Points[chine].X, bulk.Points[chine].Y);
@@ -59,9 +61,10 @@ namespace AVSHull
 
                     geom.Children.Add(new LineGeometry(p1, p2));
                 }
+                geom_list.Add(geom);
             }
 
-            return geom;
+            return geom_list;
         }
         public Geometry GetChineGeometry()
         {
@@ -279,6 +282,13 @@ namespace AVSHull
             BaseHull.Instance().Bulkheads.Insert(index, new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL));
             BaseHull.Instance().Notify("HullData");
         }
+
+        public override void ChangeChines(int numChines)
+        {
+            base.ChangeChines(numChines);
+            BaseHull.Instance().ChangeChines(numChines);
+        }
+
         //m_selectedBulkhead, m_draggingHandle, x, y, z);
         //*************************************************************
         // INotifyPropertyChanged implementation
