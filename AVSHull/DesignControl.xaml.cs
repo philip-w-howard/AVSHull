@@ -107,22 +107,6 @@ namespace AVSHull
             }
         }
 
-        //private Version GetVersion()
-        //{
-        //    //if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
-        //    //{
-        //    //    return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
-        //    //}
-        //    //try
-        //    //{
-        //    //    return ApplicationDeployment.CurrentDeployment.CurrentVersion;
-        //    //}
-        //    //catch (Exception)
-        //    {
-        //        return Assembly.GetExecutingAssembly().GetName().Version;
-        //    }
-        //}
-
         public void openClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openDlg = new OpenFileDialog();
@@ -244,7 +228,7 @@ namespace AVSHull
                 return;
             }
 
-            EditableHull hull = new EditableHull();
+            HullView hull = new HullView();
 
             Size3D originalSize = hull.GetSize();
 

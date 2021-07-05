@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace AVSHull
 {
-    public class EditableHull : Hull, INotifyPropertyChanged
+    public class HullView : Hull, INotifyPropertyChanged
 
     {
         private const int POINTS_PER_CHINE = 50;
@@ -23,7 +23,7 @@ namespace AVSHull
             set { m_SelectedBulkhead = value; }
         }
 
-        public EditableHull()
+        public HullView()
         {
             Bulkheads = new List<Bulkhead>();
 
@@ -288,8 +288,7 @@ namespace AVSHull
             BaseHull.Instance().ChangeChines(numChines);
         }
 
-        //m_selectedBulkhead, m_draggingHandle, x, y, z);
-        //*************************************************************
+         //*************************************************************
         // INotifyPropertyChanged implementation
         // Handled by base class
     }

@@ -36,7 +36,7 @@ namespace AVSHull
             // Initialize the panels
             if (myHull != null && myHull.Bulkheads.Count != 0)
             {
-                EditableHull eHull = new EditableHull();
+                HullView eHull = new HullView();
                 List<Point3DCollection> chines = eHull.GenerateChines();
 
                 for (int index = 0; index < chines.Count / 2; index++)

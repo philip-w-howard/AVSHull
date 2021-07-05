@@ -26,7 +26,7 @@ namespace AVSHull
         private const int HANDLE_SIZE = 5;
         private const int NOT_SELECTED = -1;
 
-        private EditableHull m_editableHull;
+        private HullView m_editableHull;
         private double m_scale = 1.0;
         private TransformGroup m_xform = new TransformGroup();              // Transform applied to geometry to scale and center drawings
         private bool IsEditable = false;
@@ -36,7 +36,7 @@ namespace AVSHull
             get { return _perspective; }
             set
             {
-                m_editableHull = new EditableHull();
+                m_editableHull = new HullView();
                 _perspective = value;
                 switch (_perspective)
                 {
