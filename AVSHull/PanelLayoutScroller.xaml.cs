@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -31,15 +32,16 @@ namespace AVSHull
         private void SetupPanels()
         {
             m_panels = new List<Panel>();
-
             Hull myHull = BaseHull.Instance();
             // Initialize the panels
             if (myHull != null && myHull.Bulkheads.Count != 0)
             {
-                EditableHull eHull = new EditableHull();
-                for (int index = 0; index < eHull.Chines.Count / 2; index++)
+                HullView eHull = new HullView();
+                List<Point3DCollection> chines = eHull.GenerateChines();
+
+                for (int index = 0; index < chines.Count / 2; index++)
                 {
-                    Panel p = new Panel(eHull.Chines[index], eHull.Chines[index + 1]);
+                    Panel p = new Panel(chines[index], chines[index + 1]);
                     p.name = "Panel " + (index + 1);
                     m_panels.Add(p);
                 }

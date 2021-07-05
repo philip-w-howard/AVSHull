@@ -82,9 +82,10 @@ namespace AVSHull
             }
             Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.TRANSOM));
             CheckTransom();
+            SetBulkheadHandler();
         }
 
-        public void LoadFromHullFile(string filename)
+        public Hull(string filename)
         {
             Bulkheads = new List<Bulkhead>();
 
@@ -113,18 +114,14 @@ namespace AVSHull
             }
             RepositionToZero();
             CheckTransom();
-            SetBulkheadHandler(bulkhead_PropertyChanged);
-
-            Notify("HullData");
+            SetBulkheadHandler();
         }
 
-        public void SetBulkheadHandler(PropertyChangedEventHandler handler = null)
+        private void SetBulkheadHandler()
         {
-            if (handler == null) handler = bulkhead_PropertyChanged;
-
             foreach (Bulkhead bulk in Bulkheads)
             {
-                bulk.PropertyChanged += handler;
+                bulk.PropertyChanged += bulkhead_PropertyChanged;
             }
         }
         private void RepositionToZero()
@@ -210,7 +207,7 @@ namespace AVSHull
             }
         }
 
-        public void ChangeChines(int numChines)
+        public virtual void ChangeChines(int numChines)
         {
             Timestamp = DateTime.Now;
 
@@ -222,7 +219,7 @@ namespace AVSHull
             Notify("HullData");
         }
 
-        public void CheckTransom()
+        private void CheckTransom()
         {
             for (int ii = 0; ii < Bulkheads.Count; ii++)
             {

@@ -110,7 +110,7 @@ namespace AVSHull
             if (resizeData != null)
             {
                 bool proportional = resizeData.Proportional;
-                EditableHull hull = new EditableHull();
+                HullView hull = new HullView();
 
                 // Need to turn off Proportional for initial setup
                 resizeData.Proportional = false;

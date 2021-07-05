@@ -9,13 +9,13 @@ using System.Diagnostics;
 
 namespace AVSHull
 {
-    public class EditableHull : Hull, INotifyPropertyChanged
-
+    // Presents a view of the Singleton hull defined by BaseHull
+    public class HullView : Hull, INotifyPropertyChanged
     {
         private const int POINTS_PER_CHINE = 50;
         public static int NOT_SELECTED = -1;
 
-        public List<Point3DCollection> Chines;
+        private List<Point3DCollection> Chines;
         private int m_SelectedBulkhead;
         public int SelectedBulkhead
         {
@@ -23,7 +23,7 @@ namespace AVSHull
             set { m_SelectedBulkhead = value; }
         }
 
-        public EditableHull()
+        public HullView()
         {
             Bulkheads = new List<Bulkhead>();
 
@@ -33,7 +33,7 @@ namespace AVSHull
             }
 
             m_SelectedBulkhead = NOT_SELECTED;
-            PrepareChines(POINTS_PER_CHINE);
+            Chines = GenerateChines(POINTS_PER_CHINE);
         }
 
         public void Rotate(double x, double y, double z)
@@ -46,12 +46,14 @@ namespace AVSHull
             RepositionToZero();
         }
 
-        public Geometry GetBulkheadGeometry()
+        public List<Geometry> GetBulkheadGeometry()
         {
-            GeometryGroup geom = new GeometryGroup();
+            List<Geometry> geom_list = new List<Geometry>();
 
             foreach (Bulkhead bulk in Bulkheads)
             {
+                GeometryGroup geom = new GeometryGroup();
+
                 for (int chine = 0; chine < bulk.NumChines - 1; chine++)
                 {
                     Point p1 = new Point(bulk.Points[chine].X, bulk.Points[chine].Y);
@@ -59,9 +61,10 @@ namespace AVSHull
 
                     geom.Children.Add(new LineGeometry(p1, p2));
                 }
+                geom_list.Add(geom);
             }
 
-            return geom;
+            return geom_list;
         }
         public Geometry GetChineGeometry()
         {
@@ -202,14 +205,14 @@ namespace AVSHull
             }
         }
 
-        private List<Point3DCollection> PrepareChines(Hull hull, int points_per_chine)
+        public List<Point3DCollection> GenerateChines(Hull hull, int points_per_chine = POINTS_PER_CHINE)
         {
             int nChines = hull.Bulkheads[0].NumChines;
             List<Point3DCollection> chines = new List<Point3DCollection>();
 
             for (int chine = 0; chine < nChines; chine++)
             {
-                Point3DCollection chine_data = new Point3DCollection(Bulkheads.Count);
+                Point3DCollection chine_data = new Point3DCollection(hull.Bulkheads.Count);
 
                 for (int bulkhead = 0; bulkhead < hull.Bulkheads.Count; bulkhead++)
                 {
@@ -223,11 +226,10 @@ namespace AVSHull
             return chines;
         }
 
-        private void PrepareChines(int points_per_chine)
+        public List<Point3DCollection> GenerateChines(int points_per_chine = POINTS_PER_CHINE)
         {
-            Chines = PrepareChines(this, points_per_chine);
+            return GenerateChines(this, points_per_chine);
         }
-
         public void UpdateBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
         {
             if (chine < 0 && BaseHull.Instance().Bulkheads[bulkhead].Type != Bulkhead.BulkheadType.BOW)
@@ -257,7 +259,7 @@ namespace AVSHull
 
             // get points for new bulkhead
             // First, create chines for base hull
-            List<Point3DCollection> chines = PrepareChines(BaseHull.Instance(), POINTS_PER_CHINE);
+            List<Point3DCollection> chines = GenerateChines(BaseHull.Instance(), POINTS_PER_CHINE);
             Point3DCollection points = new Point3DCollection();
             for (int ii=num_chines-1; ii>=0; ii--)
             {
@@ -279,8 +281,14 @@ namespace AVSHull
             BaseHull.Instance().Bulkheads.Insert(index, new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL));
             BaseHull.Instance().Notify("HullData");
         }
-        //m_selectedBulkhead, m_draggingHandle, x, y, z);
-        //*************************************************************
+
+        public override void ChangeChines(int numChines)
+        {
+            base.ChangeChines(numChines);
+            BaseHull.Instance().ChangeChines(numChines);
+        }
+
+         //*************************************************************
         // INotifyPropertyChanged implementation
         // Handled by base class
     }
