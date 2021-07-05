@@ -43,23 +43,20 @@ namespace AVSHull
 
         private void HullMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            PerspectiveView.IsEditable = false;
-
             if (sender == FrontView)
             {
-                PerspectiveView.perspective = HullControl.PerspectiveType.FRONT;
+                PerspectiveView.Perspective = HullControl.PerspectiveType.FRONT;
             }
             else if (sender == TopView)
             {
-                PerspectiveView.perspective = HullControl.PerspectiveType.TOP;
+                PerspectiveView.Perspective = HullControl.PerspectiveType.TOP;
             }
             else if (sender == SideView)
             {
-                PerspectiveView.perspective = HullControl.PerspectiveType.SIDE;
+                PerspectiveView.Perspective = HullControl.PerspectiveType.SIDE;
             }
 
             UpdateViews();
-            PerspectiveView.IsEditable = true;
             PerspectiveView.InvalidateVisual();
 
         }
@@ -69,57 +66,29 @@ namespace AVSHull
             Button button = (Button)sender;
 
             if ((string)button.Content == "+X")
-                PerspectiveView.editableHull.Rotate(5, 0, 0);
+                PerspectiveView.Rotate(5, 0, 0);
             else if ((string)button.Content == "-X")
-                PerspectiveView.editableHull.Rotate(-5, 0, 0);
+                PerspectiveView.Rotate(-5, 0, 0);
             else if ((string)button.Content == "+Y")
-                PerspectiveView.editableHull.Rotate(0, 5, 0);
+                PerspectiveView.Rotate(0, 5, 0);
             else if ((string)button.Content == "-Y")
-                PerspectiveView.editableHull.Rotate(0, -5, 0);
+                PerspectiveView.Rotate(0, -5, 0);
             else if ((string)button.Content == "+Z")
-                PerspectiveView.editableHull.Rotate(0, 0, 5);
+                PerspectiveView.Rotate(0, 0, 5);
             else if ((string)button.Content == "-Z")
-                PerspectiveView.editableHull.Rotate(0, 0, -5);
+                PerspectiveView.Rotate(0, 0, -5);
 
-            PerspectiveView.perspective = HullControl.PerspectiveType.PERSPECTIVE;
             PerspectiveView.InvalidateVisual();
         }
 
         private void UpdateViews()
         {
-            EditableHull topView = new EditableHull();
-            topView.Rotate(0, 90, 90);
-            TopView.editableHull = topView;
-            TopView.perspective = HullControl.PerspectiveType.TOP;
+            TopView.Perspective = HullControl.PerspectiveType.TOP;
+            SideView.Perspective = HullControl.PerspectiveType.SIDE;
+            FrontView.Perspective = HullControl.PerspectiveType.FRONT;
 
-            EditableHull sideView = new EditableHull();
-            sideView.Rotate(0, 90, 180);
-            SideView.editableHull = sideView;
-            SideView.perspective = HullControl.PerspectiveType.SIDE;
-
-            EditableHull frontView = new EditableHull();
-            frontView.Rotate(0, 0, 180);
-            FrontView.editableHull = frontView;
-            FrontView.perspective = HullControl.PerspectiveType.FRONT;
-
-            EditableHull perspectiveView = new EditableHull();
-            switch (PerspectiveView.perspective)
-            {
-                case HullControl.PerspectiveType.FRONT:
-                    perspectiveView.Rotate(0, 0, 180);
-                    break;
-                case HullControl.PerspectiveType.TOP:
-                    perspectiveView.Rotate(0, 90, 90);
-                    break;
-                case HullControl.PerspectiveType.SIDE:
-                    perspectiveView.Rotate(0, 90, 180);
-                    break;
-                case HullControl.PerspectiveType.PERSPECTIVE:
-                    perspectiveView.Rotate(10, 30, 190);
-                    break;
-
-            }
-            PerspectiveView.editableHull = perspectiveView;
+            // Need to invoke the setter to regenerate the hull.
+            PerspectiveView.Perspective = PerspectiveView.Perspective;
 
             TopView.InvalidateVisual();
             FrontView.InvalidateVisual();
@@ -129,7 +98,7 @@ namespace AVSHull
 
         void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Debug.WriteLine("MainWindow.PropertyChanged: " + e.PropertyName);
+            Debug.WriteLine("DesignControl.PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "HullData" || e.PropertyName == "Bulkhead" || e.PropertyName == "HullScale")
             {
                 undoLog.Add(BaseHull.Instance());
@@ -184,8 +153,7 @@ namespace AVSHull
 
                     redoLog.Clear();
 
-                    PerspectiveView.perspective = HullControl.PerspectiveType.PERSPECTIVE;
-                    PerspectiveView.IsEditable = false;
+                    PerspectiveView.Perspective = HullControl.PerspectiveType.PERSPECTIVE;
                     UpdateViews();
 
                     NumChines.Text = ((BaseHull.Instance().Bulkheads[0].NumChines) / 2).ToString();
@@ -233,8 +201,7 @@ namespace AVSHull
 
                 BaseHull.Instance().Bulkheads = tempHull.Bulkheads;
 
-                PerspectiveView.perspective = HullControl.PerspectiveType.PERSPECTIVE;
-                PerspectiveView.IsEditable = false;
+                PerspectiveView.Perspective = HullControl.PerspectiveType.PERSPECTIVE;
 
                 undoLog.Clear();
                 undoLog.Add(BaseHull.Instance());

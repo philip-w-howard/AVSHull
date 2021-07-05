@@ -53,7 +53,7 @@ HullControl
 		SelectedBulkhead
 		Create (from BaseHull)
 		Rotate
-		GetBulkheadGeometry (not used)
+		GetBulkheadGeometry
 		GetChineGeometry
 		GetSize
 		UpdateBulkheadPoint (some translation from screen to hull coordinates)
@@ -91,7 +91,9 @@ HullControl
 		createClick
 		ResizeClick
 		Undo/Redo
-    
+ 
+ ****	Remember Perspective rotation when dropping handle in small windows
+           OR: disallow editing in small windows.
 TODO:
 	
 	Place pop-ups in center of parent. 
