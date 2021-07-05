@@ -79,6 +79,7 @@ namespace AVSHull
         private int m_draggingHandle = NOT_SELECTED;
         private bool m_dragging = false;
         private bool m_rotating = false;
+        private bool m_rotate_x = false;
         private Point m_startDrag = new Point(0, 0);
         private Point m_lastDrag = new Point(0, 0);
         private bool m_movingBulkhead = false;
@@ -291,7 +292,8 @@ namespace AVSHull
                         // assume we are going to rotate
                         m_dragging = false;
                         m_rotating = true;
-                        
+
+                        m_rotate_x = (loc.X > this.ActualWidth / 4 && loc.X < (3 * this.ActualWidth / 4));
                         m_startDrag = loc;
                         m_lastDrag = loc;
                     }
@@ -300,6 +302,7 @@ namespace AVSHull
             else
             {
                 m_rotating = true;  // only thing we can do for a non-editable hull
+                m_rotate_x = (loc.X > this.ActualWidth / 4 && loc.X < (3 * this.ActualWidth / 4));
                 m_startDrag = loc;
                 m_lastDrag = loc;
             }
@@ -436,11 +439,17 @@ namespace AVSHull
                 }
                 else if (m_rotating)
                 {
-                    const double ROTATE_SCALE = 0.1;
+                    const double ROTATE_SCALE = 1.0;
 
-                    double rotate_y = -deltaX / ROTATE_SCALE;
-                    double rotate_z = -deltaY / ROTATE_SCALE;
-                    Rotate(0, rotate_y, rotate_z);
+                    double rotate_x = -deltaX * ROTATE_SCALE;
+                    double rotate_y = -deltaY * ROTATE_SCALE;
+
+                    if (!m_rotate_x && loc.X > this.ActualWidth / 2) rotate_y = -rotate_y;
+
+                    if (m_rotate_x)
+                        Rotate(rotate_y, rotate_x, 0);
+                    else
+                        Rotate(0, rotate_x, rotate_y);
                     InvalidateVisual();
                 }
                 else if (m_movingBulkhead && m_selectedBulkhead != NOT_SELECTED && m_editableHull.Bulkheads[m_selectedBulkhead].Type != Bulkhead.BulkheadType.BOW &&
