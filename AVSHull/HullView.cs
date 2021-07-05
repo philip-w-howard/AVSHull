@@ -9,8 +9,8 @@ using System.Diagnostics;
 
 namespace AVSHull
 {
+    // Presents a view of the Singleton hull defined by BaseHull
     public class HullView : Hull, INotifyPropertyChanged
-
     {
         private const int POINTS_PER_CHINE = 50;
         public static int NOT_SELECTED = -1;

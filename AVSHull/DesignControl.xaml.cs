@@ -46,19 +46,20 @@ namespace AVSHull
             if (sender == FrontView)
             {
                 PerspectiveView.Perspective = HullControl.PerspectiveType.FRONT;
+                PerspectiveView.IsEditable = true;
             }
             else if (sender == TopView)
             {
                 PerspectiveView.Perspective = HullControl.PerspectiveType.TOP;
+                PerspectiveView.IsEditable = true;
             }
             else if (sender == SideView)
             {
                 PerspectiveView.Perspective = HullControl.PerspectiveType.SIDE;
+                PerspectiveView.IsEditable = true;
             }
 
             UpdateViews();
-            PerspectiveView.InvalidateVisual();
-
         }
 
         private void RotateClick(object sender, RoutedEventArgs e)

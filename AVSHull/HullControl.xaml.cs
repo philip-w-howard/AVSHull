@@ -29,7 +29,17 @@ namespace AVSHull
         private HullView m_editableHull;
         private double m_scale = 1.0;
         private TransformGroup m_xform = new TransformGroup();              // Transform applied to geometry to scale and center drawings
-        private bool IsEditable = false;
+        private bool m_IsEditable = false;
+        public bool IsEditable
+        {
+            private get { return m_IsEditable; }
+            set 
+            { 
+                m_IsEditable = value;
+                if (m_IsEditable) m_RecreateHandles = true;
+            }
+        }
+
         private PerspectiveType _perspective = PerspectiveType.PERSPECTIVE;
         public PerspectiveType Perspective
         {
@@ -42,19 +52,19 @@ namespace AVSHull
                 {
                     case PerspectiveType.FRONT:
                         m_editableHull.Rotate(0, 0, 180);
-                        IsEditable = true;
+                        //IsEditable = true;
                         break;
                     case PerspectiveType.TOP:
                         m_editableHull.Rotate(0, 90, 90);
-                        IsEditable = true;
+                        //IsEditable = true;
                         break;
                     case PerspectiveType.SIDE:
                         m_editableHull.Rotate(0, 90, 180);
-                        IsEditable = true;
+                        //IsEditable = true;
                         break;
                     case PerspectiveType.PERSPECTIVE:
                         m_editableHull.Rotate(10, 30, 190);
-                        IsEditable = false;
+                        m_IsEditable = false;
                         break;
                 }
             }
@@ -157,7 +167,7 @@ namespace AVSHull
             chines.Transform = m_xform;
             drawingContext.DrawGeometry(null, chinePen, chines);
 
-            if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
+            if (m_IsEditable && m_selectedBulkhead != NOT_SELECTED)
             {
                 foreach (Geometry geom in m_handles)
                 {
@@ -169,7 +179,7 @@ namespace AVSHull
         private void CreateHandles()
         {
             m_handles.Clear();
-            if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
+            if (m_IsEditable && m_selectedBulkhead != NOT_SELECTED)
             {
                 Bulkhead bulk = m_editableHull.Bulkheads[m_selectedBulkhead];
                 foreach (Point3D point in bulk.Points)
@@ -189,7 +199,7 @@ namespace AVSHull
         {
             m_editableHull.Rotate(x, y, z);
             _perspective = PerspectiveType.PERSPECTIVE;
-            IsEditable = false;
+            m_IsEditable = false;
         }
 
         private int BulkheadClicked(Point loc)
@@ -227,7 +237,7 @@ namespace AVSHull
 
             Point loc = e.GetPosition(this);
 
-            if (IsEditable)
+            if (m_IsEditable)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
