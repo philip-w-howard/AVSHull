@@ -62,26 +62,6 @@ namespace AVSHull
             UpdateViews();
         }
 
-        private void RotateClick(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-
-            if ((string)button.Content == "+X")
-                PerspectiveView.Rotate(5, 0, 0);
-            else if ((string)button.Content == "-X")
-                PerspectiveView.Rotate(-5, 0, 0);
-            else if ((string)button.Content == "+Y")
-                PerspectiveView.Rotate(0, 5, 0);
-            else if ((string)button.Content == "-Y")
-                PerspectiveView.Rotate(0, -5, 0);
-            else if ((string)button.Content == "+Z")
-                PerspectiveView.Rotate(0, 0, 5);
-            else if ((string)button.Content == "-Z")
-                PerspectiveView.Rotate(0, 0, -5);
-
-            PerspectiveView.InvalidateVisual();
-        }
-
         private void UpdateViews()
         {
             TopView.Perspective = HullControl.PerspectiveType.TOP;

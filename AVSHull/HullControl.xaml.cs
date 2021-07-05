@@ -78,6 +78,8 @@ namespace AVSHull
         private int m_selectedBulkhead = NOT_SELECTED;
         private int m_draggingHandle = NOT_SELECTED;
         private bool m_dragging = false;
+        private bool m_rotating = false;
+        private bool m_rotate_x = false;
         private Point m_startDrag = new Point(0, 0);
         private Point m_lastDrag = new Point(0, 0);
         private bool m_movingBulkhead = false;
@@ -242,6 +244,7 @@ namespace AVSHull
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     m_draggingHandle = HandleClicked(loc);
+                    int bulk = BulkheadClicked(loc);
                     if (m_InsertBulkhead)
                     {
                         if (Perspective == PerspectiveType.SIDE || Perspective == PerspectiveType.TOP)
@@ -253,13 +256,13 @@ namespace AVSHull
                     else if (m_draggingHandle != NOT_SELECTED)
                     {
                         m_dragging = true;
+                        m_rotating = false;
                         m_startDrag = loc;
                         m_lastDrag = loc;
                     }
-                    else
+                    else if (bulk != NOT_SELECTED)
                     {
                         m_dragging = false;
-                        int bulk = BulkheadClicked(loc);
                         if (bulk != m_selectedBulkhead)
                         {
                             m_selectedBulkhead = bulk;
@@ -284,7 +287,24 @@ namespace AVSHull
                             InvalidateVisual();
                         }
                     }
+                    else
+                    {
+                        // assume we are going to rotate
+                        m_dragging = false;
+                        m_rotating = true;
+
+                        m_rotate_x = (loc.X > this.ActualWidth / 4 && loc.X < (3 * this.ActualWidth / 4));
+                        m_startDrag = loc;
+                        m_lastDrag = loc;
+                    }
                 }
+            }
+            else
+            {
+                m_rotating = true;  // only thing we can do for a non-editable hull
+                m_rotate_x = (loc.X > this.ActualWidth / 4 && loc.X < (3 * this.ActualWidth / 4));
+                m_startDrag = loc;
+                m_lastDrag = loc;
             }
         }
         protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
@@ -401,15 +421,15 @@ namespace AVSHull
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                double deltaX = (loc.X - m_lastDrag.X) / m_scale;
+                double deltaY = (loc.Y - m_lastDrag.Y) / m_scale;
+                m_lastDrag = loc;
+
                 if (m_dragging)
                 {
                     Rect rect = m_handles[m_draggingHandle].Rect;
-                    double deltaX = (loc.X - m_lastDrag.X) / m_scale;
-                    double deltaY = (loc.Y - m_lastDrag.Y) / m_scale;
                     rect.X += deltaX;
                     rect.Y += deltaY;
-
-                    m_lastDrag = loc;
 
                     RectangleGeometry geom = new RectangleGeometry(rect);
                     geom.Transform = m_xform;
@@ -417,12 +437,24 @@ namespace AVSHull
                     m_handles[m_draggingHandle] = geom;
                     InvalidateVisual();
                 }
+                else if (m_rotating)
+                {
+                    const double ROTATE_SCALE = 1.0;
+
+                    double rotate_x = -deltaX * ROTATE_SCALE;
+                    double rotate_y = -deltaY * ROTATE_SCALE;
+
+                    if (!m_rotate_x && loc.X > this.ActualWidth / 2) rotate_y = -rotate_y;
+
+                    if (m_rotate_x)
+                        Rotate(rotate_y, rotate_x, 0);
+                    else
+                        Rotate(0, rotate_x, rotate_y);
+                    InvalidateVisual();
+                }
                 else if (m_movingBulkhead && m_selectedBulkhead != NOT_SELECTED && m_editableHull.Bulkheads[m_selectedBulkhead].Type != Bulkhead.BulkheadType.BOW &&
                     (Perspective == PerspectiveType.TOP || Perspective == PerspectiveType.SIDE))
                 {
-                    double deltaX = (loc.X - m_lastDrag.X) / m_scale;
-                    double deltaY = (loc.Y - m_lastDrag.Y) / m_scale;
-                    m_lastDrag = loc;
                     m_editableHull.UpdateBulkheadPoint(m_selectedBulkhead, NOT_SELECTED, 0, 0, deltaX);
 
                     InvalidateVisual();

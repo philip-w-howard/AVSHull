@@ -95,6 +95,12 @@ HullControl
  ****	Remember Perspective rotation when dropping handle in small windows
            OR: disallow editing in small windows.
 TODO:
+	Rotation
+		HullControl: m_dragging, etc. as properties. Setting one clears the others.
+		Can go to m_IsRotating even if not editable
+		Make sure rotation makes hull not editable.
+		click off bulkhead deselects bulkhead
+		rotate only works if no bulkhead is selected.
 	
 	Place pop-ups in center of parent. 
 		See about box for sample
@@ -137,10 +143,6 @@ TODO:
 	Save vs. SaveAs
 		can use undoLog.Count to determine if there are unsaved changes?
 
-	Edit bulkhead dialog?
-
-	Is PanelLayout separate app? Window? Tab?
-
 	Panel Layout zoom
 		relative to mouse
 
@@ -169,30 +171,7 @@ TODO:
 
 	Add Undo/Redo to Layout
 
-	Move Tools to toolbar inside tab
-	Implement tool slide-out: Expander
-
-		Design
-			Resize
-			Chines
-			Bulkhead
-				Allow Movement
-				Insert
-				Delete
-    
-		Panels
-			Use GCode Setup as template
-			Setup (sheet layout)
-			GCode Setup
-			Offset Setup
-				Got pop-up working. Need to get data binding right.
-			Panel Ops
-				Rotate
-				Duplicate
-				Split
-				Flip
-
-	Make HullControl.IsEditable a property: Merging HullControl refactor Merging rotation change
+	Make HullControl.IsEditable a property: Merging HullControl refactor
 		Based on perspective?
 		Tie to editableHull property?
 		Enable/Disable context menu based on property value.
