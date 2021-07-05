@@ -113,8 +113,9 @@ TODO:
 				Split
 				Flip
 
-	Make HullControl.IsEditable a property. 
+	Make HullControl.IsEditable a property: Merging HullControl refactor
 		Based on perspective?
 		Tie to editableHull property?
 		Enable/Disable context menu based on property value.
+
 
