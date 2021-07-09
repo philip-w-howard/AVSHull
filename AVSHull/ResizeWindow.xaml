@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
-        Title="ResizeWindow" SizeToContent="WidthAndHeight">
+        Title="Resize" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <local:ResizeWindowData x:Key="ResizeData" Proportional="True" Width="50" Height="10" Length="150" />
     </Window.Resources>
@@ -26,9 +26,9 @@
         <Label Grid.Row="1" Grid.Column="0" >Width</Label>
         <Label Grid.Row="2" Grid.Column="0">Height</Label>
         <Label Grid.Row="3" Grid.Column="0">Length</Label>
-        <TextBox  Grid.Row="1" Grid.Column="1" Name="widthValue" Width="40" Text="{Binding Path=Width}"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Name="heightValue" Width="40" Text="{Binding Path=Height}" />
-        <TextBox Grid.Row="3" Grid.Column="1" Name="lengthValue" Width="40" Text="{Binding Path=Length}" />
+        <TextBox  Grid.Row="1" Grid.Column="1" Name="widthValue" Text="{Binding Path=Width}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Name="heightValue" Text="{Binding Path=Height}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Name="lengthValue" Text="{Binding Path=Length}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
 
         <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Button Margin="20" Click="OKClick" Width="50">OK</Button>
