@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
-        >
+        BorderThickness="2">
     <StackPanel DataContext="{DynamicResource LayoutSetup}" Background="White">
         <Grid Width="200" HorizontalAlignment="Left">
             <Grid.ColumnDefinitions>
