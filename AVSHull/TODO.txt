@@ -92,9 +92,7 @@ HullControl
 		ResizeClick
 		Undo/Redo
  
- ****	Remember Perspective rotation when dropping handle in small windows
-           OR: disallow editing in small windows.
-TODO:
+ TODO:
 	Rotation
 		HullControl: m_dragging, etc. as properties. Setting one clears the others.
 		Can go to m_IsRotating even if not editable
@@ -177,3 +175,23 @@ TODO:
 		Enable/Disable context menu based on property value.
 
 
+UpdatePopups
+	Resize
+		Layout OK
+		Size of entry fields?
+		Format of data in entry fields
+    
+	Panel Layout
+		Fixed width for entry fields (Grid?)
+		border or background
+
+	GCode
+		fixed width for entry fields (Grid?)
+		Cut Inside: dropdown or checkbox
+    
+	Offsets
+		enable Spacing Style
+		Horizontal Spacing as numeric text field?
+    
+	Zoom panel should center on mouse
+	Eliminate Chines/New Bulkhead Loc in URH subwindow
