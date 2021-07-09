@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AVSHull"
-        mc:Ignorable="d">
+        mc:Ignorable="d"
+        BorderThickness="2">
     <StackPanel DataContext="{DynamicResource GCodeSetup}" Background="White">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -25,34 +26,34 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0">Plunge Speed</Label>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PlungeSpeed}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PlungeSpeed}"  TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="1" Grid.Column="0">Cut Speed</Label>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CutSpeed}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CutSpeed}"  TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="2" Grid.Column="0">Cutter Diameter</Label>
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CutterDiameter}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CutterDiameter}"  TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="3" Grid.Column="0">Cut Inside</Label>
-            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding OffsetInside}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding OffsetInside}"  TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="4" Grid.Column="0">Material Thickness</Label>
-            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding MaterialThickness}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding MaterialThickness}" TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="5" Grid.Column="0">Cutthroug Depth</Label>
-            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding CutthroughDepth}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding CutthroughDepth}" TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="6" Grid.Column="0">Depth Per Cut</Label>
-            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding DepthPerCut}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding DepthPerCut}" TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="7" Grid.Column="0">Num Tabs</Label>
-            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding NumTabs}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding NumTabs}" TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="8" Grid.Column="0">Tab Depth</Label>
-            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding TabDepth}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding TabDepth}" TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="9" Grid.Column="0">Tab Width</Label>
-            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding TabWidth}" HorizontalAlignment="right" />
+            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding TabWidth}" TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="10" Grid.Column="0">Origin</Label>
             <ComboBox Grid.Row="10" Grid.Column="1" SelectedIndex="{Binding Origin}" HorizontalAlignment="right" ItemsSource="{Binding OriginTypes}" />

@@ -120,8 +120,6 @@ namespace AVSHull
 
                     PerspectiveView.Perspective = HullControl.PerspectiveType.PERSPECTIVE;
                     UpdateViews();
-
-                    NumChines.Text = ((BaseHull.Instance().Bulkheads[0].NumChines) / 2).ToString();
                 }
             }
         }
@@ -173,8 +171,6 @@ namespace AVSHull
 
                 redoLog.Clear();
                 UpdateViews();
-
-                NumChines.Text = ((BaseHull.Instance().Bulkheads[0].NumChines) / 2).ToString();
             }
         }
         public void createClick(object sender, RoutedEventArgs e)
@@ -263,6 +259,18 @@ namespace AVSHull
 
                 UpdateViews();
             }
+        }
+
+        private void ChangeChinesClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.NumChines = BaseHull.Instance().NumChines / 2;
+            values.ChangeChinesExpanded = !values.LayoutSetupExpanded;
+        }
+        private void NewBulkheadClick(object sender, RoutedEventArgs e)
+        {
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.NewBulkheadExpanded = !values.NewBulkheadExpanded;
         }
     }
 }

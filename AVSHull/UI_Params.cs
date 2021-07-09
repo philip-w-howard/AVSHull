@@ -7,6 +7,20 @@ namespace AVSHull
 {
     class UI_Params : INotifyPropertyChanged
     {
+        private bool? _newBulkheadExpanded = false;
+        public bool? NewBulkheadExpanded
+        {
+            get { return _newBulkheadExpanded; }
+            set { _newBulkheadExpanded = value; Notify("NewBulkheadExpanded"); }
+        }
+
+        private bool? _changeChinesExpanded = false;
+        public bool? ChangeChinesExpanded
+        {
+            get { return _changeChinesExpanded; }
+            set { _changeChinesExpanded = value; Notify("ChangeChinesExpanded"); }
+        }
+
         private bool? _offsetsSetupExpanded = false;
         public bool? OffsetsSetupExpanded
         {

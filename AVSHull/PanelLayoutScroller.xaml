@@ -6,26 +6,6 @@
              xmlns:local="clr-namespace:AVSHull"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <!--<DockPanel Background="Green">-->
-        <!--<ToolBarTray Background="White" DockPanel.Dock="Top">
-            <ToolBar Band="0 " BandIndex="1">
-                <Menu >
-                    <MenuItem Header="_File">
-                        <MenuItem Header="_Open..." Click="openClick"/>
-                        <MenuItem Header="_Save..." Click="saveClick"/>
-                        <MenuItem Header="Output _GCode File..." Click="outputGcode" />
-                        <MenuItem Header="Output _Panel Offsets..." Click="outputOffsets" />
-                        <MenuItem Header="Output S_TL file..." Click="outputSTL" />
-                        <MenuItem Header="Output S_VG file..." Click="outputSVG" />
-                    </MenuItem>
-                    <MenuItem Header="_Setup" Click="setupClick"/>
-                </Menu>
-            </ToolBar>
-            <ToolBar Band="0" BandIndex="2">
-
-            </ToolBar>
-        </ToolBarTray>-->
-
     <DockPanel>
         <StackPanel DataContext="{DynamicResource Curr_UI_Params}" Background="Gray">
             <Button Content="Layout" Click="LayoutClick" ToolTip="Sheet Layout"/>

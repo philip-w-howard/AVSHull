@@ -40,6 +40,8 @@ namespace AVSHull
             }
         }
 
+        public bool IsRotatable { get; set; }
+
         private PerspectiveType _perspective = PerspectiveType.PERSPECTIVE;
         public PerspectiveType Perspective
         {
@@ -64,7 +66,7 @@ namespace AVSHull
                         break;
                     case PerspectiveType.PERSPECTIVE:
                         m_editableHull.Rotate(10, 30, 190);
-                        m_IsEditable = false;
+                        IsEditable = false;
                         break;
                 }
             }
@@ -169,7 +171,7 @@ namespace AVSHull
             chines.Transform = m_xform;
             drawingContext.DrawGeometry(null, chinePen, chines);
 
-            if (m_IsEditable && m_selectedBulkhead != NOT_SELECTED)
+            if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
             {
                 foreach (Geometry geom in m_handles)
                 {
@@ -181,7 +183,7 @@ namespace AVSHull
         private void CreateHandles()
         {
             m_handles.Clear();
-            if (m_IsEditable && m_selectedBulkhead != NOT_SELECTED)
+            if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
             {
                 Bulkhead bulk = m_editableHull.Bulkheads[m_selectedBulkhead];
                 foreach (Point3D point in bulk.Points)
@@ -201,7 +203,7 @@ namespace AVSHull
         {
             m_editableHull.Rotate(x, y, z);
             _perspective = PerspectiveType.PERSPECTIVE;
-            m_IsEditable = false;
+            IsEditable = false;
         }
 
         private int BulkheadClicked(Point loc)
@@ -239,7 +241,7 @@ namespace AVSHull
 
             Point loc = e.GetPosition(this);
 
-            if (m_IsEditable)
+            if (IsEditable)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
@@ -437,7 +439,7 @@ namespace AVSHull
                     m_handles[m_draggingHandle] = geom;
                     InvalidateVisual();
                 }
-                else if (m_rotating)
+                else if (m_rotating && IsRotatable)
                 {
                     const double ROTATE_SCALE = 1.0;
 

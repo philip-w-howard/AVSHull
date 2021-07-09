@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
-        >
+        BorderThickness="2">
     <StackPanel DataContext="{DynamicResource LayoutSetup}" Background="White">
         <Grid Width="200" HorizontalAlignment="Left">
             <Grid.ColumnDefinitions>
@@ -23,12 +23,12 @@
             <Label Grid.Row="0" Grid.Column="2">Height</Label>
 
             <Label Grid.Row="1" Grid.Column="0">Panel Size</Label>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SheetWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right"/>
-            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SheetHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Right"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SheetWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right"  HorizontalAlignment="Stretch" />
+            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SheetHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right"  HorizontalAlignment="Stretch"/>
 
             <Label Grid.Row="2" Grid.Column="0">Panel Arrangement</Label>
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SheetsWide, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" />
-            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding SheetsHigh, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Right"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SheetsWide, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right"  HorizontalAlignment="Stretch" />
+            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding SheetsHigh, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  TextAlignment="Right"  HorizontalAlignment="Stretch"/>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Click="OK_Click" Margin="5" IsDefault="True">OK</Button>

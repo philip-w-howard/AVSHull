@@ -20,9 +20,9 @@
         <Label Grid.Row="0" Grid.Column="0">Distance from left</Label>
         <Label Grid.Row="1" Grid.Column="0">Number of tongues</Label>
         <Label Grid.Row="2" Grid.Column="0">Depth</Label>
-        <TextBox Grid.Row="0" Grid.Column="1" Width="40" Text="{Binding Start, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <TextBox Grid.Row="1" Grid.Column="1" Width="40" Text="{Binding NumTongues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Width="40" Text="{Binding Depth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Grid.Row="0" Grid.Column="1" Width="40" Text="{Binding Start, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  TextAlignment="Right"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Width="40" Text="{Binding NumTongues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Width="40" Text="{Binding Depth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" />
 
         <StackPanel Margin="20" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Button Margin="20" Click="OKClick" Width="50" IsDefault="True">OK</Button>
