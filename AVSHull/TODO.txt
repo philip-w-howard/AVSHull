@@ -175,7 +175,7 @@ HullControl
 		Enable/Disable context menu based on property value.
 
 
-UpdatePopups
+UpdatePopups: mostly done
 	Resize
 		Layout OK
 		Size of entry fields?
@@ -194,4 +194,4 @@ UpdatePopups
 		Horizontal Spacing as numeric text field?
     
 	Zoom panel should center on mouse
-	Eliminate Chines/New Bulkhead Loc in URH subwindow
+	Eliminate Chines/New Bulkhead Loc in URH subwindow: done
