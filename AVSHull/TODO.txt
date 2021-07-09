@@ -181,15 +181,15 @@ UpdatePopups
 		Size of entry fields?
 		Format of data in entry fields
     
-	Panel Layout
+	Panel Layout: done
 		Fixed width for entry fields (Grid?)
 		border or background
 
-	GCode
+	GCode: done
 		fixed width for entry fields (Grid?)
 		Cut Inside: dropdown or checkbox
     
-	Offsets
+	Offsets: done
 		enable Spacing Style
 		Horizontal Spacing as numeric text field?
     

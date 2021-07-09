@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="AVSHull.NewBulkheadControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AVSHull"
+             mc:Ignorable="d" 
+             BorderThickness="2">
+    <StackPanel Background="White">
+        <Grid Width="200" HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0">New Bulkhead Loc</Label>
+            <TextBox Grid.Row="0" Grid.Column="1" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NewBulkheadLoc}" TextAlignment="Right"  HorizontalAlignment="Stretch" />
+        </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Click="OK_Click" Margin="5" IsDefault="True">OK</Button>
+            <Button Click="Cancel_Click" Margin="5" IsDefault="false">Cancel</Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

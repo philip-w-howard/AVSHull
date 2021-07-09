@@ -13,12 +13,21 @@
     <DockPanel>
         <StackPanel DataContext="{DynamicResource Curr_UI_Params}" Background="Gray">
             <Button Name="ResizeButton" Content="Resize" Click="ResizeClick" ToolTip="Resize hull"/>
-            <!--<Popup IsOpen="{Binding Path=ResizeExpanded}"
+            <Button Content="Chines" Click="ChangeChinesClick" ToolTip="Change number of chines"/>
+            <Popup IsOpen="{Binding Path=ChangeChinesExpanded}"
                    PlacementTarget="{Binding ElementName=FrontView}"
                    Placement="Relative"
                    PopupAnimation="Slide">
-                <local:ResizeWindow x:Name="Resize"/>
-            </Popup>-->
+                <local:ChangeChinesControl/>
+            </Popup>
+
+            <Button Content="Bulkheads" Click="NewBulkheadClick" ToolTip="Add a bulkhead"/>
+            <Popup IsOpen="{Binding Path=NewBulkheadExpanded}"
+                   PlacementTarget="{Binding ElementName=FrontView}"
+                   Placement="Relative"
+                   PopupAnimation="Slide">
+                <local:NewBulkheadControl/>
+            </Popup>
         </StackPanel>
         <Border BorderBrush="Gray" BorderThickness="3">
             <Grid>
@@ -50,20 +59,16 @@
                 <local:HullControl x:Name="PerspectiveView" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="7" ClipToBounds ="False" 
                                             HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
 
-                <StackPanel Grid.Column="6" Grid.Row="0">
+                <!--<StackPanel Grid.Column="6" Grid.Row="0">
                     <StackPanel Orientation="Horizontal">
                          <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <Label>Chines:</Label>
-                                <TextBox x:Name="NumChines" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NumChines, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label>New Bulkhead Loc:</Label>
                                 <TextBox x:Name="NewBulkheadLoc" DataContext="{DynamicResource Curr_UI_Params}" Text="{Binding Path=NewBulkheadLoc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
-                </StackPanel>
+                </StackPanel>-->
             </Grid>
         </Border>
     </DockPanel>

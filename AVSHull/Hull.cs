@@ -25,6 +25,15 @@ namespace AVSHull
             set { _timestamp = value; Notify("Timestamp"); }
         }
 
+        public int NumChines 
+        { 
+            get 
+            {
+                if (m_Bulkheads.Count == 0) return 0;
+                return m_Bulkheads[0].NumChines; 
+            } 
+        }
+
         public Hull()
         {
             Bulkheads = new List<Bulkhead>();
@@ -124,6 +133,7 @@ namespace AVSHull
                 bulk.PropertyChanged += bulkhead_PropertyChanged;
             }
         }
+
         private void RepositionToZero()
         {
             Point3D min = GetMin();
