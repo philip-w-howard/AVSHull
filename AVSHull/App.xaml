@@ -29,5 +29,7 @@
         <local:UI_Params x:Key="Curr_UI_Params" AllowBulkheadMoves="false" NumChines="5" />
         <local:CreateHullData x:Key="CreateHullData" IncludeBow="True" FlatBottom="False" NumBulkheads="5" NumChines="5" Length="120" Width="30" Height="15" TransomAngle="85" />
         <local:NotifyPoint3D x:Key="HullMouseLocation" X="1" Y="2" Z="3" />
+        <local:PanelLog x:Key="PanelUndoLog" />
+        <local:PanelLog x:Key="PanelRedoLog" />
     </Application.Resources>
 </Application>

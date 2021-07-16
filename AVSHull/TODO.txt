@@ -195,3 +195,21 @@ UpdatePopups: mostly done
     
 	Zoom panel should center on mouse
 	Eliminate Chines/New Bulkhead Loc in URH subwindow: done
+
+Features:
+	Undo/Redo to panels
+		Re-use log code, or just duplicate? Problem is ICloneable vs a List<T>, which isn't
+
+	Split Panel options
+
+	Offsets: Fixed offset
+		include all hard corners
+		spacing field is a double
+	Measure
+		Waterline
+			water density
+			Weight
+		Righting moment
+			Heel
+			Pitch
+			Height of CG

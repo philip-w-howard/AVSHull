@@ -38,7 +38,6 @@ namespace AVSHull
         {
             InitializeComponent();
             Layout = new PanelLayout();
-            Layout.Panels = new List<Panel>();
 
             Layout.LayoutSetup.PropertyChanged += layout_PropertyChanged;
             Layout.PropertyChanged += layout_PropertyChanged;

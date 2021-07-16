@@ -14,6 +14,7 @@ namespace AVSHull
         public PanelLayout()
         {
             m_panelSetup = (PanelsLayoutSetup)Application.Current.FindResource("LayoutSetup");
+            m_panels = new List<Panel>();
         }
 
         private PanelsLayoutSetup m_panelSetup;
@@ -73,6 +74,7 @@ namespace AVSHull
             set
             {
                 m_panels = value;
+
                 Notify("Panels");
             }
         }
@@ -83,6 +85,18 @@ namespace AVSHull
             get { return _scale; }
             set { _scale = value; Notify("Scale"); }
         }
+
+        //void panel_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        //{
+        //    PanelLog log = (PanelLog)Application.Current.FindResource("PanelUndoLog");
+        //    if (e.Action != NotifyCollectionChangedAction.Reset) log.Add(m_panels);
+        //    //if (e.PropertyName == "HullData" || e.PropertyName == "Bulkhead" || e.PropertyName == "HullScale")
+        //    //{
+        //    //    undoLog.Add(BaseHull.Instance());
+        //    //    redoLog.Clear();
+        //    //    UpdateViews();
+        //    //}
+        //}
 
         //****************************************************************
         // INotifyPropertyChanged implementation
