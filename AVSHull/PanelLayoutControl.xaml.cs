@@ -25,7 +25,7 @@ namespace AVSHull
         private double MIN_ROTATE_DRAG = 3;
         private double ROTATE_STEP = Math.PI / 180;
         private const double SCALE_FACTOR = 1.1;
-        private int m_selectedPanel = NOT_SELECTED;
+        private Panel m_selectedPanel = null;
         private Point m_currentDragLoc = new Point(0, 0);
         private Point m_startDragLoc = new Point(-1, -1);
         private bool m_dragging = false;
@@ -80,7 +80,7 @@ namespace AVSHull
 
         public void AddPanel(Panel p)
         {
-            Layout.Panels.Add(p);
+            Layout.AddPanel(p);
             InvalidateVisual();
         }
 
@@ -134,11 +134,11 @@ namespace AVSHull
             Pen panelPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
             Pen selectedPen = new Pen(System.Windows.Media.Brushes.Blue, 2.0);
 
-            for (int index=0; index < Layout.Panels.Count; index++)
+            foreach (Panel p in Layout.Panels)
             {
-                Geometry geom = Layout.Panels[index].GetGeometry();
+                Geometry geom = p.GetGeometry();
                 geom.Transform = scale;
-                if (index == m_selectedPanel)
+                if (p == m_selectedPanel)
                     drawingContext.DrawGeometry(null, selectedPen, geom);
                 else
                     drawingContext.DrawGeometry(null, panelPen, geom);
@@ -155,22 +155,26 @@ namespace AVSHull
             InvalidateVisual();
         }
 
-        private int PanelClicked(Point loc)
+        private Panel PanelClicked(Point loc)
         {
             //Pen pen = new Pen(Brushes.Black, CLICK_WIDTH);
             ScaleTransform scale = new ScaleTransform(Layout.Scale, Layout.Scale);
 
-            for (int index= Layout.Panels.Count-1; index >= 0; index--)
+            int index = 0;
+
+            //NOTE: Used to iterate in reverse direction
+            foreach (Panel p in Layout.Panels)
             {
-                Geometry geom = Layout.Panels[index].GetGeometry();
+                Geometry geom = p.GetGeometry();
                 geom.Transform = scale;
 
                 if (geom.FillContains(loc))
                 {
-                    return index;
+                    return p;
                 }
+                index++;
             }
-            return NOT_SELECTED;
+            return null;
         }
         private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -178,8 +182,8 @@ namespace AVSHull
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                int panel = PanelClicked(loc);
-                if (panel != NOT_SELECTED)
+                Panel panel = PanelClicked(loc);
+                if (panel != null)
                 {
                     m_selectedPanel = panel;
                     m_currentDragLoc = loc;
@@ -191,7 +195,7 @@ namespace AVSHull
                     m_doUnselect = true;
                 }
             }
-            else if (e.RightButton == MouseButtonState.Pressed && m_selectedPanel != NOT_SELECTED)
+            else if (e.RightButton == MouseButtonState.Pressed && m_selectedPanel != null)
             {
                 ContextMenu cm = this.FindResource("panelMenu") as ContextMenu;
                 if (cm != null)
@@ -203,9 +207,9 @@ namespace AVSHull
         private void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Point loc = e.GetPosition(this);
-            if (m_selectedPanel != NOT_SELECTED && m_doUnselect)
+            if (m_selectedPanel != null && m_doUnselect)
             {
-                m_selectedPanel = NOT_SELECTED;
+                m_selectedPanel = null;
                 InvalidateVisual();
             }
             m_dragging = false;
@@ -221,18 +225,18 @@ namespace AVSHull
             {
                 m_doUnselect = false;
 
-                if (m_dragging && m_selectedPanel != NOT_SELECTED)
+                if (m_dragging && m_selectedPanel != null)
                 {
                     double deltaX = (loc.X - m_currentDragLoc.X) / Layout.Scale;
                     double deltaY = (loc.Y - m_currentDragLoc.Y) / Layout.Scale;
-                    Point currLoc = Layout.Panels[m_selectedPanel].Origin;
+                    Point currLoc = m_selectedPanel.Origin;
                     currLoc.X += deltaX;
                     currLoc.Y += deltaY;
-                    Layout.Panels[m_selectedPanel].Origin = currLoc;
+                    m_selectedPanel.Origin = currLoc;
                     m_currentDragLoc = loc;
                     InvalidateVisual();
                 }
-                else if (m_selectedPanel != NOT_SELECTED)
+                else if (m_selectedPanel != null)
                 {
                     // do rotation
                     double distance = loc.X - m_currentDragLoc.X;
@@ -242,10 +246,10 @@ namespace AVSHull
                         m_currentDragLoc = loc;
 
                         if (distance > 0)
-                            Layout.Panels[m_selectedPanel].Rotate(ROTATE_STEP);
+                            m_selectedPanel.Rotate(ROTATE_STEP);
 
                         else
-                            Layout.Panels[m_selectedPanel].Rotate(-ROTATE_STEP);
+                            m_selectedPanel.Rotate(-ROTATE_STEP);
 
                         InvalidateVisual();
                     }
@@ -254,18 +258,18 @@ namespace AVSHull
         }
         private void HorizontalFlipClick(object sender, RoutedEventArgs e)
         {
-            if (m_selectedPanel != NOT_SELECTED)
+            if (m_selectedPanel != null)
             {
-                Layout.Panels[m_selectedPanel].HorizontalFlip();
+                m_selectedPanel.HorizontalFlip();
                 InvalidateVisual();
             }
         }
 
         private void VerticalFlipClick(object sender, RoutedEventArgs e)
         {
-            if (m_selectedPanel != NOT_SELECTED)
+            if (m_selectedPanel != null)
             {
-                Layout.Panels[m_selectedPanel].VerticalFlip();
+                m_selectedPanel.VerticalFlip();
                 InvalidateVisual();
             }
 
@@ -273,10 +277,9 @@ namespace AVSHull
 
         private void CopyClick(object sender, RoutedEventArgs e)
         {
-            if (m_selectedPanel != NOT_SELECTED)
+            if (m_selectedPanel != null)
             {
-                Layout.Panels.Add((Panel)Layout.Panels[m_selectedPanel].Clone());
-                m_selectedPanel = Layout.Panels.Count - 1;
+                Layout.AddPanel((Panel)m_selectedPanel.Clone());
                 InvalidateVisual();
             }
 
@@ -284,16 +287,16 @@ namespace AVSHull
 
         private void DeleteClick(object sender, RoutedEventArgs e)
         {
-            if (m_selectedPanel != NOT_SELECTED)
+            if (m_selectedPanel != null)
             {
-                Layout.Panels.RemoveAt(m_selectedPanel);
+                Layout.RemovePanel(m_selectedPanel);
                 InvalidateVisual();
             }
         }
 
         private void SplitClick(object sender, RoutedEventArgs e)
         {
-            if (m_selectedPanel != NOT_SELECTED)
+            if (m_selectedPanel != null)
             {
                 PanelSplitSetup setup = new PanelSplitSetup();
                 bool? result = setup.ShowDialog();
@@ -304,17 +307,17 @@ namespace AVSHull
                     PanelSplitSetupValues parameters = (PanelSplitSetupValues)Application.Current.FindResource("SplitSetup");
                     if (parameters == null) return;
 
-                    if (Layout.Panels[m_selectedPanel].Split(parameters.Start, parameters.NumTongues, parameters.Depth, out panel_1, out panel_2))
+                    if (m_selectedPanel.Split(parameters.Start, parameters.NumTongues, parameters.Depth, out panel_1, out panel_2))
                     {
-                        Point origin = Layout.Panels[m_selectedPanel].Origin;
+                        Point origin = m_selectedPanel.Origin;
                         panel_1.Origin = origin;
                         origin.X += parameters.Start;
                         panel_2.Origin = origin;
 
-                        Layout.Panels.RemoveAt(m_selectedPanel);
-                        Layout.Panels.Add(panel_1);
-                        Layout.Panels.Add(panel_2);
-                        m_selectedPanel = NOT_SELECTED;
+                        Layout.RemovePanel(m_selectedPanel);
+                        Layout.AddPanel(panel_1);
+                        Layout.AddPanel(panel_2);
+                        m_selectedPanel = null;
                         InvalidateVisual();
                     }
                 }

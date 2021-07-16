@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -168,7 +169,7 @@ namespace AVSHull
                 AllPanelData panelData = new AllPanelData();
                 panelData.panelList = new List<List<Panel>>();
                 panelData.panelList.Add(m_panels);
-                panelData.panelList.Add(LayoutControl.Layout.Panels);
+                panelData.panelList.Add(LayoutControl.Layout.Panels as List<Panel>);
 
                 panelData.panelLayout = LayoutControl.Layout.LayoutSetup;
                 System.Xml.Serialization.XmlSerializer panelWriter = new System.Xml.Serialization.XmlSerializer(typeof(AllPanelData));

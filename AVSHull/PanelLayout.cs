@@ -68,15 +68,33 @@ namespace AVSHull
         }
 
         private List<Panel> m_panels;
-        public List<Panel> Panels
+
+        public IEnumerable<Panel> Panels
         {
             get { return m_panels; }
             set
             {
-                m_panels = value;
+                m_panels = value as List<Panel>;
 
                 Notify("Panels");
             }
+        }
+
+        public IReadOnlyCollection<Panel> ReadOnlyPanels
+        {
+            get { return m_panels.AsReadOnly(); }
+        }
+
+        public void AddPanel(Panel p)
+        {
+            m_panels.Add(p);
+            Notify("Panels");
+        }
+
+        public void RemovePanel(Panel p)
+        {
+            m_panels.Remove(p);
+            Notify("Panels");
         }
 
         private double _scale;
