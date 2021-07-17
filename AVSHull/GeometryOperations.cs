@@ -449,6 +449,19 @@ namespace AVSHull
             }
         }
 
+        static public Point ComputeMidPoint(PointCollection points)
+        {
+            double min_x;
+            double min_y;
+            double size_x;
+            double size_y;
+
+            ComputeMin(points, out min_x, out min_y);
+            ComputeSize(points, out size_x, out size_y);
+
+            return new Point(min_x + size_x/2, min_y + size_y/2);
+        }
+
         // Find the bottom left corner of a shape defined as a collection of points.
         static public void TopLeft(PointCollection points, out double min_x, out double max_y)
         {

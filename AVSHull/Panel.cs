@@ -19,7 +19,7 @@ namespace AVSHull
         public Point Origin
         {
             get { return m_origin; }
-            set { m_origin = value; ShiftTo(0, 0);  Notify("Panel.Origin"); }
+            set { m_origin = value; Notify("Panel.Origin"); }
         }
 
         protected PointCollection m_panelPoints;
@@ -38,9 +38,10 @@ namespace AVSHull
         // Develop the panel from two chines
         public Panel(Point3DCollection chine1, Point3DCollection chine2)
         {
+            m_origin = new Point(0, 0);
             Panelize(chine1, chine2);
             HorizontalizePanel();
-            ShiftTo(0, 0);
+            Center();
         }
 
          public Panel(Bulkhead bulk)
@@ -54,12 +55,12 @@ namespace AVSHull
             {
                 m_panelPoints.Add(new Point(point.X, point.Y/scaleFactor));
             }
-            ShiftTo(0, 0);
+            Center();
         }
         protected Panel(PointCollection points)
         {
             m_panelPoints = points.Clone();
-            ShiftTo(0, 0);
+            Center();
         }
 
 
@@ -183,15 +184,11 @@ namespace AVSHull
 
             angle = Math.Atan2(y, x);
             Rotate(-angle);
-
-            ShiftTo(0, 0);
         }
 
         public void Rotate(double angle)
         {
             double[,] rotate = new double[2, 2];
-
-            Shift(-m_origin.X, -m_origin.Y);
 
             rotate[0, 0] = Math.Cos(angle);
             rotate[1, 1] = Math.Cos(angle);
@@ -200,27 +197,16 @@ namespace AVSHull
 
             Matrix.Multiply(m_panelPoints, rotate, out m_panelPoints);
 
-            ShiftTo(0, 0);
             Notify("Panel.Rotate");
         }
-        private void ShiftTo(double x, double y)
+        private void Center()
         {
-            double min_x, min_y;
-            GeometryOperations.ComputeMin(m_panelPoints, out min_x, out min_y);
-
-            x -= min_x;
-            y -= min_y;
-
-            x += m_origin.X;
-            y += m_origin.Y;
-
-            if (x != 0 || y != 0) Shift(x, y);
+            Point center = GeometryOperations.ComputeMidPoint(m_panelPoints);
+            if (center.X != 0 || center.Y != 0)
+            GeometryOperations.TranslateShape(m_panelPoints, -center.X, -center.Y);
+            m_origin.X -= center.X;
+            m_origin.Y -= center.Y;
         }
-        private void Shift(double x, double y)
-        {
-            GeometryOperations.TranslateShape(m_panelPoints, x, y);
-        }
-
         public void VerticalFlip()
         {
             PointCollection points = new PointCollection();
@@ -233,7 +219,7 @@ namespace AVSHull
             }
 
             m_panelPoints = points;
-            ShiftTo(0, 0);
+            Center();
             Notify("panel.flip");
         }
 
@@ -249,7 +235,7 @@ namespace AVSHull
             }
 
             m_panelPoints = points;
-            ShiftTo(0, 0);
+            Center();
             Notify("panel.flip");
         }
 
@@ -261,11 +247,18 @@ namespace AVSHull
             
             if (m_panelPoints.Count < 2) return geom;
 
-            path.StartPoint = m_panelPoints[m_panelPoints.Count - 1];
-
+            Point pt = m_panelPoints[m_panelPoints.Count - 1];
+            pt.X += Origin.X;
+            pt.Y += Origin.Y;
+            path.StartPoint = pt;
+            
             foreach (Point p in  m_panelPoints)
             {
-                path.Segments.Add(new LineSegment(p, true));
+                pt = p;
+                pt.X += Origin.X;
+                pt.Y += Origin.Y;
+
+                path.Segments.Add(new LineSegment(pt, true));
             }
 
             geom.Figures.Add(path);

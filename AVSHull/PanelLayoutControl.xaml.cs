@@ -279,7 +279,9 @@ namespace AVSHull
         {
             if (m_selectedPanel != null)
             {
-                Layout.AddPanel((Panel)m_selectedPanel.Clone());
+                Panel p = (Panel)m_selectedPanel.Clone();
+                Layout.AddPanel(p);
+                m_selectedPanel = p;
                 InvalidateVisual();
             }
 
