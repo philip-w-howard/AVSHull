@@ -199,7 +199,6 @@ UpdatePopups: mostly done
 Features:
 	Undo/Redo to panels
 		Re-use log code, or just duplicate? Problem is ICloneable vs a List<T>, which isn't
-	***	Split panel needs to correctly handle origin.
 
 	Split Panel options
 

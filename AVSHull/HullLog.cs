@@ -7,11 +7,25 @@ namespace AVSHull
 {
     abstract class UndoRedoLog<T> where T : class
     {
-        protected Stack<T> Log = new Stack<T>();
+        protected List<T> Log = new List<T>();
 
         public int Count { get { return Log.Count; } }
         private int topPermanent;
+        private int _maxSize = 0;
 
+        public int MaxSize
+        {
+            get { return _maxSize; }
+            set { _maxSize = value; }
+        }
+
+        protected void Trim()
+        {
+            if (MaxSize > 0)
+            {
+                while (Count > MaxSize) Log.RemoveAt(0);
+            }
+        }
         public abstract void Add(T value);
         //{
         //    bool is_cloneable = typeof(ICloneable).IsAssignableFrom(typeof(T));
@@ -34,14 +48,14 @@ namespace AVSHull
         {
             if (Log.Count > topPermanent)
             {
-                T temp = Log.Pop();
+                T temp = Log[Log.Count - 1];
 
                 while (Log.Count > topPermanent)
                 {
-                    Log.Pop();
+                    Log.RemoveAt(Log.Count-1);
                 }
 
-                Log.Push(temp);
+                Log.Add(temp);
                 topPermanent = Log.Count;
             }
         }
@@ -50,13 +64,15 @@ namespace AVSHull
         {
             if (Log.Count == 0) return null;
 
-            return Log.Pop();
+            T temp = Log[Log.Count - 1];
+            Log.RemoveAt(Log.Count-1);
+            return temp;
         }
         public T Peek()
         {
             if (Log.Count == 0) return null;
 
-            return Log.Peek();
+            return Log[Log.Count - 1];
         }
         public void Clear()
         {
@@ -68,7 +84,7 @@ namespace AVSHull
     {
         public override void Add(U value)
         {
-            Log.Push((U)value.Clone());
+            Log.Add((U)value.Clone());
         }
     }
 
@@ -82,7 +98,7 @@ namespace AVSHull
                 list.Add(item);
             }
 
-            Log.Push(list);
+            Log.Add(list);
         }
     }
 
