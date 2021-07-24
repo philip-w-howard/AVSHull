@@ -27,23 +27,6 @@ namespace AVSHull
             }
         }
         public abstract void Add(T value);
-        //{
-        //    bool is_cloneable = typeof(ICloneable).IsAssignableFrom(typeof(T));
-        //    bool is_enumerable = typeof(IEnumerable<T>).IsAssignableFrom(typeof(T));
-        //    if (is_cloneable)
-        //        Log.Push((T)((ICloneable)value).Clone());
-        //    else if (is_enumerable)
-        //    {
-        //        T copy = new T();
-        //        IEnumerable collection = value as IEnumerable;
-
-        //    }
-        //    else
-        //    {
-        //        Log.Push(value);
-        //    }
-
-        //}
         public void Snapshot()
         {
             if (Log.Count > topPermanent)
@@ -85,6 +68,7 @@ namespace AVSHull
         public override void Add(U value)
         {
             Log.Add((U)value.Clone());
+            Trim();
         }
     }
 
@@ -99,6 +83,7 @@ namespace AVSHull
             }
 
             Log.Add(list);
+            Trim();
         }
     }
 
