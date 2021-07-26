@@ -73,6 +73,7 @@ namespace AVSHull
         public IEnumerable<Panel> Panels
         {
             get { return m_panels; }
+            // NOTE: set should only be invoked from undo/redo code. If it is invoked elsewhere, notifications will not be properly delivered.
             set
             {
                 m_panels = value as List<Panel>;
@@ -81,7 +82,7 @@ namespace AVSHull
                     p.PropertyChanged += panel_PropertyChanged;
                 }
 
-                Notify("Panels");
+                // Notify("Panels"); This should only happen on Undo/Redo, so we don't need to notify
             }
         }
 

@@ -41,6 +41,7 @@ namespace AVSHull
             InitializeComponent();
             Layout = new PanelLayout();
             UndoLog = new PanelCtrlLog();
+            UndoLog.Add(Layout.Panels);
             RedoLog = new PanelCtrlLog();
 
             Layout.LayoutSetup.PropertyChanged += layout_PropertyChanged;
@@ -337,5 +338,35 @@ namespace AVSHull
                 }
             }
         }
+        public void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = UndoLog.Count > 1;
+        }
+
+        public void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (UndoLog.Count > 1)
+            {
+                RedoLog.Add(UndoLog.Pop());
+                Layout.Panels = UndoLog.Peek();
+                InvalidateVisual();
+            }
+        }
+        public void Redo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = RedoLog.Count > 0;
+        }
+
+        public void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (RedoLog.Count > 0)
+            {
+                Layout.Panels = RedoLog.Pop();
+                UndoLog.Add(Layout.Panels);
+                UndoLog.StartSnapshot();
+                InvalidateVisual();
+            }
+        }
+
     }
 }

@@ -66,7 +66,16 @@ namespace AVSHull
 
         private void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            DesignWindow.Undo_CanExecute(sender, e);
+            ATabItem tab = (ATabItem)MyTabs.SelectedItem;
+            if (tab.TabName == "Design")
+            {
+                DesignWindow.Undo_CanExecute(sender, e);
+
+            }
+            else if (tab.TabName == "Panels")
+            {
+                LayoutWindow.LayoutControl.Undo_CanExecute(sender, e);
+            }
         }
 
         private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -77,15 +86,37 @@ namespace AVSHull
                 DesignWindow.Undo_Executed(sender, e);
 
             }
+            else if (tab.TabName == "Panels")
+            {
+                LayoutWindow.LayoutControl.Undo_Executed(sender, e);
+            }
         }
         private void Redo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            DesignWindow.Redo_CanExecute(sender, e);
+            ATabItem tab = (ATabItem)MyTabs.SelectedItem;
+            if (tab.TabName == "Design")
+            {
+                DesignWindow.Redo_CanExecute(sender, e);
+
+            }
+            else if (tab.TabName == "Panels")
+            {
+                LayoutWindow.LayoutControl.Redo_CanExecute(sender, e);
+            }
         }
 
         private void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            DesignWindow.Redo_Executed(sender, e);
+            ATabItem tab = (ATabItem)MyTabs.SelectedItem;
+            if (tab.TabName == "Design")
+            {
+                DesignWindow.Redo_Executed(sender, e);
+
+            }
+            else if (tab.TabName == "Panels")
+            {
+                LayoutWindow.LayoutControl.Redo_Executed(sender, e);
+            }
         }
         private void AboutClick(object sender, RoutedEventArgs e)
         {
