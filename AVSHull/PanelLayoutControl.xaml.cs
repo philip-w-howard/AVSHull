@@ -33,15 +33,15 @@ namespace AVSHull
 
         public PanelLayout Layout { get; set; }
 
+        PanelCtrlLog UndoLog;
+        PanelCtrlLog RedoLog;
 
         public PanelLayoutControl()
         {
             InitializeComponent();
             Layout = new PanelLayout();
-            PanelLog undoLog = (PanelLog)FindResource("PanelUndoLog");
-            undoLog.Clear();
-            PanelLog redoLog = (PanelLog)FindResource("PanelRedoLog");
-            redoLog.Clear();
+            UndoLog = new PanelCtrlLog();
+            RedoLog = new PanelCtrlLog();
 
             Layout.LayoutSetup.PropertyChanged += layout_PropertyChanged;
             Layout.PropertyChanged += layout_PropertyChanged;
@@ -74,6 +74,9 @@ namespace AVSHull
                     //InvalidateVisual();
                     break;
                 case "Panels":
+                case "PanelLayout.Panel":
+                    UndoLog.Add(Layout.Panels);
+                    Debug.WriteLine("PanelCtrl Log: {0}", UndoLog.Count);
                     InvalidateVisual();
                     break;
 
@@ -85,6 +88,7 @@ namespace AVSHull
         public void AddPanel(Panel p)
         {
             Layout.AddPanel(p);
+            UndoLog.StartSnapshot();
             InvalidateVisual();
         }
 
@@ -219,6 +223,7 @@ namespace AVSHull
             m_dragging = false;
             m_doUnselect = false;
 
+            UndoLog.Snapshot();
         }
 
         private void OnPreviewMouseMove(object sender, MouseEventArgs e)
@@ -286,6 +291,7 @@ namespace AVSHull
                 Panel p = (Panel)m_selectedPanel.Clone();
                 Layout.AddPanel(p);
                 m_selectedPanel = p;
+                UndoLog.StartSnapshot();
                 InvalidateVisual();
             }
 
@@ -296,6 +302,7 @@ namespace AVSHull
             if (m_selectedPanel != null)
             {
                 Layout.RemovePanel(m_selectedPanel);
+                UndoLog.StartSnapshot();
                 InvalidateVisual();
             }
         }
@@ -324,11 +331,11 @@ namespace AVSHull
                         Layout.AddPanel(panel_1);
                         Layout.AddPanel(panel_2);
                         m_selectedPanel = null;
+                        UndoLog.StartSnapshot();
                         InvalidateVisual();
                     }
                 }
             }
         }
-
     }
 }

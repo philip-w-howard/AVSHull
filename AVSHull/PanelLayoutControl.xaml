@@ -14,8 +14,6 @@
             <MenuItem Header="_Delete" Click="DeleteClick"/>
             <MenuItem Header="_Split" Click="SplitClick" />
         </ContextMenu>
-        <local:PanelLog x:Key="PanelUndoLog" />
-        <local:PanelLog x:Key="PanelRedoLog" />
     </UserControl.Resources>
 
     <Grid>

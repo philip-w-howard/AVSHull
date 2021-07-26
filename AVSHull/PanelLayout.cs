@@ -12,14 +12,10 @@ namespace AVSHull
     // Setup data plus list of panels
     public class PanelLayout : INotifyPropertyChanged
     {
-        private PanelLog PanelUndoLog = new PanelLog();
-        private PanelLog PanelRedoLog = new PanelLog();
-
         public PanelLayout()
         {
             m_panelSetup = (PanelsLayoutSetup)Application.Current.FindResource("LayoutSetup");
             m_panels = new List<Panel>();
-            PanelUndoLog.Add(m_panels);
         }
 
         private PanelsLayoutSetup m_panelSetup;
@@ -84,8 +80,6 @@ namespace AVSHull
                 {
                     p.PropertyChanged += panel_PropertyChanged;
                 }
-                PanelUndoLog.Clear();
-                PanelUndoLog.Add(m_panels);
 
                 Notify("Panels");
             }
@@ -101,15 +95,12 @@ namespace AVSHull
             m_panels.Add(p);
             p.PropertyChanged += panel_PropertyChanged;
 
-            PanelUndoLog.Add(m_panels);
-
             Notify("Panels");
         }
 
         public void RemovePanel(Panel p)
         {
             m_panels.Remove(p);
-            PanelUndoLog.Add(m_panels);
 
             Notify("Panels");
         }
@@ -135,8 +126,7 @@ namespace AVSHull
 
         void panel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            PanelUndoLog.Add(m_panels);
-            Debug.WriteLine("Panel Log {0}", PanelUndoLog.Count);
+            Notify("PanelLayout.Panel");
         }
 
         //****************************************************************

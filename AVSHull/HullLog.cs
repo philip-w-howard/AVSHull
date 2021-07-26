@@ -81,17 +81,38 @@ namespace AVSHull
         }
     }
 
-    class ListLog<U,V> : UndoRedoLog<U> where V: class, new() where U : List<V>, new()
+    class ListLog<U, V> : UndoRedoLog<U> where V : class, ICloneable, new() where U : List<V>, new()
     {
         public override void Add(U value)
         {
             U list = new U();
             foreach (V item in value)
             {
-                list.Add(item);
+                list.Add((V)item.Clone());
             }
 
             Log.Add(list);
+            Trim();
+        }
+    }
+
+    class EnumerablestLog<U, V> : UndoRedoLog<U> where V : class, ICloneable, new() where U : class, IEnumerable<V>
+    {
+        List<V> list;
+        public IEnumerable<V> data
+        {
+            get { return list; }
+        }
+
+        public override void Add(U value)
+        {
+            list = new List<V>();
+            foreach (V item in value)
+            {
+                list.Add((V)item.Clone());
+            }
+
+            Log.Add((U)data);
             Trim();
         }
     }
@@ -100,6 +121,9 @@ namespace AVSHull
     { }
 
     class PanelLog : ListLog<List<Panel>, Panel>
+    { }
+
+    class PanelCtrlLog : EnumerablestLog<IEnumerable<Panel>, Panel>
     { }
 
 }
