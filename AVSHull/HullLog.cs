@@ -27,6 +27,14 @@ namespace AVSHull
             }
         }
         public abstract void Add(T value);
+        
+        // Mark the beginning of a series of log entries that will evantually be coallesced into a single entry
+        public void StartSnapshot()
+        {
+            topPermanent = Log.Count;
+        }
+        
+        // Combine a series of log entries into a single entry
         public void Snapshot()
         {
             if (Log.Count > topPermanent)
@@ -60,6 +68,7 @@ namespace AVSHull
         public void Clear()
         {
             Log.Clear();
+            StartSnapshot();
         }
     }
 

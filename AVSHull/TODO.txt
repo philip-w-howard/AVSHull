@@ -200,6 +200,10 @@ Features:
 	Undo/Redo to panels
 		Re-use log code, or just duplicate? Problem is ICloneable vs a List<T>, which isn't
 
+		Panel changes are added to undo log.
+		Move PanelLog to PanelLayoutControl
+			move event handler here.
+
 	Split Panel options
 
 	Offsets: Fixed offset

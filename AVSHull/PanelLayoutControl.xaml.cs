@@ -30,7 +30,7 @@ namespace AVSHull
         private Point m_startDragLoc = new Point(-1, -1);
         private bool m_dragging = false;
         private bool m_doUnselect = false;
-        
+
         public PanelLayout Layout { get; set; }
 
 
@@ -38,6 +38,10 @@ namespace AVSHull
         {
             InitializeComponent();
             Layout = new PanelLayout();
+            PanelLog undoLog = (PanelLog)FindResource("PanelUndoLog");
+            undoLog.Clear();
+            PanelLog redoLog = (PanelLog)FindResource("PanelRedoLog");
+            redoLog.Clear();
 
             Layout.LayoutSetup.PropertyChanged += layout_PropertyChanged;
             Layout.PropertyChanged += layout_PropertyChanged;

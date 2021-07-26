@@ -419,7 +419,7 @@ namespace AVSHull
                 m_points[otherChine] = otherPoint;
             }
 
-            Notify("Bulkhead");
+            Notify("Bulkhead.Handle");
         }
 
         private double NewZPoint(Point3D basePoint, Point3D newPoint)

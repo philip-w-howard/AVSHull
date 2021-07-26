@@ -80,8 +80,9 @@ namespace AVSHull
         void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Debug.WriteLine("DesignControl.PropertyChanged: " + e.PropertyName);
-            if (e.PropertyName == "HullData" || e.PropertyName == "Bulkhead" || e.PropertyName == "HullScale")
+            if (e.PropertyName == "HullData" || e.PropertyName == "Bulkhead" || e.PropertyName == "HullScale" || e.PropertyName == "Bulkhead.Handle")
             {
+                if (e.PropertyName != "Bulkhead.Handle") undoLog.StartSnapshot();
                 undoLog.Add(BaseHull.Instance());
                 redoLog.Clear();
                 UpdateViews();
@@ -256,6 +257,7 @@ namespace AVSHull
             {
                 BaseHull.Instance().Bulkheads = redoLog.Pop().Bulkheads;
                 undoLog.Add(BaseHull.Instance());
+                undoLog.StartSnapshot();
 
                 UpdateViews();
             }
