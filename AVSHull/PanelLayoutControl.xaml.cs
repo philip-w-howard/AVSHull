@@ -42,6 +42,7 @@ namespace AVSHull
             Layout = new PanelLayout();
             UndoLog = new PanelCtrlLog();
             UndoLog.Add(Layout.Panels);
+            UndoLog.StartSnapshot();
             RedoLog = new PanelCtrlLog();
 
             Layout.LayoutSetup.PropertyChanged += layout_PropertyChanged;
@@ -57,7 +58,26 @@ namespace AVSHull
             Layout.WindowWidth = 600;
         }
 
-        void layout_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        // Initialize layout from a file Open operation
+        public void Load(List<Panel> panels, PanelsLayoutSetup setup)
+        {
+            Layout.Clear();
+
+            foreach (Panel p in panels)
+            {
+                AddPanel(p);
+            }
+            
+            Layout.LayoutSetup = setup;
+
+            // reset undo/redo logs
+            UndoLog.Clear();
+            UndoLog.Add(Layout.Panels);
+            UndoLog.StartSnapshot();
+            RedoLog.Clear();
+        }
+
+    void layout_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -340,11 +360,13 @@ namespace AVSHull
         }
         public void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
+            Debug.WriteLine("Can undo? {0}", UndoLog.Count);
             e.CanExecute = UndoLog.Count > 1;
         }
 
         public void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            Debug.WriteLine("Undo {0}", UndoLog.Count);
             if (UndoLog.Count > 1)
             {
                 RedoLog.Add(UndoLog.Pop());

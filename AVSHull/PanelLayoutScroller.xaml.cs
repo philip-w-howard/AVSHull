@@ -147,15 +147,10 @@ namespace AVSHull
                     if (panelData.panelList.Count == 2)
                     {
                         m_panels = panelData.panelList[0];
-                        foreach (Panel p in panelData.panelList[1])
-                        {
-                            LayoutControl.AddPanel(p);
-                        }
+                        LayoutControl.Load(panelData.panelList[1], panelData.panelLayout);
                     }
-                    LayoutControl.Layout.LayoutSetup = panelData.panelLayout;
                 }
             }
-
         }
 
         public void saveClick(object sender, RoutedEventArgs e)

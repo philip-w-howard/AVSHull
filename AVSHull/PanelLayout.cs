@@ -91,6 +91,11 @@ namespace AVSHull
             get { return m_panels.AsReadOnly(); }
         }
 
+        public void Clear()
+        {
+            m_panels.Clear();
+        }
+
         public void AddPanel(Panel p)
         {
             m_panels.Add(p);

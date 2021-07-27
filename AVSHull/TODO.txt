@@ -198,13 +198,13 @@ UpdatePopups: mostly done
 
 Features:
 	Undo/Redo to panels
-		Re-use log code, or just duplicate? Problem is ICloneable vs a List<T>, which isn't
-
-		Panel changes are added to undo log.
-		Move PanelLog to PanelLayoutControl
-			move event handler here.
+		check redo
+		chedk that it works from loaded files
+			each panel should not be undoable.
 
 	Split Panel options
+		Different split option
+		Positioning of split panels
 
 	Offsets: Fixed offset
 		include all hard corners
