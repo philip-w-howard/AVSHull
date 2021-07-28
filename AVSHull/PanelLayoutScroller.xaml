@@ -29,6 +29,7 @@
                    PopupAnimation="Slide">
                 <local:OffsetSetupWindow/>
             </Popup>
+            <Button Content="Clear" Click="ClearClick" ToolTip="Clear all panels from layout" />
         </StackPanel>
 
         <ScrollViewer Name="Scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="White">

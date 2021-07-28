@@ -58,6 +58,17 @@ namespace AVSHull
             Layout.WindowWidth = 600;
         }
 
+        public void Clear()
+        {
+            Layout.Clear();
+
+            // reset undo/redo logs
+            UndoLog.Clear();
+            UndoLog.Add(Layout.Panels);
+            UndoLog.StartSnapshot();
+            RedoLog.Clear();
+            InvalidateVisual();
+        }
         // Initialize layout from a file Open operation
         public void Load(List<Panel> panels, PanelsLayoutSetup setup)
         {
@@ -75,9 +86,10 @@ namespace AVSHull
             UndoLog.Add(Layout.Panels);
             UndoLog.StartSnapshot();
             RedoLog.Clear();
+            InvalidateVisual();
         }
 
-    void layout_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void layout_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {

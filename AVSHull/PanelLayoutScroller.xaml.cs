@@ -261,5 +261,10 @@ namespace AVSHull
             UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
             values.OffsetsSetupExpanded = !values.OffsetsSetupExpanded;
         }
+
+        private void ClearClick(object sender, RoutedEventArgs e)
+        {
+            LayoutControl.Clear();
+        }
     }
 }
