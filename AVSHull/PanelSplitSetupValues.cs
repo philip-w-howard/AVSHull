@@ -26,6 +26,12 @@ namespace AVSHull
             set { _depth = value; Notify("Depth"); }
         }
 
+        private bool _roundEnds;
+        public bool RoundEnds
+        {
+            get { return _roundEnds; }
+            set { _roundEnds = value; Notify("RoundEnds"); }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         void Notify(string propName)
         {

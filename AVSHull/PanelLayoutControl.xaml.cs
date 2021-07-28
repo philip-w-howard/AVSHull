@@ -341,8 +341,9 @@ namespace AVSHull
                     PanelSplitSetupValues parameters = (PanelSplitSetupValues)Application.Current.FindResource("SplitSetup");
                     if (parameters == null) return;
 
-                    if (m_selectedPanel.Split(parameters.Start, parameters.NumTongues, parameters.Depth, out panel_1, out panel_2))
+                    if (m_selectedPanel.Split(parameters.Start, parameters.NumTongues, parameters.Depth, parameters.RoundEnds, out panel_1, out panel_2))
                     {
+                        UndoLog.StartSnapshot();
                         Point origin = m_selectedPanel.Origin;
                         panel_1.Origin = origin;
                         origin.X += parameters.Start;
@@ -352,7 +353,7 @@ namespace AVSHull
                         Layout.AddPanel(panel_1);
                         Layout.AddPanel(panel_2);
                         m_selectedPanel = null;
-                        UndoLog.StartSnapshot();
+                        UndoLog.Snapshot();
                         InvalidateVisual();
                     }
                 }

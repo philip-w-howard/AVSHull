@@ -290,7 +290,7 @@ namespace AVSHull
 
         //****************************************************
         // Split a panel into two sub-panels
-        public bool Split(double start, double radius, double depth, out Panel panel_1, out Panel panel_2)
+        public bool Split(double start, int numTongues, double depth, bool roundEnds, out Panel panel_1, out Panel panel_2)
         {
             bool addTo_1 = true;
             PointCollection points_1 = new PointCollection();
@@ -336,7 +336,13 @@ namespace AVSHull
                         bottom = startPoint;
 
                         if (first != startPoint) points_2.Add(first);
-                        PointCollection splitter_1 = PanelSplitter.Tongues(top, bottom, (int)radius, depth);
+
+                        PointCollection splitter_1;
+                        if (roundEnds)
+                            splitter_1 = PanelSplitter.Tongues(top, bottom, numTongues, depth);
+                        else
+                            splitter_1 = PanelSplitter.SquareEqualTongues(top, bottom, numTongues, depth);
+
                         IEnumerable<Point> splitter_2 = splitter_1.Reverse();
 
                         foreach (Point p in splitter_1)

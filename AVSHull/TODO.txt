@@ -197,11 +197,6 @@ UpdatePopups: mostly done
 	Eliminate Chines/New Bulkhead Loc in URH subwindow: done
 
 Features:
-	Undo/Redo to panels
-		check redo
-		chedk that it works from loaded files
-			each panel should not be undoable.
-
 	Split Panel options
 		Different split option
 		Positioning of split panels
