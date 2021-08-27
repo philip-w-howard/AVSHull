@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -28,6 +29,7 @@ namespace AVSHull
         {
             InitializeComponent();
             SetupPanels();
+            PreviewMouseWheel += OnMouseWheel;
         }
 
         private void SetupPanels()
@@ -114,6 +116,22 @@ namespace AVSHull
                     break;
                 }
             }
+        }
+        private void OnMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                LayoutControl.ZoomIn();
+                //if (Scroller.ComputedHorizontalScrollBarVisibility == Visibility.Visible) Scroller.ScrollToHorizontalOffset(offset);
+            }
+            else if (e.Delta < 0)
+            {
+                LayoutControl.ZoomOut();
+            }
+
+            Point loc = Mouse.GetPosition(LayoutControl);
+            Debug.WriteLine("Offsets: ({0}, {1}) Location: ({2}, {3})", Scroller.HorizontalOffset, Scroller.VerticalOffset, loc.X/LayoutControl.Layout.Scale, loc.Y / LayoutControl.Layout.Scale);
+            InvalidateVisual();
         }
 
         //*****************************************************************

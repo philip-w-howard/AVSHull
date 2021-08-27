@@ -32,7 +32,7 @@
             <Button Content="Clear" Click="ClearClick" ToolTip="Clear all panels from layout" />
         </StackPanel>
 
-        <ScrollViewer Name="Scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="White">
+        <ScrollViewer Name="Scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="White" >
             <ScrollViewer.ContextMenu>
                 <ContextMenu x:Name="PanelContextMenu">
                     <MenuItem Header="Add _All" Click="AddAllClick" />

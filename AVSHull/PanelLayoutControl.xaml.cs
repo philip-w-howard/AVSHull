@@ -48,7 +48,6 @@ namespace AVSHull
             Layout.LayoutSetup.PropertyChanged += layout_PropertyChanged;
             Layout.PropertyChanged += layout_PropertyChanged;
 
-            MouseWheel += OnMouseWheel;
             PreviewMouseDown += OnPreviewMouseDown;
             PreviewMouseMove += OnPreviewMouseMove;
             PreviewMouseUp += OnPreviewMouseUp;
@@ -186,14 +185,13 @@ namespace AVSHull
             }
         }
 
-        private void OnMouseWheel(object sender, MouseWheelEventArgs e)
+        public void ZoomIn()
         {
-            if (e.Delta > 0)
-                Layout.Scale *= 1.1;
-            else if (e.Delta < 0)
-                Layout.Scale /= 1.1;
-
-            InvalidateVisual();
+            Layout.Scale *= 1.1;
+        }
+        public void ZoomOut()
+        {
+            Layout.Scale /= 1.1;
         }
 
         private Panel PanelClicked(Point loc)
