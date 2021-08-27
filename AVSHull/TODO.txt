@@ -196,6 +196,13 @@ UpdatePopups: mostly done
 	Zoom panel should center on mouse
 	Eliminate Chines/New Bulkhead Loc in URH subwindow: done
 
+KayakBulkheads
+	Make sure bow is centered
+	Allow transome on front and back
+	Make sure center line is centered
+	Allow closed top
+		force closed top to be centered
+
 Features:
 	Split Panel options
 		Different split option
