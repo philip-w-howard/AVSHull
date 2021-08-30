@@ -21,31 +21,34 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding IncludeBow, Mode=TwoWay}">Include Bow</CheckBox>
-
-        <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding FlatBottom, Mode=TwoWay}">Flat Bottom</CheckBox>
+        <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding IncludeTransom, Mode=TwoWay}">Include Transom</CheckBox>
+        <CheckBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding FlatBottom, Mode=TwoWay}">Flat Bottom</CheckBox>
+        <CheckBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding ClosedTop, Mode=TwoWay}">Closed Top</CheckBox>
         
-        <Label Grid.Row="2" Grid.Column="0">Number of bulkheads</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Width="40" Text="{Binding NumBulkheads, Mode=TwoWay}"/>
+        <Label Grid.Row="4" Grid.Column="0">Number of bulkheads</Label>
+        <TextBox Grid.Row="4" Grid.Column="1" Width="40" Text="{Binding NumBulkheads, Mode=TwoWay}"/>
 
-        <Label Grid.Row="3" Grid.Column="0">Number of chines</Label>
-        <TextBox Grid.Row="3" Grid.Column="1" Width="40" Text="{Binding NumChines, Mode=TwoWay}" />
+        <Label Grid.Row="5" Grid.Column="0">Number of chines</Label>
+        <TextBox Grid.Row="5" Grid.Column="1" Width="40" Text="{Binding NumChines, Mode=TwoWay}" />
 
-        <Label Grid.Row="4" Grid.Column="0">Length</Label>
-        <TextBox Grid.Row="4" Grid.Column="1" Width="40" Text="{Binding Length, Mode=TwoWay}" />
+        <Label Grid.Row="6" Grid.Column="0">Length</Label>
+        <TextBox Grid.Row="6" Grid.Column="1" Width="40" Text="{Binding Length, Mode=TwoWay}" />
 
-        <Label Grid.Row="5" Grid.Column="0">Width</Label>
-        <TextBox Grid.Row="5" Grid.Column="1" Width="40" Text="{Binding Width, Mode=TwoWay}" />
+        <Label Grid.Row="7" Grid.Column="0">Width</Label>
+        <TextBox Grid.Row="7" Grid.Column="1" Width="40" Text="{Binding Width, Mode=TwoWay}" />
 
-        <Label Grid.Row="6" Grid.Column="0">Height</Label>
-        <TextBox Grid.Row="6" Grid.Column="1" Width="40" Text="{Binding Height, Mode=TwoWay}" />
+        <Label Grid.Row="8" Grid.Column="0">Height</Label>
+        <TextBox Grid.Row="8" Grid.Column="1" Width="40" Text="{Binding Height, Mode=TwoWay}" />
 
-        <Label Grid.Row="7" Grid.Column="0">Transom Angle</Label>
-        <TextBox Grid.Row="7" Grid.Column="1" Width="40" Text="{Binding TransomAngle, Mode=TwoWay}" />
+        <Label Grid.Row="9" Grid.Column="0">Transom Angle</Label>
+        <TextBox Grid.Row="9" Grid.Column="1" Width="40" Text="{Binding TransomAngle, Mode=TwoWay}" />
 
-        <StackPanel Margin="10" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+        <StackPanel Margin="10" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Button Margin="20" Click="OK_Click" Width="50" IsDefault="True">OK</Button>
             <Button Margin="20" Click="Cancel_Click" Width="50" IsCancel="True">Cancel</Button>
         </StackPanel>

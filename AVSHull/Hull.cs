@@ -52,6 +52,7 @@ namespace AVSHull
 
             if (setup.IncludeBow)
             {
+                points.Clear();
                 Z = 0;
                 width = 0;
                 for (int ii = 0; ii < setup.NumChines + 1; ii++)
@@ -59,7 +60,7 @@ namespace AVSHull
                     points.Add(new Point3D(width, height, Z));
                     height += setup.Height/setup.NumChines;
                 }
-                Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.BOW));
+                Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.BOW, setup.FlatBottom, setup.ClosedTop));
             }
 
             // Vertical bulkheads
@@ -67,30 +68,55 @@ namespace AVSHull
             {
                 points.Clear();
                 Z = Bulkheads.Count * setup.Length / setup.NumBulkheads;
-                width = 0;
-                height = 0;
                 for (int ii = 0; ii < setup.NumChines + 1; ii++)
                 {
+                    if (ii == setup.NumChines && setup.ClosedTop) 
+                        width = 0;
+                    else if (ii == 0 && setup.FlatBottom)
+                        width = setup.Width / (setup.NumChines + 1);
+                    else
+                        width = ii * setup.Width / setup.NumChines;
+
+                    height = ii * setup.Height / setup.NumChines;
+
                     points.Add(new Point3D(width, height, Z));
-                    width += setup.Width / setup.NumChines;
-                    height += setup.Height / setup.NumChines;
                 }
-                Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL));
+                Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL, setup.FlatBottom, setup.ClosedTop));
             }
 
             // Transom
-            points.Clear();
-            Z = Bulkheads.Count * setup.Length / setup.NumBulkheads;
-            width = 0;
-            height = 0;
-            for (int ii = 0; ii < setup.NumChines+1; ii++)
+            if (setup.IncludeTransom)
             {
-                points.Add(new Point3D(width, height, Z + height*Math.Cos(Math.PI / 180 * setup.TransomAngle)));
-                width += setup.Width / setup.NumChines;
-                height += setup.Height / setup.NumChines;
+                points.Clear();
+                Z = Bulkheads.Count * setup.Length / setup.NumBulkheads;
+                for (int ii = 0; ii < setup.NumChines + 1; ii++)
+                {
+                    if (ii == setup.NumChines && setup.ClosedTop)
+                        width = 0;
+                    else if (ii == 0 && setup.FlatBottom)
+                        width = setup.Width / (setup.NumChines + 1);
+                    else
+                        width = ii * setup.Width / setup.NumChines;
+
+                    height = ii * setup.Height / setup.NumChines;
+
+                    points.Add(new Point3D(width, height, Z + height * Math.Cos(Math.PI / 180 * setup.TransomAngle)));
+                }
+                Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.TRANSOM, setup.FlatBottom, setup.ClosedTop));
+                CheckTransom();
             }
-            Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.TRANSOM));
-            CheckTransom();
+            else
+            {
+                Z = setup.Length;
+                width = 0;
+                for (int ii = 0; ii < setup.NumChines + 1; ii++)
+                {
+                    points.Add(new Point3D(width, height, Z));
+                    height += setup.Height / setup.NumChines;
+                }
+                Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.BOW, setup.FlatBottom, setup.ClosedTop));
+            }
+
             SetBulkheadHandler();
         }
 

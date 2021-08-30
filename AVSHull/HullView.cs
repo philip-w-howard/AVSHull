@@ -278,7 +278,7 @@ namespace AVSHull
                 }
             }
 
-            BaseHull.Instance().Bulkheads.Insert(index, new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL));
+            BaseHull.Instance().Bulkheads.Insert(index, new Bulkhead(points, Bulkhead.BulkheadType.VERTICAL, BaseHull.Instance().Bulkheads[index].IsFlatBottomed, BaseHull.Instance().Bulkheads[index].HasClosedTop));
             BaseHull.Instance().Notify("HullData");
         }
 

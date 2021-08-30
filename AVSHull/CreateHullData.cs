@@ -14,11 +14,25 @@ namespace AVSHull
             set { _includeBow = value; Notify("IncludeBow"); }
         }
 
-        private bool _flatBottom = true;
+        private bool _includeTransom = true;
+        public bool IncludeTransom
+        {
+            get { return _includeTransom; }
+            set { _includeTransom = value; Notify("IncludeTransom"); }
+        }
+
+        private bool _flatBottom = false;
         public bool FlatBottom
         {
             get { return _flatBottom; }
             set { _flatBottom = value; Notify("FlatBottom"); }
+        }
+
+        private bool _closedTop = false;
+        public bool ClosedTop
+        {
+            get { return _closedTop; }
+            set { _closedTop = value; Notify("ClosedTop"); }
         }
 
         private int _numBulkheads = 4;

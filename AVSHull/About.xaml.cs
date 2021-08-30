@@ -12,7 +12,8 @@ namespace AVSHull
         {
             InitializeComponent();
 
-            Version.Content = Assembly.GetExecutingAssembly().GetName().Version;
+            //Version.Content = Assembly.GetExecutingAssembly().GetName().Version;
+            Version.Content = typeof(Hull).Assembly.GetName().Version;
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)

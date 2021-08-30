@@ -197,11 +197,13 @@ UpdatePopups: mostly done
 	Eliminate Chines/New Bulkhead Loc in URH subwindow: done
 
 KayakBulkheads
-	Make sure bow is centered
-	Allow transome on front and back
-	Make sure center line is centered
+	Make sure bow is centered: done
+	Make sure center line is centered: done
 	Allow closed top
 		force closed top to be centered
+	Allow transom/bow for both bow and stern.
+
+	Flat bottomed bow needs extra point (duplicate bottom)
 
 Features:
 	Split Panel options

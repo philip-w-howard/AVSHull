@@ -23,6 +23,19 @@ namespace AVSHull
             set { _type = value; Notify("Type"); }
         }
 
+        private bool _isFlatBottomed;
+        public bool IsFlatBottomed
+        {
+            get { return _isFlatBottomed; }
+            set { _isFlatBottomed = value; }
+        }
+        
+        private bool _hasClosedTop;
+        public bool HasClosedTop
+        {
+            get { return _hasClosedTop; }
+            set { _hasClosedTop = value; }
+        }
         public int NumChines { get { return m_points.Count; } }
 
         private double m_transomAngle;
@@ -50,7 +63,10 @@ namespace AVSHull
             m_points = new Point3DCollection();
             Point3DCollection tempPoints = new Point3DCollection();
 
-            if (original.NumChines % 2 == 1)
+            IsFlatBottomed = original.IsFlatBottomed;
+            HasClosedTop = original.HasClosedTop;
+
+            if (!IsFlatBottomed)
             {
                 // centerline bulkhead
                 int useable_chines = original.NumChines / 2 + 1;
@@ -118,12 +134,17 @@ namespace AVSHull
             }
         }
 
-        public Bulkhead(Point3DCollection points, BulkheadType type)
+        public Bulkhead(Point3DCollection points, BulkheadType type, bool flatBottomed, bool closedTop)
         {
             m_points = new Point3DCollection();
             this.Type = type;
 
-            if (Math.Abs(points[0].X) < NEAR_ZERO)
+            IsFlatBottomed = flatBottomed;
+            HasClosedTop = closedTop;
+
+            if (Math.Abs(points[points.Count - 1].X) < NEAR_ZERO) HasClosedTop = true;
+
+            if (!flatBottomed)
             {
                 // Bottom is on center-line
                 for (int ii = points.Count - 1; ii > 0; ii--)
@@ -150,7 +171,7 @@ namespace AVSHull
                 }
 
                 // Insert other half of hull
-                for (int ii = 1; ii < points.Count; ii++)
+                for (int ii = 0; ii < points.Count; ii++)
                 {
                     Point3D point = new Point3D(-points[ii].X, points[ii].Y, points[ii].Z);
                     m_points.Add(point);
@@ -159,6 +180,7 @@ namespace AVSHull
 
             ComputeAngle();
             StraightenBulkhead();
+            CheckCenterlines();
         }
 
         // Create a bulkhead from a Carlson HUL file
@@ -190,10 +212,12 @@ namespace AVSHull
                 temp_points.Add(point);
             }
 
+            if (Math.Abs(temp_points[temp_points.Count - 1].X) < NEAR_ZERO) HasClosedTop = true;
 
             if (Math.Abs(temp_points[0].X) < NEAR_ZERO)
             {
                 // Bottom is on center-line
+                IsFlatBottomed = false;
                 for (int ii = temp_points.Count - 1; ii > 0; ii--)
                 {
                     m_points.Add(temp_points[ii]);
@@ -211,6 +235,8 @@ namespace AVSHull
             }
             else
             {
+                IsFlatBottomed = true;
+
                 // flat floor: bottom is not on center-line
                 for (int ii = temp_points.Count - 1; ii >= 0; ii--)
                 {
@@ -343,7 +369,7 @@ namespace AVSHull
             Notify("Bulkhead");
         }
 
-        public void UpdateBulkheadPoint(int chine, double x, double y, double z)
+        public void UpdateBulkheadPoint(int chine, double delta_x, double delta_y, double delta_z)
         {
             Point3D basePoint = m_points[0];
             Point3D point = m_points[chine];
@@ -354,22 +380,22 @@ namespace AVSHull
             {
                 case BulkheadType.BOW:
                     point.X += 0;                   // Can't shift BOW points in the X direction
-                    point.Y += y;
-                    point.Z += z;
+                    point.Y += delta_y;
+                    point.Z += delta_z;
                     otherPoint.X -= 0;              // Can't shift BOW points in the X direction
-                    otherPoint.Y += y;
-                    otherPoint.Z += z;
+                    otherPoint.Y += delta_y;
+                    otherPoint.Z += delta_z;
                     break;
                 case BulkheadType.VERTICAL:
-                    point.X += x;
-                    point.Y += y;
+                    point.X += delta_x;
+                    point.Y += delta_y;
                     point.Z = basePoint.Z;          // force all points to be vertical relative to base point
-                    otherPoint.X -= x;
-                    otherPoint.Y += y;
+                    otherPoint.X -= delta_x;
+                    otherPoint.Y += delta_y;
                     otherPoint.Z = basePoint.Z;          // force all points to be vertical relative to base point
                     break;
                 case BulkheadType.TRANSOM:
-                    if (x == 0 && y == 0 && z == 0)
+                    if (delta_x == 0 && delta_y == 0 && delta_z == 0)
                     {
                         // Simply force Z to be on the plane of the transom
                         if (chine != 0)
@@ -378,31 +404,31 @@ namespace AVSHull
                             otherPoint.Z = NewZPoint(basePoint, point);
                         }
                     }
-                    else if (x == 0)
+                    else if (delta_x == 0)
                     {
                         // assume updating from side view
                         // Believe the user's y coordinate and then compute Z to be on the plane.
-                        point.Y += y;
+                        point.Y += delta_y;
                         point.Z = NewZPoint(basePoint, point);
-                        otherPoint.Y += y;
+                        otherPoint.Y += delta_y;
                         otherPoint.Z = NewZPoint(basePoint, otherPoint);
                     }
-                    else if (y == 0)
+                    else if (delta_y == 0)
                     {
                         // assume updating from top view
                         // Can't update Z or Y from top view
-                        point.X += x;
-                        otherPoint.X -= x;
+                        point.X += delta_x;
+                        otherPoint.X -= delta_x;
                     }
-                    else if (z == 0)
+                    else if (delta_z == 0)
                     {
                         // assume updating from front view
                         // can update both x and y
-                        point.X += x;
-                        point.Y += y;
+                        point.X += delta_x;
+                        point.Y += delta_y;
                         point.Z = NewZPoint(basePoint, point);
-                        otherPoint.X -= x;
-                        otherPoint.Y += y;
+                        otherPoint.X -= delta_x;
+                        otherPoint.Y += delta_y;
                         otherPoint.Z = NewZPoint(basePoint, otherPoint);
                     }
                     else
@@ -418,6 +444,8 @@ namespace AVSHull
             {
                 m_points[otherChine] = otherPoint;
             }
+
+            CheckCenterlines();
 
             Notify("Bulkhead.Handle");
         }
@@ -436,6 +464,37 @@ namespace AVSHull
                 m_points[ii] = point;
             }
             Notify("Bulkhead");
+        }
+
+        private void CheckCenterlines()
+        {
+            if (!IsFlatBottomed)
+            {
+                Point3D bottom = m_points[m_points.Count / 2];
+                if (bottom.X != 0)
+                {
+                    bottom.X = 0;
+                    m_points[m_points.Count / 2] = bottom;
+                }
+            }
+
+            if (HasClosedTop)
+            {
+                Point3D top1 = m_points[0];
+                Point3D top2 = m_points[m_points.Count - 1];
+
+                if (top1.X != 0)
+                {
+                    top1.X = 0;
+                    m_points[0] = top1;
+                }
+
+                if (top2.X != 0)
+                {
+                    top2.X = 0;
+                    m_points[m_points.Count-1] = top2;
+                }
+            }
         }
     }
  }
