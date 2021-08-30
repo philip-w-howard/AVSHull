@@ -62,6 +62,26 @@ namespace AVSHull
                 }
                 Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.BOW, setup.FlatBottom, setup.ClosedTop));
             }
+            else
+            {
+                points.Clear();
+                Z = setup.Height * Math.Cos(Math.PI / 180 * setup.TransomAngle);
+                for (int ii = 0; ii < setup.NumChines + 1; ii++)
+                {
+                    if (ii == setup.NumChines && setup.ClosedTop)
+                        width = 0;
+                    else if (ii == 0 && setup.FlatBottom)
+                        width = setup.Width / (setup.NumChines + 1);
+                    else
+                        width = ii * setup.Width / setup.NumChines;
+
+                    height = ii * setup.Height / setup.NumChines;
+
+                    points.Add(new Point3D(width, height, Z - height * Math.Cos(Math.PI / 180 * setup.TransomAngle)));
+                }
+                Bulkheads.Add(new Bulkhead(points, Bulkhead.BulkheadType.TRANSOM, setup.FlatBottom, setup.ClosedTop));
+                CheckTransom();
+            }
 
             // Vertical bulkheads
             while (Bulkheads.Count < setup.NumBulkheads - 1)
