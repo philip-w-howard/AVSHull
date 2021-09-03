@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using System.Diagnostics;
 
 namespace AVSHull
 {
@@ -71,6 +72,11 @@ namespace AVSHull
             Point intersection_b1, intersection_b2;
             PointCollection edge2 = new PointCollection();
 
+            for (int ii=0; ii<chine1.Count; ii++)
+            {
+                Debug.WriteLine("Chines {0} ({1:F2}) ({2:F2})", ii, chine1[ii], chine2[ii]);
+            }
+
             m_panelPoints = new PointCollection();
 
             // See if we start at a point or an edge:
@@ -113,11 +119,15 @@ namespace AVSHull
                 r1 = (chine1[0] - chine1[1]).Length;
                 r2 = (chine2[0] - chine1[1]).Length;
                 GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
+                Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})", 
+                    m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
 
                 // advance edge2 by one point
                 r1 = (chine2[0] - chine2[1]).Length;
                 r2 = (chine1[0] - chine2[1]).Length;
                 GeometryOperations.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
+                Debug.WriteLine("Intersection b {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                    m_panelPoints.Count, edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, intersection_b1, intersection_b2);
 
                 if (intersection_a1.X >= intersection_a2.X)
                     m_panelPoints.Add(intersection_a1);
@@ -137,11 +147,15 @@ namespace AVSHull
                 r1 = (chine1[ii - 1] - chine1[ii]).Length;
                 r2 = (chine2[ii - 1] - chine1[ii]).Length;
                 GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
+                Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                    m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
 
                 // advance edge2 by one point
                 r1 = (chine2[ii - 1] - chine2[ii]).Length;
                 r2 = (chine1[ii - 1] - chine2[ii]).Length;
                 GeometryOperations.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
+                Debug.WriteLine("Intersection b {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                    m_panelPoints.Count, edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, intersection_b1, intersection_b2);
 
                 Vector v_1 = m_panelPoints[m_panelPoints.Count - 1] - m_panelPoints[m_panelPoints.Count - 2];
                 Vector v_1a = intersection_a1 - m_panelPoints[m_panelPoints.Count - 1];
@@ -165,7 +179,6 @@ namespace AVSHull
                     edge2.Add(intersection_b1);
                 else
                     edge2.Add(intersection_b2);
-
             }
 
             // NOTE: Should check for closed tail?

@@ -203,7 +203,12 @@ KayakBulkheads
 		force closed top to be centered
 	Allow transom/bow for both bow and stern.
 
-	Flat bottomed bow needs extra point (duplicate bottom)
+	Flat bottomed bow needs extra point (duplicate bottom): done
+
+	DEBUG: panelize RecreationalKayak Panel 1
+		0,0 seems to show up multiple times in chine
+
+		Panel 3: Very squiggly
 
 Features:
 	Split Panel options
