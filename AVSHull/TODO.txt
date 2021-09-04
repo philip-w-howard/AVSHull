@@ -196,7 +196,7 @@ UpdatePopups: mostly done
 	Zoom panel should center on mouse
 	Eliminate Chines/New Bulkhead Loc in URH subwindow: done
 
-KayakBulkheads
+KayakBulkheads: done
 	Make sure bow is centered: done
 	Make sure center line is centered: done
 	Allow closed top
@@ -208,7 +208,7 @@ KayakBulkheads
 	DEBUG: panelize RecreationalKayak Panel 1
 		0,0 seems to show up multiple times in chine
 
-		Panel 3: Very squiggly
+		Panel 3: Very squiggly: fixed
 
 Features:
 	Split Panel options
