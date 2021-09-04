@@ -201,14 +201,15 @@ KayakBulkheads
 	Make sure center line is centered: done
 	Allow closed top
 		force closed top to be centered
-	Allow transom/bow for both bow and stern.
+	Allow transom/bow for both bow and stern. done
 
 	Flat bottomed bow needs extra point (duplicate bottom): done
 
-	DEBUG: panelize RecreationalKayak Panel 1
-		0,0 seems to show up multiple times in chine
-
-		Panel 3: Very squiggly
+RedoPaneliztion: 
+	Handle pointy ends
+		Use while loop instead of for loop
+		Handle first point for pointy different
+		Handle last point for pointy different
 
 Features:
 	Split Panel options

@@ -12,7 +12,7 @@ namespace AVSHull
 {
     public class Panel : INotifyPropertyChanged, ICloneable
     {
-        private const double MIN_EDGE_LENGTH = 0.1;
+        private const double MIN_EDGE_LENGTH = 0.25;
 
         public string name { get; set; }
 
@@ -71,38 +71,18 @@ namespace AVSHull
             Point intersection_b1, intersection_b2;
             PointCollection edge2 = new PointCollection();
 
-            for (int ii = 0; ii < chine1.Count; ii++)
-            {
-                Debug.WriteLine("Chines {0} ({1:F2}) ({2:F2})", ii, chine1[ii], chine2[ii]);
-            }
-
             m_panelPoints = new PointCollection();
 
-            // See if we start at a point or an edge:
-            if ((chine1[0] - chine2[0]).Length < MIN_EDGE_LENGTH)
+            bool pointy_bow = (chine1[0] - chine2[0]).Length < MIN_EDGE_LENGTH;
+            bool pointy_stern = (chine1[chine1.Count-1] - chine2[chine1.Count-1]).Length < MIN_EDGE_LENGTH;
+
+            if (pointy_bow)
             {
-                // Not implemented yet
-                throw new Exception();
+                m_panelPoints.Add(new Point(0, 0));
+                edge2.Add(new Point(0, 0));
 
-                //// Start both edges at (0,0)
-                //m_panelPoints.Add(new Point(0, 0));
-                //edge2.Add(new Point(0, 0));
-
-                //// Compute next point, and place it on the x axis
-                //// advance edge1 by one point
-                //r1 = (chine1[0] - chine1[1]).Length;
-                //m_panelPoints.Add(new Point(r1, 0));
-
-
-                //// advance edge2 by one point
-                //r1 = (chine2[0] - chine2[1]).Length;
-                //r2 = (chine1[0] - chine2[1]).Length;
-                //Geometry.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
-
-                //if (intersection_b1.X >= intersection_b2.X)
-                //    edge2.Add(intersection_b1);
-                //else
-                //    edge2.Add(intersection_b2);
+                r1 = (chine1[0] - chine1[1]).Length;
+                m_panelPoints.Add(new Point(r1 * Math.Cos(Math.PI / 4), r1 * Math.Sin(Math.PI / 4)));
             }
             else
             {
@@ -114,108 +94,102 @@ namespace AVSHull
                 r1 = (chine1[0] - chine2[0]).Length;
                 edge2.Add(new Point(0, -r1));
 
-                for (int ii = 0; ii < chine1.Count - 1; ii++)
-                {
-                    // Compute next point, and favor positive X direction
-                    // advance edge1 by one point
-                    r1 = (chine1[ii] - chine1[ii+1]).Length;
-                    r2 = (chine2[ii] - chine1[ii+1]).Length;
-                    GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
-                    Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
-                        m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
+                // Compute next point, and favor positive X direction
+                // advance edge1 by one point
+                r1 = (chine1[0] - chine1[1]).Length;
+                r2 = (chine2[0] - chine1[1]).Length;
+                GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
+                Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                    m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
 
-                    if (ii == 0)
-                    {
-                        if (intersection_a1.X >= intersection_a2.X)
-                            m_panelPoints.Add(intersection_a1);
-                        else
-                            m_panelPoints.Add(intersection_a2);
-                    }
-                    else
-                    {
-                        Vector v_1 = m_panelPoints[m_panelPoints.Count - 1] - m_panelPoints[m_panelPoints.Count - 2];
-                        Vector v_1a = intersection_a1 - m_panelPoints[m_panelPoints.Count - 1];
-                        Vector v_1b = intersection_a2 - m_panelPoints[m_panelPoints.Count - 1];
-
-                        double a1 = Math.Abs(Vector.AngleBetween(v_1, v_1a));
-                        double a2 = Math.Abs(Vector.AngleBetween(v_1, v_1b));
-
-                        if (a1 < a2)
-                            m_panelPoints.Add(intersection_a1);
-                        else
-                            m_panelPoints.Add(intersection_a2);
-                    }
-                    // advance edge2 by one point
-                    r1 = (chine2[ii] - chine2[ii + 1]).Length;
-                    r2 = (chine1[ii + 1] - chine2[ii + 1]).Length;
-                    GeometryOperations.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
-                    Debug.WriteLine("Intersection b {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
-                        m_panelPoints.Count, edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, intersection_b1, intersection_b2);
-
-                    if (ii == 0)
-                    {
-                        if (intersection_b1.X >= intersection_b2.X)
-                            edge2.Add(intersection_b1);
-                        else
-                            edge2.Add(intersection_b2);
-                    }
-                    else
-                    {
-                        Vector v_2 = edge2[edge2.Count - 1] - edge2[edge2.Count - 2];
-                        Vector v_2a = intersection_b1 - edge2[edge2.Count - 1];
-                        Vector v_2b = intersection_b2 - edge2[edge2.Count - 1];
-
-                        double b1 = Math.Abs(Vector.AngleBetween(v_2, v_2a));
-                        double b2 = Math.Abs(Vector.AngleBetween(v_2, v_2b));
-
-                        if (b1 < b2)
-                            edge2.Add(intersection_b1);
-                        else
-                            edge2.Add(intersection_b2);
-                    }
-                }
+                if (intersection_a1.X >= intersection_a2.X)
+                    m_panelPoints.Add(intersection_a1);
+                else
+                    m_panelPoints.Add(intersection_a2);
             }
 
+            // Add next point to edge2
+            r1 = (chine2[0] - chine2[1]).Length;
+            r2 = (chine1[1] - chine2[1]).Length;
+            GeometryOperations.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
+            Debug.WriteLine("Intersection b {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                m_panelPoints.Count, edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, intersection_b1, intersection_b2);
 
-            //for (int ii = 2; ii < chine1.Count; ii++)
-            //{
-            //    // advance edge1 by one point
-            //    r1 = (chine1[ii - 1] - chine1[ii]).Length;
-            //    r2 = (chine2[ii - 1] - chine1[ii]).Length;
-            //    GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
-            //    Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
-            //        m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
+            if (intersection_b1.X >= intersection_b2.X)
+                edge2.Add(intersection_b1);
+            else
+                edge2.Add(intersection_b2);
 
-            //    // advance edge2 by one point
-            //    r1 = (chine2[ii - 1] - chine2[ii]).Length;
-            //    r2 = (chine1[ii - 1] - chine2[ii]).Length;
-            //    GeometryOperations.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
-            //    Debug.WriteLine("Intersection b {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
-            //        m_panelPoints.Count, edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, intersection_b1, intersection_b2);
+            // Complete the rest of the points
+            int last_point;
+            if (pointy_stern)
+                last_point = chine1.Count - 2;
+            else
+                last_point = chine1.Count - 1;
 
-            //    Vector v_1 = m_panelPoints[m_panelPoints.Count - 1] - m_panelPoints[m_panelPoints.Count - 2];
-            //    Vector v_1a = intersection_a1 - m_panelPoints[m_panelPoints.Count - 1];
-            //    Vector v_1b = intersection_a2 - m_panelPoints[m_panelPoints.Count - 1];
+            for (int ii = 1; ii < last_point; ii++)
+            {
+                r1 = (chine1[ii] - chine1[ii+1]).Length;
+                r2 = (chine2[ii] - chine1[ii+1]).Length;
+                GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
+                Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                    m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
 
-            //    Vector v_2 = edge2[edge2.Count - 1] - edge2[edge2.Count - 2];
-            //    Vector v_2a = intersection_b1 - edge2[edge2.Count - 1];
-            //    Vector v_2b = intersection_b2 - edge2[edge2.Count - 1];
+                Vector v_1 = m_panelPoints[m_panelPoints.Count - 1] - m_panelPoints[m_panelPoints.Count - 2];
+                Vector v_1a = intersection_a1 - m_panelPoints[m_panelPoints.Count - 1];
+                Vector v_1b = intersection_a2 - m_panelPoints[m_panelPoints.Count - 1];
 
-            //    double a1 = Math.Abs(Vector.AngleBetween(v_1, v_1a));
-            //    double a2 = Math.Abs(Vector.AngleBetween(v_1, v_1b));
-            //    double b1 = Math.Abs(Vector.AngleBetween(v_2, v_2a));
-            //    double b2 = Math.Abs(Vector.AngleBetween(v_2, v_2b));
+                double a1 = Math.Abs(Vector.AngleBetween(v_1, v_1a));
+                double a2 = Math.Abs(Vector.AngleBetween(v_1, v_1b));
 
-            //    if (a1 < a2)
-            //        m_panelPoints.Add(intersection_a1);
-            //    else
-            //        m_panelPoints.Add(intersection_a2);
+                if (a1 < a2)
+                    m_panelPoints.Add(intersection_a1);
+                else
+                    m_panelPoints.Add(intersection_a2);
+                
+                // advance edge2 by one point
+                r1 = (chine2[ii] - chine2[ii + 1]).Length;
+                r2 = (chine1[ii + 1] - chine2[ii + 1]).Length;
+                GeometryOperations.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
+                Debug.WriteLine("Intersection b {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                    m_panelPoints.Count, edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, intersection_b1, intersection_b2);
 
-            //    if (b1 < b2)
-            //        edge2.Add(intersection_b1);
-            //    else
-            //        edge2.Add(intersection_b2);
-            //}
+                Vector v_2 = edge2[edge2.Count - 1] - edge2[edge2.Count - 2];
+                Vector v_2a = intersection_b1 - edge2[edge2.Count - 1];
+                Vector v_2b = intersection_b2 - edge2[edge2.Count - 1];
+
+                double b1 = Math.Abs(Vector.AngleBetween(v_2, v_2a));
+                double b2 = Math.Abs(Vector.AngleBetween(v_2, v_2b));
+
+                if (b1 < b2)
+                    edge2.Add(intersection_b1);
+                else
+                    edge2.Add(intersection_b2);
+            }
+
+            if (pointy_stern)
+            {
+                r1 = (chine1[chine1.Count - 2] - chine1[chine1.Count - 1]).Length;
+                r2 = (chine2[chine2.Count - 2] - chine2[chine2.Count - 1]).Length;
+
+                GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
+                Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                    m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
+
+                Vector v_1 = m_panelPoints[m_panelPoints.Count - 1] - m_panelPoints[m_panelPoints.Count - 2];
+                Vector v_1a = intersection_a1 - m_panelPoints[m_panelPoints.Count - 1];
+                Vector v_1b = intersection_a2 - m_panelPoints[m_panelPoints.Count - 1];
+
+                double a1 = Math.Abs(Vector.AngleBetween(v_1, v_1a));
+                double a2 = Math.Abs(Vector.AngleBetween(v_1, v_1b));
+
+                if (a1 < a2)
+                    m_panelPoints.Add(intersection_a1);
+                else
+                    m_panelPoints.Add(intersection_a2);
+
+                // Don't need to add point to edge2 because it is the same (pointy) point and it would be a duplicate
+            }
 
             // NOTE: Should check for closed tail?
             for (int ii = edge2.Count - 1; ii >= 0; ii--)
