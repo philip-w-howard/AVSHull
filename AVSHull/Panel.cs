@@ -64,7 +64,6 @@ namespace AVSHull
             Center();
         }
 
-
         protected void Panelize(Point3DCollection chine1, Point3DCollection chine2)
         {
             double r1, r2;
@@ -72,7 +71,7 @@ namespace AVSHull
             Point intersection_b1, intersection_b2;
             PointCollection edge2 = new PointCollection();
 
-            for (int ii=0; ii<chine1.Count; ii++)
+            for (int ii = 0; ii < chine1.Count; ii++)
             {
                 Debug.WriteLine("Chines {0} ({1:F2}) ({2:F2})", ii, chine1[ii], chine2[ii]);
             }
@@ -107,10 +106,137 @@ namespace AVSHull
             }
             else
             {
-                // Make the edge the first segment in edge2
+                // Start at origin
                 m_panelPoints.Add(new Point(0, 0));
                 edge2.Add(new Point(0, 0));
 
+                // Make the edge the first segment in edge2
+                r1 = (chine1[0] - chine2[0]).Length;
+                edge2.Add(new Point(0, -r1));
+
+                for (int ii = 0; ii < chine1.Count - 1; ii++)
+                {
+                    // Compute next point, and favor positive X direction
+                    // advance edge1 by one point
+                    r1 = (chine1[ii] - chine1[ii+1]).Length;
+                    r2 = (chine2[ii] - chine1[ii+1]).Length;
+                    GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
+                    Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                        m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
+
+                    if (intersection_a1.X >= intersection_a2.X)
+                        m_panelPoints.Add(intersection_a1);
+                    else
+                        m_panelPoints.Add(intersection_a2);
+
+                    // advance edge2 by one point
+                    r1 = (chine2[ii] - chine2[ii + 1]).Length;
+                    r2 = (chine1[ii + 1] - chine2[ii + 1]).Length;
+                    GeometryOperations.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
+                    Debug.WriteLine("Intersection b {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+                        m_panelPoints.Count, edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, intersection_b1, intersection_b2);
+
+                    if (intersection_b1.X >= intersection_b2.X)
+                        edge2.Add(intersection_b1);
+                    else
+                        edge2.Add(intersection_b2);
+                }
+            }
+
+
+            //for (int ii = 2; ii < chine1.Count; ii++)
+            //{
+            //    // advance edge1 by one point
+            //    r1 = (chine1[ii - 1] - chine1[ii]).Length;
+            //    r2 = (chine2[ii - 1] - chine1[ii]).Length;
+            //    GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
+            //    Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+            //        m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
+
+            //    // advance edge2 by one point
+            //    r1 = (chine2[ii - 1] - chine2[ii]).Length;
+            //    r2 = (chine1[ii - 1] - chine2[ii]).Length;
+            //    GeometryOperations.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
+            //    Debug.WriteLine("Intersection b {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
+            //        m_panelPoints.Count, edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, intersection_b1, intersection_b2);
+
+            //    Vector v_1 = m_panelPoints[m_panelPoints.Count - 1] - m_panelPoints[m_panelPoints.Count - 2];
+            //    Vector v_1a = intersection_a1 - m_panelPoints[m_panelPoints.Count - 1];
+            //    Vector v_1b = intersection_a2 - m_panelPoints[m_panelPoints.Count - 1];
+
+            //    Vector v_2 = edge2[edge2.Count - 1] - edge2[edge2.Count - 2];
+            //    Vector v_2a = intersection_b1 - edge2[edge2.Count - 1];
+            //    Vector v_2b = intersection_b2 - edge2[edge2.Count - 1];
+
+            //    double a1 = Math.Abs(Vector.AngleBetween(v_1, v_1a));
+            //    double a2 = Math.Abs(Vector.AngleBetween(v_1, v_1b));
+            //    double b1 = Math.Abs(Vector.AngleBetween(v_2, v_2a));
+            //    double b2 = Math.Abs(Vector.AngleBetween(v_2, v_2b));
+
+            //    if (a1 < a2)
+            //        m_panelPoints.Add(intersection_a1);
+            //    else
+            //        m_panelPoints.Add(intersection_a2);
+
+            //    if (b1 < b2)
+            //        edge2.Add(intersection_b1);
+            //    else
+            //        edge2.Add(intersection_b2);
+            //}
+
+            // NOTE: Should check for closed tail?
+            for (int ii = edge2.Count - 1; ii >= 0; ii--)
+            {
+                m_panelPoints.Add(edge2[ii]);
+            }
+        }
+        protected void Panelize_old(Point3DCollection chine1, Point3DCollection chine2)
+        {
+            double r1, r2;
+            Point intersection_a1, intersection_a2;
+            Point intersection_b1, intersection_b2;
+            PointCollection edge2 = new PointCollection();
+
+            for (int ii = 0; ii < chine1.Count; ii++)
+            {
+                Debug.WriteLine("Chines {0} ({1:F2}) ({2:F2})", ii, chine1[ii], chine2[ii]);
+            }
+
+            m_panelPoints = new PointCollection();
+
+            // See if we start at a point or an edge:
+            if ((chine1[0] - chine2[0]).Length < MIN_EDGE_LENGTH)
+            {
+                // Not implemented yet
+                throw new Exception();
+
+                //// Start both edges at (0,0)
+                //m_panelPoints.Add(new Point(0, 0));
+                //edge2.Add(new Point(0, 0));
+
+                //// Compute next point, and place it on the x axis
+                //// advance edge1 by one point
+                //r1 = (chine1[0] - chine1[1]).Length;
+                //m_panelPoints.Add(new Point(r1, 0));
+
+
+                //// advance edge2 by one point
+                //r1 = (chine2[0] - chine2[1]).Length;
+                //r2 = (chine1[0] - chine2[1]).Length;
+                //Geometry.Intersection(edge2[edge2.Count - 1], r1, m_panelPoints[m_panelPoints.Count - 1], r2, out intersection_b1, out intersection_b2);
+
+                //if (intersection_b1.X >= intersection_b2.X)
+                //    edge2.Add(intersection_b1);
+                //else
+                //    edge2.Add(intersection_b2);
+            }
+            else
+            {
+                // Start at origin
+                m_panelPoints.Add(new Point(0, 0));
+                edge2.Add(new Point(0, 0));
+
+                // Make the edge the first segment in edge2
                 r1 = (chine1[0] - chine2[0]).Length;
                 edge2.Add(new Point(0, -r1));
 
@@ -119,7 +245,7 @@ namespace AVSHull
                 r1 = (chine1[0] - chine1[1]).Length;
                 r2 = (chine2[0] - chine1[1]).Length;
                 GeometryOperations.Intersection(m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, out intersection_a1, out intersection_a2);
-                Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})", 
+                Debug.WriteLine("Intersection a {0}: ({1:F2}) r: {2:F2}  ({3:F2}) r: {4:F2} ::= ({5:F2}) ({6:F2})",
                     m_panelPoints.Count, m_panelPoints[m_panelPoints.Count - 1], r1, edge2[edge2.Count - 1], r2, intersection_a1, intersection_a2);
 
                 // advance edge2 by one point
