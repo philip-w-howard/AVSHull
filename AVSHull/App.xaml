@@ -23,7 +23,8 @@
                 SpacingStyleString="Every point"
                 Spacing="12"
                 OutputType="EIGHTHS"
-                SpacingStyle="EVERY_POINT" />
+                SpacingStyle="EVERY_POINT"
+        />
         <local:PanelsLayoutSetup x:Key="LayoutSetup" SheetWidth="96" SheetHeight="48" SheetsWide="3" SheetsHigh="2"/>
         <local:PanelSplitSetupValues x:Key="SplitSetup" Start="0" NumTongues="3" Depth="3" RoundEnds="False" />
         <local:UI_Params x:Key="Curr_UI_Params" AllowBulkheadMoves="false" NumChines="5" />

@@ -184,32 +184,20 @@ UpdatePopups: mostly done
 	Panel Layout: done
 		Fixed width for entry fields (Grid?)
 		border or background
+		fill panels to make them easier to see
+		Rotate 90
 
 	GCode: done
 		fixed width for entry fields (Grid?)
 		Cut Inside: dropdown or checkbox
     
-	Offsets: done
+	Offsets: 
+		Set origin of panels as LLH corner
 		enable Spacing Style
 		Horizontal Spacing as numeric text field?
     
 	Zoom panel should center on mouse
 	Eliminate Chines/New Bulkhead Loc in URH subwindow: done
-
-KayakBulkheads: done
-	Make sure bow is centered: done
-	Make sure center line is centered: done
-	Allow closed top
-		force closed top to be centered
-	Allow transom/bow for both bow and stern. done
-
-	Flat bottomed bow needs extra point (duplicate bottom): done
-
-RedoPaneliztion: 
-	Handle pointy ends
-		Use while loop instead of for loop
-		Handle first point for pointy different
-		Handle last point for pointy different
 
 Features:
 	Split Panel options
@@ -227,3 +215,11 @@ Features:
 			Heel
 			Pitch
 			Height of CG
+
+OffsetWriter
+	DONE: Enable the other output options.
+	SelectPoints: pick points at the spacing mark plus "knees"
+	When outputting panel, use the SelectedPoints panels, not the original
+	Set Origin (ULH, LLH, URH, LRH, Center, Other)
+
+OffsetSetupWindow: spacing enabled dependent on spacing type.

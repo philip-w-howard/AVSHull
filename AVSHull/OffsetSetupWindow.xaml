@@ -17,6 +17,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0">Output Type</Label>
@@ -30,16 +31,26 @@
             </ComboBox>
 
             <Label Grid.Row="1" Grid.Column="0">Spacing Style</Label>
-            <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  SelectedIndex="0" IsEditable="False" IsReadOnly="True" IsEnabled="False">
+            <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" IsEditable="False" IsReadOnly="True" IsEnabled="True" 
+                      ItemsSource="{Binding Path=SpacingStyleNames}" SelectedItem="{Binding Path=SpacingStyleString}"/>
+            <!--<ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  SelectedIndex="0" IsEditable="False" IsReadOnly="True" IsEnabled="True" 
+                       SelectedItem="{Binding Path=SpacingStyleString}">
                 <ComboBoxItem>Every point</ComboBoxItem>
                 <ComboBoxItem>Fixed spacing</ComboBoxItem>
-            </ComboBox>
+            </ComboBox>-->
 
             <Label Grid.Row="2" Grid.Column="0">Horizontal Spacing</Label>
-            <ComboBox Name="Spacing_Input" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="1" IsEditable="False" IsReadOnly="True" IsEnabled="False">
+            <ComboBox Name="Spacing_Input" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="1" IsEditable="False" IsReadOnly="True" IsEnabled="True" >
                 <ComboBoxItem>6 inches</ComboBoxItem>
                 <ComboBoxItem>12 inches</ComboBoxItem>
                 <ComboBoxItem>24 inches</ComboBoxItem>
+            </ComboBox>
+
+            <Label Grid.Row="3" Grid.Column="0">Origin</Label>
+            <ComboBox Name="Origin" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="2" SelectedItem="{Binding Path=OriginString}" IsEditable="False" IsReadOnly="True" IsEnabled="True">
+                <ComboBoxItem>Upper Left</ComboBoxItem>
+                <ComboBoxItem>Lower Left</ComboBoxItem>
+                <ComboBoxItem>Center</ComboBoxItem>
             </ComboBox>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Text;
@@ -10,6 +11,16 @@ namespace AVSHull
 {
     public class OffsetsParameters : INotifyPropertyChanged
     {
+        //************************************************************
+        public enum OutputTypeEnum { EIGHTHS, SIXTEENTHS, THIRTYSECONDTHS, DECIMAL_2DIGIT, DECIMAL_3DIGIT, DECIMAL_4DIGIT }
+        private OutputTypeEnum _outputType = OutputTypeEnum.EIGHTHS;
+
+        public OutputTypeEnum OutputType
+        {
+            get { return _outputType; }
+            set { _outputType = value; Notify("OutputType"); }
+        }
+
         private string _outputTypeString = "Eighths";
         public string OutputTypeString
         {
@@ -50,6 +61,25 @@ namespace AVSHull
             }
         }
 
+        //***************************************************************************
+        public enum SpacingStyleEnum { EVERY_POINT, FIXED_SPACING }
+        private SpacingStyleEnum _spacingStyle = SpacingStyleEnum.EVERY_POINT;
+
+        public SpacingStyleEnum SpacingStyle
+        {
+            get { return _spacingStyle; }
+            set { _spacingStyle = value; Notify("SpacingStyle"); }
+        }
+
+        public ObservableCollection<string> xSpacingStyleNames = new ObservableCollection<string>(Enum.GetNames(typeof(SpacingStyleEnum)));
+
+        private List<string> _spacingStyleNames = new List<string>() { "Every point", "Fixed spacing" }; //  (Enum.GetNames(typeof(SpacingStyleEnum)));
+        public List<string> SpacingStyleNames
+        {
+            get { return _spacingStyleNames; }
+            set { _spacingStyleNames = value; Notify("SpacingStyleStrings"); }
+        }
+
         private string _spacingStyleString = "Every point";
         public string SpacingStyleString
         {
@@ -71,6 +101,7 @@ namespace AVSHull
                 Notify("SpacingStyleString");
             }
         }
+        //*******************************************************************
         private double m_Spacing = 12;
         public double Spacing
         {
@@ -78,22 +109,41 @@ namespace AVSHull
             set { m_Spacing = value; Notify("Spacing"); }
         }
 
-        public enum OutputTypeEnum { EIGHTHS, SIXTEENTHS, THIRTYSECONDTHS, DECIMAL_2DIGIT, DECIMAL_3DIGIT, DECIMAL_4DIGIT }
-        private OutputTypeEnum _outputType = OutputTypeEnum.EIGHTHS;
 
-        public OutputTypeEnum OutputType
+
+        public enum OriginEnum { UPPER_LEFT, LOWER_LEFT, CENTER }
+        private OriginEnum _Origin = OriginEnum.CENTER;
+
+        public OriginEnum Origin
         {
-            get { return _outputType; }
-            set { _outputType = value; Notify("OutputType"); }
+            get { return _Origin; }
+            set { _Origin = value; Notify("Origin"); }
         }
 
-        public enum SpacingStyleEnum { EVERY_POINT, FIXED_SPACING }
-        private SpacingStyleEnum _spacingStyle = SpacingStyleEnum.EVERY_POINT;
-
-        public SpacingStyleEnum SpacingStyle
+        private string _originString = "Center";
+        public string OriginString
         {
-            get { return _spacingStyle; }
-            set { _spacingStyle = value; Notify("SpacingStyle"); }
+            get { return _originString; }
+            set
+            {
+                _originString = value;
+                switch (_originString)
+                {
+                    case "Center":
+                    case "System.Windows.Controls.ComboBoxItem: Center":
+                        Origin = OriginEnum.CENTER;
+                        break;
+                    case "Upper Left":
+                    case "System.Windows.Controls.ComboBoxItem: Upper Left":
+                        Origin = OriginEnum.UPPER_LEFT;
+                        break;
+                    case "Lower Left":
+                    case "System.Windows.Controls.ComboBoxItem: Lower Left":
+                        Origin = OriginEnum.LOWER_LEFT;
+                        break;
+                }
+                Notify("Origin");
+            }
         }
 
         //**************************************************
