@@ -170,10 +170,12 @@ namespace AVSHull
     class OffsetWriter : ILayoutWriter
     {
         private OffsetsParameters parameters;
+        private PanelsLayoutSetup layout;
 
         public OffsetWriter()
         {
             parameters = (OffsetsParameters)Application.Current.FindResource("OffsetParameters");
+            layout = (PanelsLayoutSetup)Application.Current.FindResource("LayoutSetup");
         }
 
         public PanelLayout Layout { get; set; }
@@ -232,8 +234,22 @@ namespace AVSHull
         }
         private String FormatPoint(Point panelOrigin, Point point, OffsetsParameters.OutputTypeEnum format)
         {
+            double layout_width = layout.SheetsWide * layout.SheetWidth;
+            double layout_height = layout.SheetsHigh * layout.SheetHeight;
             String result = new String("");
-            point = new Point(point.X + panelOrigin.X, point.Y + panelOrigin.Y);
+
+            if (parameters.Origin == OffsetsParameters.OriginEnum.UPPER_LEFT)
+            {
+                point = new Point(point.X + panelOrigin.X, point.Y + panelOrigin.Y);
+            }
+            else if (parameters.Origin == OffsetsParameters.OriginEnum.CENTER)
+            {
+                point = new Point(point.X + panelOrigin.X - layout_width / 2, point.Y + panelOrigin.Y - layout_height / 2);
+            }
+            else if (parameters.Origin == OffsetsParameters.OriginEnum.LOWER_LEFT)
+            {
+                point = new Point(point.X + panelOrigin.X, -(point.Y + panelOrigin.Y - layout_height));
+            }
 
             switch (format)
             {

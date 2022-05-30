@@ -19,10 +19,10 @@
                 TabWidth = "0.375"
                 Origin = "0" />
         <local:OffsetsParameters x:Key="OffsetParameters"
-                Spacing="6"
+                Spacing="12"
                 OutputType="EIGHTHS"
                 SpacingStyle="EVERY_POINT"
-                Origin="UPPER_LEFT"
+                Origin="LOWER_LEFT"
         />
         <local:PanelsLayoutSetup x:Key="LayoutSetup" SheetWidth="96" SheetHeight="48" SheetsWide="3" SheetsHigh="2"/>
         <local:PanelSplitSetupValues x:Key="SplitSetup" Start="0" NumTongues="3" Depth="3" RoundEnds="False" />
