@@ -13,12 +13,24 @@ namespace AVSHull
     {
         //************************************************************
         public enum OutputTypeEnum { EIGHTHS, SIXTEENTHS, THIRTYSECONDTHS, DECIMAL_2DIGIT, DECIMAL_3DIGIT, DECIMAL_4DIGIT }
+        
         private OutputTypeEnum _outputType = OutputTypeEnum.EIGHTHS;
-
         public OutputTypeEnum OutputType
         {
             get { return _outputType; }
-            set { _outputType = value; Notify("OutputType"); }
+            set 
+            {
+                _outputType = value; 
+                _outputTypeString = _outputTypeNames[(int)_outputType];  
+                Notify("OutputType"); 
+            }
+        }
+
+        private List<string> _outputTypeNames = new List<String>() { "Eighths", "Sixteenths", "Thirtysecondths", "Decimal 2-digits", "Decimal 3-digits", "Decimal 4-digits" };
+        public List<string> OutputTypeNames
+        {
+            get { return _outputTypeNames; }
+            set { _outputTypeNames = value; Notify("OutputTypeStrings"); }
         }
 
         private string _outputTypeString = "Eighths";
@@ -28,35 +40,7 @@ namespace AVSHull
             set
             {
                 _outputTypeString = value.ToString();
-                switch (_outputTypeString)
-                {
-                    case "Eights":
-                    case "System.Windows.Controls.ComboBoxItem: Eighths":
-                        OutputType = OutputTypeEnum.EIGHTHS;
-                        break;
-                    case "Sixteenths":
-                    case "System.Windows.Controls.ComboBoxItem: Sixteenths":
-                        OutputType = OutputTypeEnum.SIXTEENTHS;
-                        break;
-                    case "Thirtysecondths":
-                    case "System.Windows.Controls.ComboBoxItem: Thirtysecondths":
-                        OutputType = OutputTypeEnum.THIRTYSECONDTHS;
-                        break;
-                    case "Decimal 2-digits":
-                    case "System.Windows.Controls.ComboBoxItem: Decimal 2-digits":
-                        OutputType = OutputTypeEnum.DECIMAL_2DIGIT;
-                        break;
-                    case "Decimal 3-digits":
-                    case "System.Windows.Controls.ComboBoxItem: Decimal 3-digits":
-                        OutputType = OutputTypeEnum.DECIMAL_3DIGIT;
-                        break;
-                    case "Decimal 4-digits":
-                    case "System.Windows.Controls.ComboBoxItem: Decimal 4-digits":
-                        OutputType = OutputTypeEnum.DECIMAL_4DIGIT;
-                        break;
-                    default:
-                        break;
-                }
+                OutputType = (OutputTypeEnum)_outputTypeNames.IndexOf(_outputTypeString);
                 Notify("OutputTypeString");
             }
         }
@@ -68,10 +52,12 @@ namespace AVSHull
         public SpacingStyleEnum SpacingStyle
         {
             get { return _spacingStyle; }
-            set { _spacingStyle = value; Notify("SpacingStyle"); }
+            set 
+            { 
+                _spacingStyle = value;
+                _spacingStyleString = SpacingStyleNames[(int)_spacingStyle];
+                Notify("SpacingStyle"); }
         }
-
-        public ObservableCollection<string> xSpacingStyleNames = new ObservableCollection<string>(Enum.GetNames(typeof(SpacingStyleEnum)));
 
         private List<string> _spacingStyleNames = new List<string>() { "Every point", "Fixed spacing" }; //  (Enum.GetNames(typeof(SpacingStyleEnum)));
         public List<string> SpacingStyleNames
@@ -87,17 +73,7 @@ namespace AVSHull
             set
             {
                 _spacingStyleString = value;
-                switch (_spacingStyleString)
-                {
-                    case "Every point":
-                        SpacingStyle = SpacingStyleEnum.EVERY_POINT;
-                        break;
-                    case "Fixed spacing":
-                        SpacingStyle = SpacingStyleEnum.FIXED_SPACING;
-                        break;
-                    default:
-                        break;
-                }
+                SpacingStyle = (SpacingStyleEnum)_spacingStyleNames.IndexOf(_spacingStyleString);
                 Notify("SpacingStyleString");
             }
         }

@@ -21,23 +21,13 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0">Output Type</Label>
-            <ComboBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" IsEditable="False" IsReadOnly="True" SelectedItem="{Binding Path=OutputTypeString}">
-                <ComboBoxItem>Eighths</ComboBoxItem>
-                <ComboBoxItem>Sixteenths</ComboBoxItem>
-                <ComboBoxItem>Thirtysecondths</ComboBoxItem>
-                <ComboBoxItem>Decimal 2-digits</ComboBoxItem>
-                <ComboBoxItem>Decimal 3-digits</ComboBoxItem>
-                <ComboBoxItem>Decimal 4-digits</ComboBoxItem>
+            <ComboBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" IsEditable="False" IsReadOnly="True" 
+                      ItemsSource="{Binding Path=OutputTypeNames}" SelectedItem="{Binding Path=OutputTypeString}">
             </ComboBox>
 
             <Label Grid.Row="1" Grid.Column="0">Spacing Style</Label>
             <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" IsEditable="False" IsReadOnly="True" IsEnabled="True" 
                       ItemsSource="{Binding Path=SpacingStyleNames}" SelectedItem="{Binding Path=SpacingStyleString}"/>
-            <!--<ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  SelectedIndex="0" IsEditable="False" IsReadOnly="True" IsEnabled="True" 
-                       SelectedItem="{Binding Path=SpacingStyleString}">
-                <ComboBoxItem>Every point</ComboBoxItem>
-                <ComboBoxItem>Fixed spacing</ComboBoxItem>
-            </ComboBox>-->
 
             <Label Grid.Row="2" Grid.Column="0">Horizontal Spacing</Label>
             <ComboBox Name="Spacing_Input" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="1" IsEditable="False" IsReadOnly="True" IsEnabled="True" >
