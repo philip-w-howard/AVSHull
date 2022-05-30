@@ -333,6 +333,7 @@ namespace AVSHull
             if (m_selectedPanel != null)
             {
                 Layout.RemovePanel(m_selectedPanel);
+                m_selectedPanel = null;
                 UndoLog.StartSnapshot();
                 InvalidateVisual();
             }
