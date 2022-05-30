@@ -21,27 +21,24 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0">Output Type</Label>
-            <ComboBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" IsEditable="False" IsReadOnly="True" 
-                      ItemsSource="{Binding Path=OutputTypeNames}" SelectedItem="{Binding Path=OutputTypeString}">
-            </ComboBox>
+            <ComboBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" IsEditable="False" IsReadOnly="True" 
+                      ItemsSource="{Binding Path=OutputTypeNames}" SelectedIndex ="{Binding Path=OutputTypeIndex}" />
 
             <Label Grid.Row="1" Grid.Column="0">Spacing Style</Label>
-            <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" IsEditable="False" IsReadOnly="True" IsEnabled="True" 
-                      ItemsSource="{Binding Path=SpacingStyleNames}" SelectedItem="{Binding Path=SpacingStyleString}"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" IsEditable="False" IsReadOnly="True" IsEnabled="True" 
+                      ItemsSource="{Binding Path=SpacingStyleNames}" SelectedIndex="{Binding Path=SpacingStyleIndex}"/>
 
             <Label Grid.Row="2" Grid.Column="0">Horizontal Spacing</Label>
-            <ComboBox Name="Spacing_Input" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="1" IsEditable="False" IsReadOnly="True" IsEnabled="True" >
-                <ComboBoxItem>6 inches</ComboBoxItem>
-                <ComboBoxItem>12 inches</ComboBoxItem>
-                <ComboBoxItem>24 inches</ComboBoxItem>
-            </ComboBox>
+            <ComboBox Name="Spacing_Input" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" IsEditable="False" IsReadOnly="True" IsEnabled="True" 
+                      ItemsSource="{Binding Path=SpacingNames}" SelectedIndex="{Binding Path=SpacingIndex}"/>
 
             <Label Grid.Row="3" Grid.Column="0">Origin</Label>
-            <ComboBox Name="Origin" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="2" SelectedItem="{Binding Path=OriginString}" IsEditable="False" IsReadOnly="True" IsEnabled="True">
-                <ComboBoxItem>Upper Left</ComboBoxItem>
-                <ComboBoxItem>Lower Left</ComboBoxItem>
-                <ComboBoxItem>Center</ComboBoxItem>
-            </ComboBox>
+            <ComboBox Name="Origin" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" IsEditable="False" IsReadOnly="True" IsEnabled="True"
+                      ItemsSource="{Binding Path=OriginNames}" SelectedIndex="{Binding Path=OriginIndex}" />
+            <ComboBoxItem>Upper Left</ComboBoxItem>
+            <ComboBoxItem>Lower Left</ComboBoxItem>
+            <ComboBoxItem>Center</ComboBoxItem>
+
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Click="OK_Click" Margin="5" >OK</Button>

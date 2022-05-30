@@ -20,9 +20,20 @@ namespace AVSHull
             get { return _outputType; }
             set 
             {
-                _outputType = value; 
-                _outputTypeString = _outputTypeNames[(int)_outputType];  
+                _outputType = value;
+                _outputTypeIndex = (int)_outputType;
                 Notify("OutputType"); 
+            }
+        }
+
+        private int _outputTypeIndex = 0;
+        public int OutputTypeIndex
+        {
+            get { return _outputTypeIndex;  }
+            set
+            {
+                _outputTypeIndex = value;
+                OutputType = (OutputTypeEnum)_outputTypeIndex;
             }
         }
 
@@ -33,93 +44,113 @@ namespace AVSHull
             set { _outputTypeNames = value; Notify("OutputTypeStrings"); }
         }
 
-        private string _outputTypeString = "Eighths";
-        public string OutputTypeString
-        {
-            get { return _outputTypeString; }
-            set
-            {
-                _outputTypeString = value.ToString();
-                OutputType = (OutputTypeEnum)_outputTypeNames.IndexOf(_outputTypeString);
-                Notify("OutputTypeString");
-            }
-        }
-
-        //***************************************************************************
+         //***************************************************************************
         public enum SpacingStyleEnum { EVERY_POINT, FIXED_SPACING }
+        
         private SpacingStyleEnum _spacingStyle = SpacingStyleEnum.EVERY_POINT;
-
         public SpacingStyleEnum SpacingStyle
         {
             get { return _spacingStyle; }
             set 
             { 
                 _spacingStyle = value;
-                _spacingStyleString = SpacingStyleNames[(int)_spacingStyle];
-                Notify("SpacingStyle"); }
+                _spacingStyleIndex = (int)_spacingStyle;
+                Notify("SpacingStyle"); 
+            }
         }
 
-        private List<string> _spacingStyleNames = new List<string>() { "Every point", "Fixed spacing" }; //  (Enum.GetNames(typeof(SpacingStyleEnum)));
+        private List<string> _spacingStyleNames = new List<string>() { "Every point", "Fixed spacing" };
         public List<string> SpacingStyleNames
         {
             get { return _spacingStyleNames; }
             set { _spacingStyleNames = value; Notify("SpacingStyleStrings"); }
         }
 
-        private string _spacingStyleString = "Every point";
-        public string SpacingStyleString
+        private int _spacingStyleIndex = 0;
+        public int SpacingStyleIndex
         {
-            get { return _spacingStyleString; }
+            get { return _spacingStyleIndex; }
             set
             {
-                _spacingStyleString = value;
-                SpacingStyle = (SpacingStyleEnum)_spacingStyleNames.IndexOf(_spacingStyleString);
-                Notify("SpacingStyleString");
+                _spacingStyleIndex = value;
+                SpacingStyle = (SpacingStyleEnum)_spacingStyleIndex;
+                Notify("SpacingStyleIndex");
             }
         }
-        //*******************************************************************
+    
+         //*******************************************************************
         private double m_Spacing = 12;
         public double Spacing
         {
             get { return m_Spacing; }
-            set { m_Spacing = value; Notify("Spacing"); }
+            set 
+            { 
+                m_Spacing = value; 
+                switch (m_Spacing)
+                {
+                    case 6: _spacingIndex = 0; break;
+                    case 12: _spacingIndex = 1; break;
+                    case 24: _spacingIndex = 2; break;
+                }
+                Notify("Spacing"); 
+            }
         }
 
+        private List<string> _spacingNames = new List<string>() { "6 Inches", "12 Inches", "24 Inches" };
+        public List<string> SpacingNames
+        {
+            get { return _spacingNames; }
+            set { _spacingNames = value; Notify("SpacingStrings"); }
+        }
 
+        private int _spacingIndex = 0;
+        public int SpacingIndex
+        {
+            get { return _spacingIndex; }
+            set
+            {
+                _spacingIndex = value;
+                switch (_spacingIndex)
+                {
+                    case 0: Spacing = 6; break;
+                    case 1: Spacing = 12; break;
+                    case 2: Spacing = 24; break;
+                }
+                Notify("SpacingIndex");
+            }
+        }
 
+        //*******************************************************************
         public enum OriginEnum { UPPER_LEFT, LOWER_LEFT, CENTER }
+        
         private OriginEnum _Origin = OriginEnum.CENTER;
-
         public OriginEnum Origin
         {
             get { return _Origin; }
-            set { _Origin = value; Notify("Origin"); }
+            set 
+            { 
+                _Origin = value;
+                _originIndex = (int)_Origin;
+                Notify("Origin"); 
+            }
         }
 
-        private string _originString = "Center";
-        public string OriginString
+        private int _originIndex = 0;
+        public int OriginIndex
         {
-            get { return _originString; }
+            get { return _originIndex; }
             set
             {
-                _originString = value;
-                switch (_originString)
-                {
-                    case "Center":
-                    case "System.Windows.Controls.ComboBoxItem: Center":
-                        Origin = OriginEnum.CENTER;
-                        break;
-                    case "Upper Left":
-                    case "System.Windows.Controls.ComboBoxItem: Upper Left":
-                        Origin = OriginEnum.UPPER_LEFT;
-                        break;
-                    case "Lower Left":
-                    case "System.Windows.Controls.ComboBoxItem: Lower Left":
-                        Origin = OriginEnum.LOWER_LEFT;
-                        break;
-                }
-                Notify("Origin");
+                _originIndex = value;
+                Origin = (OriginEnum)_originIndex;
             }
+        }
+
+        private List<string> _originNames = new List<String>() { "Upper Left", "Lower Left", "Center" };
+        public List<string> OriginNames
+        {
+            get { return _originNames; }
+            set { _originNames = value; Notify("OriginStrings"); }
         }
 
         //**************************************************
