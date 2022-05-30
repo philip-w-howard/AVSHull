@@ -22,7 +22,7 @@
                 Spacing="6"
                 OutputType="EIGHTHS"
                 SpacingStyle="EVERY_POINT"
-                Origin="CENTER"
+                Origin="UPPER_LEFT"
         />
         <local:PanelsLayoutSetup x:Key="LayoutSetup" SheetWidth="96" SheetHeight="48" SheetsWide="3" SheetsHigh="2"/>
         <local:PanelSplitSetupValues x:Key="SplitSetup" Start="0" NumTongues="3" Depth="3" RoundEnds="False" />

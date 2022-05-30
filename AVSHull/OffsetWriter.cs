@@ -196,8 +196,9 @@ namespace AVSHull
                     foreach (Panel panel in Layout.Panels)
                     {
                         output.WriteLine(panel.name);
+                        Point panelOrigin = panel.Origin;
                         foreach (Point point in panel.Points)
-                            output.WriteLine("   {0}", FormatPoint(point, parameters.OutputType));
+                            output.WriteLine("   {0}", FormatPoint(panelOrigin, point, parameters.OutputType));
                     }
                 }
 
@@ -229,9 +230,11 @@ namespace AVSHull
 
             return result;
         }
-        private String FormatPoint(Point point, OffsetsParameters.OutputTypeEnum format)
+        private String FormatPoint(Point panelOrigin, Point point, OffsetsParameters.OutputTypeEnum format)
         {
             String result = new String("");
+            point = new Point(point.X + panelOrigin.X, point.Y + panelOrigin.Y);
+
             switch (format)
             {
                 case OffsetsParameters.OutputTypeEnum.EIGHTHS:
