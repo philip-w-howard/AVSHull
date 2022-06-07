@@ -12,6 +12,7 @@ namespace AVSHull
     public class Panel : INotifyPropertyChanged, ICloneable
     {
         private const double MIN_EDGE_LENGTH = 0.25;
+        private const double KNEE_ANGLE = 5;            // knee angle in degrees
 
         public string name { get; set; }
 
@@ -390,5 +391,48 @@ namespace AVSHull
 
             return true;
         }
+
+        //**************************************************
+        // create a panel based on fixed horizontal spaced points
+        public Panel FixedOffsetPanel(double fixed_offset)
+        {
+            PointCollection points = new PointCollection();
+
+            Point p1 = m_panelPoints[m_panelPoints.Count - 2];
+            Point p2 = m_panelPoints[m_panelPoints.Count - 2];
+            Point p3;
+
+            for (int ii=0; ii<m_panelPoints.Count; ii++)
+            {
+                p3 = m_panelPoints[ii];
+                if (GeometryOperations.IsKnee(p1, p2, p3, KNEE_ANGLE))
+                {
+                    points.Add(p2);
+                }
+
+                double x1 = p2.X;
+                double x2 = p3.X;
+
+                if (x1 > x2)
+                {
+                    double temp = x1;
+                    x1 = x2;
+                    x2 = temp;
+                }
+
+                double steps = Math.Floor(x2) / fixed_offset;
+
+                p1 = p2;
+                p2 = p3;
+            }
+
+            Panel fixedPanel = new Panel();
+            fixedPanel.m_panelPoints = points.Clone();
+
+            fixedPanel.Origin = m_origin;
+
+            return fixedPanel;
+        }
     }
+
 }

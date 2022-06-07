@@ -602,5 +602,20 @@ namespace AVSHull
 
             return new Point3D(X, Y, Z);
         }
+
+        public static bool IsKnee(Point p1, Point p2, Point p3, double angle_in_degrees)
+        {
+            double angle = Math.PI - angle_in_degrees * Math.PI / 180.0;
+            double leftAngle = 0, rightAngle = 0;
+
+            ComputeAngle(p1, p2, p3, ref leftAngle, ref rightAngle);
+
+            if (angle > Math.Min(leftAngle, rightAngle))
+                return true;
+            else
+                return false;
+
+
+        }
     }
 }

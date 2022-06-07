@@ -201,6 +201,15 @@ namespace AVSHull
                         Point panelOrigin = panel.Origin;
                         foreach (Point point in panel.Points)
                             output.WriteLine("   {0}", FormatPoint(panelOrigin, point, parameters.OutputType));
+
+                        // TEST CODE
+                        output.WriteLine(panel.name + "fixed offset");
+                        Panel fixedPanel = panel.FixedOffsetPanel(parameters.Spacing);
+
+                        Point fixedOrigin = fixedPanel.Origin;
+                        foreach (Point point in fixedPanel.Points)
+                            output.WriteLine("   {0}", FormatPoint(fixedOrigin, point, parameters.OutputType));
+
                     }
                 }
 
