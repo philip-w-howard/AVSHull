@@ -614,8 +614,13 @@ namespace AVSHull
                 return true;
             else
                 return false;
+        }
 
+        public static Point ComputeSpacingPoint(Point p1, Point p2, int fixed_offset)
+        {
+            Point p = new Point();
 
+            return p1;
         }
     }
 }

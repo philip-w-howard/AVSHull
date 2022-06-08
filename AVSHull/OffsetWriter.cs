@@ -79,8 +79,8 @@ namespace AVSHull
         }
     
          //*******************************************************************
-        private double m_Spacing = 12;
-        public double Spacing
+        private int m_Spacing = 12;
+        public int Spacing
         {
             get { return m_Spacing; }
             set 

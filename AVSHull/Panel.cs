@@ -394,7 +394,7 @@ namespace AVSHull
 
         //**************************************************
         // create a panel based on fixed horizontal spaced points
-        public Panel FixedOffsetPanel(double fixed_offset)
+        public Panel FixedOffsetPanel(int fixed_offset)
         {
             PointCollection points = new PointCollection();
 
@@ -402,30 +402,51 @@ namespace AVSHull
             Point p2 = m_panelPoints[m_panelPoints.Count - 2];
             Point p3;
 
+            bool lastPointWasKnee = false;
+            bool previousLastPointWasKnee = false;
             for (int ii=0; ii<m_panelPoints.Count; ii++)
             {
+                previousLastPointWasKnee = lastPointWasKnee;
+
                 p3 = m_panelPoints[ii];
                 if (GeometryOperations.IsKnee(p1, p2, p3, KNEE_ANGLE))
                 {
                     points.Add(p2);
+                    lastPointWasKnee = true;
                 }
-
-                double x1 = p2.X;
-                double x2 = p3.X;
-
-                if (x1 > x2)
+                else
                 {
-                    double temp = x1;
-                    x1 = x2;
-                    x2 = temp;
+                    lastPointWasKnee = false;
                 }
 
-                double steps = Math.Floor(x2) / fixed_offset;
+                if (!previousLastPointWasKnee)
+                {
+                    double x1 = p2.X;
+                    double x2 = p3.X;
 
+                    if (x1 > x2)
+                    {
+                        double temp = x1;
+                        x1 = x2;
+                        x2 = temp;
+                    }
+
+                    int floor_x1 = (int)Math.Floor(x1);
+                    int floor_x2 = (int)Math.Floor(x2);
+                    int steps = floor_x2 / fixed_offset;
+
+                    if (floor_x1/fixed_offset != floor_x2 / fixed_offset)
+                    {
+                        // transitioned across boundary
+                        points.Add(GeometryOperations.ComputeSpacingPoint(p2, p3, fixed_offset));
+                    }
+                }
                 p1 = p2;
                 p2 = p3;
             }
 
+            // Have to manually create the new panel in order to get it in the exact same place
+            // as the original.
             Panel fixedPanel = new Panel();
             fixedPanel.m_panelPoints = points.Clone();
 
