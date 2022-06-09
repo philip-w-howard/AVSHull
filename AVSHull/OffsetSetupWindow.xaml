@@ -35,10 +35,6 @@
             <Label Grid.Row="3" Grid.Column="0">Origin</Label>
             <ComboBox Name="Origin" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" IsEditable="False" IsReadOnly="True" IsEnabled="True"
                       ItemsSource="{Binding Path=OriginNames}" SelectedIndex="{Binding Path=OriginIndex}" />
-            <ComboBoxItem>Upper Left</ComboBoxItem>
-            <ComboBoxItem>Lower Left</ComboBoxItem>
-            <ComboBoxItem>Center</ComboBoxItem>
-
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Click="OK_Click" Margin="5" >OK</Button>
