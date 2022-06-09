@@ -419,28 +419,12 @@ namespace AVSHull
                     lastPointWasKnee = false;
                 }
 
-                if (!previousLastPointWasKnee)
+                if (GeometryOperations.SpansX(p2, p3, fixed_offset))
                 {
-                    double x1 = p2.X;
-                    double x2 = p3.X;
-
-                    if (x1 > x2)
-                    {
-                        double temp = x1;
-                        x1 = x2;
-                        x2 = temp;
-                    }
-
-                    int floor_x1 = (int)Math.Floor(x1);
-                    int floor_x2 = (int)Math.Floor(x2);
-                    int steps = floor_x2 / fixed_offset;
-
-                    if (floor_x1/fixed_offset != floor_x2 / fixed_offset)
-                    {
-                        // transitioned across boundary
-                        points.Add(GeometryOperations.ComputeSpacingPoint(p2, p3, fixed_offset));
-                    }
+                    // transitioned across boundary
+                    points.Add(GeometryOperations.ComputeSpacingPoint(p2, p3, fixed_offset));
                 }
+
                 p1 = p2;
                 p2 = p3;
             }

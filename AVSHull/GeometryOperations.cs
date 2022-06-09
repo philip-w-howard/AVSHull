@@ -618,9 +618,38 @@ namespace AVSHull
 
         public static Point ComputeSpacingPoint(Point p1, Point p2, int fixed_offset)
         {
-            Point p = new Point();
+            double x;
+            if (Math.Abs(p1.X) > Math.Abs(p2.X))
+                x = p1.X;
+            else
+                x = p2.X;
 
-            return p1;
+            int steps = (int)(x / fixed_offset);
+
+            double interest_x = steps * fixed_offset;
+            double delta_x = p2.X - p1.X;
+            double offset = interest_x - p1.X;
+
+            double interest_y = p1.Y;
+
+            if (offset != 0)
+            {
+                double delta_y = p2.Y - p1.Y;
+                interest_y = p1.Y + delta_y * offset / delta_x;
+            }
+
+
+            return new Point(interest_x, interest_y);
+        }
+
+        public static bool SpansX(Point p1, Point p2, int fixed_offset)
+        {
+            double x1 = Math.Abs(p1.X);
+            double x2 = Math.Abs(p2.X);
+
+            if ((int)(x1 / fixed_offset) != (int)(x2 / fixed_offset)) return true;
+
+            return false;
         }
     }
 }
