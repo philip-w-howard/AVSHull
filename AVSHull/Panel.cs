@@ -402,21 +402,15 @@ namespace AVSHull
             Point p2 = m_panelPoints[m_panelPoints.Count - 2];
             Point p3;
 
-            bool lastPointWasKnee = false;
-            bool previousLastPointWasKnee = false;
+            p1 = new Point(p1.X + m_origin.X, p1.Y + m_origin.Y);
+            p2 = new Point(p2.X + m_origin.X, p2.Y + m_origin.Y);
+
             for (int ii=0; ii<m_panelPoints.Count; ii++)
             {
-                previousLastPointWasKnee = lastPointWasKnee;
-
-                p3 = m_panelPoints[ii];
+                p3 = new Point(m_panelPoints[ii].X + m_origin.X, m_panelPoints[ii].Y + m_origin.Y);
                 if (GeometryOperations.IsKnee(p1, p2, p3, KNEE_ANGLE))
                 {
                     points.Add(p2);
-                    lastPointWasKnee = true;
-                }
-                else
-                {
-                    lastPointWasKnee = false;
                 }
 
                 if (GeometryOperations.SpansX(p2, p3, fixed_offset))
@@ -434,7 +428,7 @@ namespace AVSHull
             Panel fixedPanel = new Panel();
             fixedPanel.m_panelPoints = points.Clone();
 
-            fixedPanel.Origin = m_origin;
+            fixedPanel.Origin = new Point(0,0);
 
             return fixedPanel;
         }
