@@ -184,6 +184,8 @@ namespace AVSHull
         {
             if (Layout == null) return false;
 
+            Panel outputPanel;
+
             SaveFileDialog saveDlg = new SaveFileDialog();
 
             saveDlg.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -198,18 +200,16 @@ namespace AVSHull
                     foreach (Panel panel in Layout.Panels)
                     {
                         output.WriteLine(panel.name);
-                        Point panelOrigin = panel.Origin;
-                        foreach (Point point in panel.Points)
+                        if (parameters.SpacingStyle == OffsetsParameters.SpacingStyleEnum.FIXED_SPACING)
+                            outputPanel = panel.FixedOffsetPanel(parameters.Spacing);
+                        else
+                            outputPanel = panel;
+
+                        Point panelOrigin = outputPanel.Origin;
+                        foreach (Point point in outputPanel.Points)
+                        {
                             output.WriteLine("   {0}", FormatPoint(panelOrigin, point, parameters.OutputType));
-
-                        // TEST CODE
-                        output.WriteLine(panel.name + "fixed offset");
-                        Panel fixedPanel = panel.FixedOffsetPanel(parameters.Spacing);
-
-                        Point fixedOrigin = fixedPanel.Origin;
-                        foreach (Point point in fixedPanel.Points)
-                            output.WriteLine("   {0}", FormatPoint(fixedOrigin, point, parameters.OutputType));
-
+                        }
                     }
                 }
 
