@@ -32,6 +32,13 @@ namespace AVSHull
             get { return _roundEnds; }
             set { _roundEnds = value; Notify("RoundEnds"); }
         }
+
+        private bool _addAlignmentPoints;
+        public bool AddAlignmentPoints
+        {
+            get { return _addAlignmentPoints; }
+            set { _addAlignmentPoints = value; }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         void Notify(string propName)
         {

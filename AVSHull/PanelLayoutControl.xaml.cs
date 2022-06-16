@@ -30,6 +30,8 @@ namespace AVSHull
         private Point m_startDragLoc = new Point(-1, -1);
         private bool m_dragging = false;
         private bool m_doUnselect = false;
+        private NotifyPoint3D m_mouseLoc;
+        private Point m_clickLoc;
 
         public PanelLayout Layout { get; set; }
 
@@ -55,6 +57,9 @@ namespace AVSHull
             Layout.Scale = 1;
             Layout.WindowHeight = 400;
             Layout.WindowWidth = 600;
+
+            m_mouseLoc = (NotifyPoint3D)FindResource("HullMouseLocation");
+            m_clickLoc = new Point(0, 0);
         }
 
         public void Clear()
@@ -173,6 +178,7 @@ namespace AVSHull
 
             Pen panelPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
             Pen selectedPen = new Pen(System.Windows.Media.Brushes.Blue, 2.0);
+            Pen alignPen = new Pen(System.Windows.Media.Brushes.Red, 1.0);
 
             foreach (Panel p in Layout.Panels)
             {
@@ -182,6 +188,14 @@ namespace AVSHull
                     drawingContext.DrawGeometry(null, selectedPen, geom);
                 else
                     drawingContext.DrawGeometry(null, panelPen, geom);
+
+                Point zero = new Point(0, 0);
+                if (p.AlignmentLeft != zero || p.AlignmentRight != zero)
+                {
+                    geom = p.GetAlignmentGeometry();
+                    geom.Transform = scale;
+                    drawingContext.DrawGeometry(null, alignPen, geom);
+                }
             }
         }
 
@@ -218,6 +232,8 @@ namespace AVSHull
         private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Point loc = e.GetPosition(this);
+            m_clickLoc.X = loc.X / Layout.Scale;
+            m_clickLoc.Y = loc.Y / Layout.Scale;
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -257,10 +273,13 @@ namespace AVSHull
             UndoLog.Snapshot();
         }
 
+        //MouseEventArgs e
         private void OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
             Point loc = e.GetPosition(this);
-
+            m_mouseLoc.X = loc.X / Layout.Scale;
+            m_mouseLoc.Y = loc.Y / Layout.Scale;
+            m_mouseLoc.Z = 0;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 m_doUnselect = false;
@@ -352,7 +371,7 @@ namespace AVSHull
                     PanelSplitSetupValues parameters = (PanelSplitSetupValues)Application.Current.FindResource("SplitSetup");
                     if (parameters == null) return;
 
-                    if (m_selectedPanel.Split(parameters.Start, parameters.NumTongues, parameters.Depth, parameters.RoundEnds, out panel_1, out panel_2))
+                    if (m_selectedPanel.Split(parameters.Start, parameters.NumTongues, parameters.Depth, parameters.RoundEnds, parameters.AddAlignmentPoints, out panel_1, out panel_2))
                     {
                         UndoLog.StartSnapshot();
                         Point origin = m_selectedPanel.Origin;
@@ -402,5 +421,9 @@ namespace AVSHull
             }
         }
 
+        private void AlignmentClick(object sender, RoutedEventArgs e)
+        {
+            if (m_selectedPanel != null) m_selectedPanel.AddAlignment(m_clickLoc.X, m_clickLoc.Y);
+        }
     }
 }

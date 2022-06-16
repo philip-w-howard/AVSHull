@@ -13,6 +13,7 @@
             <MenuItem Header="_Replicate" Click="CopyClick"/>
             <MenuItem Header="_Delete" Click="DeleteClick"/>
             <MenuItem Header="_Split" Click="SplitClick" />
+            <MenuItem Header="_Add Alignment" Click="AlignmentClick" />
         </ContextMenu>
     </UserControl.Resources>
 

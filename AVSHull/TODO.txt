@@ -225,12 +225,12 @@ OffsetSetupWindow: spacing enabled dependent on spacing type.
 
 Panel.FixedOffsetPanel: need to get center correct.
 
-Save on close check
+DONE: Save on close check
     Hull
 	Panels
 Save vs. Save As
 	DONE: Record filename in Hull/Panel Layout?
-	Save vs Save As for Panel Layouts
+	DONE: Save vs Save As for Panel Layouts
 
 Update Panel Layout on Hull update check?
 Load panels with hull: ask first

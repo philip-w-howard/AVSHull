@@ -23,6 +23,20 @@ namespace AVSHull
             set { m_origin = value; Notify("Panel.Origin"); }
         }
 
+        private Point m_alignmentLeft = new Point(0, 0);
+        public Point AlignmentLeft
+        {
+            get { return m_alignmentLeft; }
+            set { m_alignmentLeft = value; Notify("Panel.AlignmentLeft"); }
+        }
+
+        private Point m_alignmentRight = new Point(0, 0);
+        public Point AlignmentRight
+        {
+            get { return m_alignmentRight; }
+            set { m_alignmentRight = value; Notify("Panel.AlignmentRight"); }
+        }
+
         protected PointCollection m_panelPoints;
         public PointCollection Points
         { 
@@ -277,8 +291,31 @@ namespace AVSHull
             
             return geom;
         }
+        public Geometry GetAlignmentGeometry()
+        {
+            PathFigure path = new PathFigure();
 
-         //***************************************************
+            PathGeometry geom = new PathGeometry();
+
+            Point zero = new Point(0, 0);
+            if (AlignmentLeft == zero && AlignmentRight == zero) return geom;
+
+            Point pt = AlignmentLeft;
+            pt.X += Origin.X;
+            pt.Y += Origin.Y;
+            path.StartPoint = pt;
+
+
+            pt = AlignmentRight;
+            pt.X += Origin.X;
+            pt.Y += Origin.Y;
+            path.Segments.Add(new LineSegment(pt, true));
+
+            geom.Figures.Add(path);
+
+            return geom;
+        }
+        //***************************************************
         // INotifyPropertyChanged implementation
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -302,7 +339,7 @@ namespace AVSHull
 
         //****************************************************
         // Split a panel into two sub-panels
-        public bool Split(double start, int numTongues, double depth, bool roundEnds, out Panel panel_1, out Panel panel_2)
+        public bool Split(double start, int numTongues, double depth, bool roundEnds, bool addAlignmentPoints, out Panel panel_1, out Panel panel_2)
         {
             bool addTo_1 = true;
             PointCollection points_1 = new PointCollection();
@@ -391,7 +428,41 @@ namespace AVSHull
 
             return true;
         }
+        public void AddAlignment(double x, double y)
+        {
+            Point startLoc = new Point(x, y);
+            Geometry geom = GetGeometry();
 
+            if (geom.FillContains(startLoc))
+            {
+                Point leftLoc = startLoc;
+                leftLoc.X -= 0.25;
+                while (geom.FillContains(leftLoc))
+                {
+                    leftLoc.X -= 0.25;
+                }
+                leftLoc.X += 0.25;
+                leftLoc.X -= Origin.X;
+                leftLoc.Y -= Origin.Y;
+
+                Point rightLoc = startLoc;
+                rightLoc.X += 0.25;
+                while (geom.FillContains(rightLoc))
+                {
+                    rightLoc.X += 0.25;
+                }
+                rightLoc.X -= 0.25;
+                rightLoc.X -= Origin.X;
+                rightLoc.Y -= Origin.Y;
+
+                AlignmentLeft = leftLoc;
+                AlignmentRight = rightLoc;
+            }
+            else
+            {
+                // FIXTHIS: Notify the user they goofed
+            }
+        }
         //**************************************************
         // create a panel based on fixed horizontal spaced points
         public Panel FixedOffsetPanel(int fixed_offset)
