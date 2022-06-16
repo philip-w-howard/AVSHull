@@ -134,24 +134,9 @@ namespace AVSHull
             Save();
         }
 
-        public void Save()
+        public void Save(string filename)
         {
-            if (BaseHull.Instance() == null) return;
-
-            if (BaseHull.Instance().Filename == "")
-            {
-                SaveFileDialog saveDlg = new SaveFileDialog();
-
-                saveDlg.Filter = "AVS Hull files (*.avsh)|*.avsh|All files (*.*)|*.*";
-                saveDlg.FilterIndex = 0;
-                saveDlg.RestoreDirectory = true;
-
-                Nullable<bool> result = saveDlg.ShowDialog();
-                if (result != true) return;
-
-                BaseHull.Instance().Filename = saveDlg.FileName;
-            }
-
+            BaseHull.Instance().Filename = filename;
             BaseHull.Instance().SaveTimestamp = DateTime.Now;
             BaseHull.Instance().Timestamp = BaseHull.Instance().SaveTimestamp;
 
@@ -164,8 +149,17 @@ namespace AVSHull
             undoLog.Snapshot();
             redoLog.Clear();
         }
+        public void Save()
+        {
+            if (BaseHull.Instance() == null) return;
 
-        public void saveAsClick(object sender, RoutedEventArgs e)
+            if (BaseHull.Instance().Filename != null && BaseHull.Instance().Filename != "")
+                Save(BaseHull.Instance().Filename);
+            else
+                SaveAs();
+        }
+
+        public void SaveAs()
         {
             if (BaseHull.Instance() == null) return;
 
@@ -181,18 +175,13 @@ namespace AVSHull
             Nullable<bool> result = saveDlg.ShowDialog();
             if (result == true)
             {
-                BaseHull.Instance().Timestamp = DateTime.Now;
-
-                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(Hull));
-
-                using (FileStream output = new FileStream(saveDlg.FileName, FileMode.Create))
-                {
-                    writer.Serialize(output, BaseHull.Instance());
-                }
-                undoLog.Snapshot();
-                redoLog.Clear();
+                Save(saveDlg.FileName);
             }
+        }
 
+        public void saveAsClick(object sender, RoutedEventArgs e)
+        {
+            SaveAs();
         }
 
         public void importClick(object sender, RoutedEventArgs e)

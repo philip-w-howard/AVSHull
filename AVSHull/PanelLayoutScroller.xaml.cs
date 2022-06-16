@@ -209,7 +209,7 @@ namespace AVSHull
 
         public void Save()
         {
-            if (LayoutControl.Layout.Filename != "")
+            if (LayoutControl.Layout.Filename != null && LayoutControl.Layout.Filename != "")
                 Save(LayoutControl.Layout.Filename);
             else
                 SaveAs();

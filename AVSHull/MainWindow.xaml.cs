@@ -22,34 +22,42 @@ namespace AVSHull
             InitializeComponent();
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             Properties.Settings.Default.Save();
             if (BaseHull.Instance().Timestamp != BaseHull.Instance().SaveTimestamp)
             {
-                string text = "Do you want to save changes?";
+                string text = "Do you want to save Hull changes?";
                 string caption = "AVSH Hull file";
-                MessageBoxButton button = MessageBoxButton.OKCancel;
+                MessageBoxButton button = MessageBoxButton.YesNoCancel;
                 MessageBoxImage icon = MessageBoxImage.Warning;
                 MessageBoxResult result;
-                result = MessageBox.Show(text, caption, button, icon, MessageBoxResult.OK);
-                if (result == MessageBoxResult.OK)
+                result = MessageBox.Show(text, caption, button, icon, MessageBoxResult.Yes);
+                if (result == MessageBoxResult.Yes)
                 {
                     DesignWindow.Save();
                 }
+                else if (result == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
             }
 
-            if (!LayoutWindow.IsSaved())
+            if (!e.Cancel && !LayoutWindow.IsSaved())
             {
-                string text = "Do you want to save changes?";
+                string text = "Do you want to save Panel changes?";
                 string caption = "AVSH Panel file";
-                MessageBoxButton button = MessageBoxButton.OKCancel;
+                MessageBoxButton button = MessageBoxButton.YesNoCancel;
                 MessageBoxImage icon = MessageBoxImage.Warning;
                 MessageBoxResult result;
-                result = MessageBox.Show(text, caption, button, icon, MessageBoxResult.OK);
-                if (result == MessageBoxResult.OK)
+                result = MessageBox.Show(text, caption, button, icon, MessageBoxResult.Yes);
+                if (result == MessageBoxResult.Yes)
                 {
                     LayoutWindow.Save();
+                }
+                else if (result == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
                 }
             }
         }

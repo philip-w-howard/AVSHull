@@ -12,7 +12,7 @@
         Title="AVS Hull" 
         Height="{Binding Source={x:Static properties:Settings.Default}, Path=MainHeight, Mode=TwoWay}" 
         Width="{Binding Source={x:Static properties:Settings.Default}, Path=MainWidth, Mode=TwoWay}" 
-        Closed="Window_Closed">
+        Closing="Window_Closing">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Undo" CanExecute="Undo_CanExecute" Executed="Undo_Executed"/>
         <CommandBinding Command="ApplicationCommands.Redo" CanExecute="Redo_CanExecute" Executed="Redo_Executed"/>
