@@ -76,5 +76,13 @@ namespace AVSHull
 
             returnMatrix = result;
         }
+        public static Point Rotate(Point p, double[,] rot)
+        {
+            Point point = new Point();
+            point.X = p.X * rot[0, 0] + p.Y * rot[1, 0];
+            point.Y = p.X * rot[0, 1] + p.Y * rot[1, 1];
+
+            return point;
+        }
     }
 }

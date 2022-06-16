@@ -223,6 +223,13 @@ namespace AVSHull
 
             Matrix.Multiply(m_panelPoints, rotate, out m_panelPoints);
 
+            Point zero = new Point(0, 0);
+            if (AlignmentLeft != zero || AlignmentRight != zero)
+            {
+                AlignmentLeft = Matrix.Rotate(AlignmentLeft, rotate);
+                AlignmentRight = Matrix.Rotate(AlignmentRight, rotate);
+            }
+
             Notify("Panel.Rotate");
         }
         private void Center()
@@ -441,7 +448,7 @@ namespace AVSHull
                 {
                     leftLoc.X -= 0.25;
                 }
-                leftLoc.X += 0.25;
+                leftLoc.X += 0.5;
                 leftLoc.X -= Origin.X;
                 leftLoc.Y -= Origin.Y;
 
@@ -451,7 +458,7 @@ namespace AVSHull
                 {
                     rightLoc.X += 0.25;
                 }
-                rightLoc.X -= 0.25;
+                rightLoc.X -= 0.5;
                 rightLoc.X -= Origin.X;
                 rightLoc.Y -= Origin.Y;
 
