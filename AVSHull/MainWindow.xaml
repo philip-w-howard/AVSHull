@@ -24,6 +24,7 @@
                     <MenuItem Header="_File">
                         <MenuItem Header="_Open" Click="openClick"/>
                         <MenuItem Header="_Save" Click="saveClick"/>
+                        <MenuItem Header="Save As" Click="saveAsClick"/>
                         <MenuItem Header="_Create" Click="createClick" Name="CreateMenu"/>
                         <MenuItem Header="_Import Carlson HUL file" Name="ImportMenu" Click="importClick"/>
                         <MenuItem Header="_Export" Name="ExportMenu">

@@ -10,6 +10,20 @@ namespace AVSHull
 {
     public class Hull : INotifyPropertyChanged, ICloneable
     {
+        private string _filename;
+        public string Filename
+        {
+            get { return _filename; }
+            set { _filename = value; Notify("Filename"); }
+        }
+
+        private string _panelsfilename;
+        public string PanelsFilename
+        {
+            get { return _panelsfilename; }
+            set { _panelsfilename = value; Notify("PanelsFilename"); }
+        }
+
         private List<Bulkhead> m_Bulkheads;
 
         public List<Bulkhead> Bulkheads
@@ -19,10 +33,17 @@ namespace AVSHull
         }
 
         private DateTime _timestamp;
-        public DateTime Timestamp 
-        { 
-            get { return _timestamp; } 
+        public DateTime Timestamp
+        {
+            get { return _timestamp; }
             set { _timestamp = value; Notify("Timestamp"); }
+        }
+
+        private DateTime _saveTimestamp;
+        public DateTime SaveTimestamp
+        {
+            get { return _saveTimestamp; }
+            set { _saveTimestamp = value; Notify("SaveTimestamp"); }
         }
 
         public int NumChines 
@@ -315,6 +336,8 @@ namespace AVSHull
             }
 
             copy.Timestamp = Timestamp;
+
+            copy.SetBulkheadHandler();
 
             return copy;
         }

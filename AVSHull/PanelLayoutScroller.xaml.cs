@@ -25,6 +25,11 @@ namespace AVSHull
     {
         private List<Panel> m_panels;
 
+        public bool IsSaved()
+        {
+            return LayoutControl.Layout.IsSaved();
+        }
+
         public PanelLayoutScroller()
         {
             InitializeComponent();
@@ -141,6 +146,10 @@ namespace AVSHull
         {
             public List<List<Panel>> panelList { get; set; }
             public PanelsLayoutSetup panelLayout { get; set; }
+
+            public DateTime Timestamp;
+            public DateTime SavedTimestamp;
+            public string Filename;
         }
 
         public void openClick(object sender, RoutedEventArgs e)
@@ -167,11 +176,49 @@ namespace AVSHull
                         m_panels = panelData.panelList[0];
                         LayoutControl.Load(panelData.panelList[1], panelData.panelLayout);
                     }
+                    LayoutControl.Layout.Timestamp = panelData.Timestamp;
+                    LayoutControl.Layout.SavedTimestamp = panelData.SavedTimestamp;
+                    LayoutControl.Layout.Filename = openDlg.FileName;
                 }
             }
         }
 
+        public void Save(string filename)
+        {
+            LayoutControl.Layout.Filename = filename;
+            LayoutControl.Layout.Timestamp = DateTime.Now;
+            LayoutControl.Layout.SavedTimestamp = LayoutControl.Layout.Timestamp;
+
+            AllPanelData panelData = new AllPanelData();
+            panelData.panelList = new List<List<Panel>>();
+            panelData.panelList.Add(m_panels);
+            panelData.panelList.Add(LayoutControl.Layout.Panels as List<Panel>);
+
+            panelData.Timestamp = LayoutControl.Layout.Timestamp;
+            panelData.SavedTimestamp = LayoutControl.Layout.SavedTimestamp;
+            panelData.Filename = LayoutControl.Layout.Filename;
+
+            panelData.panelLayout = LayoutControl.Layout.LayoutSetup;
+            System.Xml.Serialization.XmlSerializer panelWriter = new System.Xml.Serialization.XmlSerializer(typeof(AllPanelData));
+
+            using (FileStream output = new FileStream(filename, FileMode.Create))
+            {
+                panelWriter.Serialize(output, panelData);
+            }
+        }
+
+        public void Save()
+        {
+            if (LayoutControl.Layout.Filename != "")
+                Save(LayoutControl.Layout.Filename);
+            else
+                SaveAs();
+        }
         public void saveClick(object sender, RoutedEventArgs e)
+        {
+            Save();
+        }
+        public void SaveAs()
         {
             SaveFileDialog saveDlg = new SaveFileDialog();
 
@@ -182,20 +229,14 @@ namespace AVSHull
             Nullable<bool> result = saveDlg.ShowDialog();
             if (result == true)
             {
-                AllPanelData panelData = new AllPanelData();
-                panelData.panelList = new List<List<Panel>>();
-                panelData.panelList.Add(m_panels);
-                panelData.panelList.Add(LayoutControl.Layout.Panels as List<Panel>);
-
-                panelData.panelLayout = LayoutControl.Layout.LayoutSetup;
-                System.Xml.Serialization.XmlSerializer panelWriter = new System.Xml.Serialization.XmlSerializer(typeof(AllPanelData));
-
-                using (FileStream output = new FileStream(saveDlg.FileName, FileMode.Create))
-                {
-                    panelWriter.Serialize(output, panelData);
-                }
+                Save(saveDlg.FileName);
             }
         }
+        public void saveAsClick(object sender, RoutedEventArgs e)
+        {
+            SaveAs();
+        }
+
         public void exportClick(object sender, RoutedEventArgs e)
         {
             MenuItem menu = (MenuItem)sender;

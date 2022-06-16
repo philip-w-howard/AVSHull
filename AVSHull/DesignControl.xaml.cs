@@ -113,6 +113,10 @@ namespace AVSHull
                     if (tempHull.Timestamp == DateTime.MinValue) tempHull.Timestamp = DateTime.Now;
 
                     BaseHull.Instance().Bulkheads = tempHull.Bulkheads;
+                    
+                    // Update to handle older .avsh files
+                    BaseHull.Instance().Filename = openDlg.FileName;
+                    BaseHull.Instance().SaveTimestamp = BaseHull.Instance().Timestamp;
 
                     undoLog.Clear();
                     undoLog.Add(BaseHull.Instance());
@@ -127,6 +131,42 @@ namespace AVSHull
 
         public void saveClick(object sender, RoutedEventArgs e)
         {
+            Save();
+        }
+
+        public void Save()
+        {
+            if (BaseHull.Instance() == null) return;
+
+            if (BaseHull.Instance().Filename == "")
+            {
+                SaveFileDialog saveDlg = new SaveFileDialog();
+
+                saveDlg.Filter = "AVS Hull files (*.avsh)|*.avsh|All files (*.*)|*.*";
+                saveDlg.FilterIndex = 0;
+                saveDlg.RestoreDirectory = true;
+
+                Nullable<bool> result = saveDlg.ShowDialog();
+                if (result != true) return;
+
+                BaseHull.Instance().Filename = saveDlg.FileName;
+            }
+
+            BaseHull.Instance().SaveTimestamp = DateTime.Now;
+            BaseHull.Instance().Timestamp = BaseHull.Instance().SaveTimestamp;
+
+            System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(Hull));
+
+            using (FileStream output = new FileStream(BaseHull.Instance().Filename, FileMode.Create))
+            {
+                writer.Serialize(output, BaseHull.Instance());
+            }
+            undoLog.Snapshot();
+            redoLog.Clear();
+        }
+
+        public void saveAsClick(object sender, RoutedEventArgs e)
+        {
             if (BaseHull.Instance() == null) return;
 
             SaveFileDialog saveDlg = new SaveFileDialog();
@@ -134,6 +174,9 @@ namespace AVSHull
             saveDlg.Filter = "AVS Hull files (*.avsh)|*.avsh|All files (*.*)|*.*";
             saveDlg.FilterIndex = 0;
             saveDlg.RestoreDirectory = true;
+
+            BaseHull.Instance().SaveTimestamp = DateTime.Now;
+            BaseHull.Instance().Timestamp = BaseHull.Instance().SaveTimestamp;
 
             Nullable<bool> result = saveDlg.ShowDialog();
             if (result == true)

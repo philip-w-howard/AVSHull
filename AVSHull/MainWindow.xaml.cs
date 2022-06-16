@@ -25,6 +25,33 @@ namespace AVSHull
         private void Window_Closed(object sender, EventArgs e)
         {
             Properties.Settings.Default.Save();
+            if (BaseHull.Instance().Timestamp != BaseHull.Instance().SaveTimestamp)
+            {
+                string text = "Do you want to save changes?";
+                string caption = "AVSH Hull file";
+                MessageBoxButton button = MessageBoxButton.OKCancel;
+                MessageBoxImage icon = MessageBoxImage.Warning;
+                MessageBoxResult result;
+                result = MessageBox.Show(text, caption, button, icon, MessageBoxResult.OK);
+                if (result == MessageBoxResult.OK)
+                {
+                    DesignWindow.Save();
+                }
+            }
+
+            if (!LayoutWindow.IsSaved())
+            {
+                string text = "Do you want to save changes?";
+                string caption = "AVSH Panel file";
+                MessageBoxButton button = MessageBoxButton.OKCancel;
+                MessageBoxImage icon = MessageBoxImage.Warning;
+                MessageBoxResult result;
+                result = MessageBox.Show(text, caption, button, icon, MessageBoxResult.OK);
+                if (result == MessageBoxResult.OK)
+                {
+                    LayoutWindow.Save();
+                }
+            }
         }
 
         public static RoutedCommand UndoCommand = new RoutedCommand();
@@ -52,6 +79,18 @@ namespace AVSHull
             else if (tab.TabName == "Panels")
             {
                 LayoutWindow.saveClick(sender, e);
+            }
+        }
+        private void saveAsClick(object sender, RoutedEventArgs e)
+        {
+            ATabItem tab = (ATabItem)MyTabs.SelectedItem;
+            if (tab.TabName == "Design")
+            {
+                DesignWindow.saveAsClick(sender, e);
+            }
+            else if (tab.TabName == "Panels")
+            {
+                LayoutWindow.saveAsClick(sender, e);
             }
         }
 
@@ -138,5 +177,5 @@ namespace AVSHull
             DesignWindow.createClick(sender, e);
         }
 
-    }
+     }
 }

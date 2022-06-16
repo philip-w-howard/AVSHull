@@ -144,7 +144,8 @@ HullControl
 	Panel Layout zoom
 		relative to mouse
 
-	Add version/Time to Hull.
+	Add version/Time to Hull. Done
+	Add version/Time to Panel Layout
 	Object/Property for displaying text in bottom notification panel.
 	Compute X,Y,Z in panel display
 	Get timestamp of panels in panel layout
@@ -191,7 +192,7 @@ UpdatePopups: mostly done
 		fixed width for entry fields (Grid?)
 		Cut Inside: dropdown or checkbox
     
-	Offsets: 
+	Offsets: done
 		Set origin of panels as LLH corner
 		enable Spacing Style
 		Horizontal Spacing as numeric text field?
@@ -204,9 +205,6 @@ Features:
 		Different split option
 		Positioning of split panels
 
-	Offsets: Fixed offset
-		include all hard corners
-		spacing field is a double
 	Measure
 		Waterline
 			water density
@@ -218,10 +216,28 @@ Features:
 
 OffsetWriter
 	DONE: Enable the other output options.
-	SelectPoints: pick points at the spacing mark plus "knees"
-	When outputting panel, use the SelectedPoints panels, not the original
-	Set Origin (ULH, LLH, URH, LRH, Center, Other)
+	DONE: SelectPoints: pick points at the spacing mark plus "knees"
+	DONE: When outputting panel, use the SelectedPoints panels, not the original
+	DONE: Set Origin (ULH, LLH, URH, LRH, Center, Other)
+	offsets relative to panel
 
 OffsetSetupWindow: spacing enabled dependent on spacing type.
 
 Panel.FixedOffsetPanel: need to get center correct.
+
+Save on close check
+    Hull
+	Panels
+Save vs. Save As
+	DONE: Record filename in Hull/Panel Layout?
+	Save vs Save As for Panel Layouts
+
+Update Panel Layout on Hull update check?
+Load panels with hull: ask first
+	need filename in hull
+
+Add alignment line to panels
+	Add line
+	preserve across split
+
+	Auto add alignment on split

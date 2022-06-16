@@ -345,7 +345,9 @@ namespace AVSHull
             {
                 Type = Type,
                 m_transomAngle = TransomAngle,
-                m_points = m_points.Clone()
+                m_points = m_points.Clone(),
+                _isFlatBottomed = IsFlatBottomed,
+                _hasClosedTop = HasClosedTop
             };
 
             return copy;

@@ -12,6 +12,31 @@ namespace AVSHull
     // Setup data plus list of panels
     public class PanelLayout : INotifyPropertyChanged
     {
+        private DateTime m_timestamp;
+        public DateTime Timestamp
+        {
+            get { return m_timestamp; }
+            set { m_timestamp = value; }
+        }
+
+        private DateTime m_savedTimestamp;
+        public DateTime SavedTimestamp
+        {
+            get { return m_savedTimestamp; }
+            set { m_savedTimestamp = value; }
+        }
+        private string m_filename;
+        public string Filename
+        {
+            get { return m_filename; }
+            set { m_filename = value; }
+        }
+
+        public bool IsSaved()
+        {
+            return SavedTimestamp == Timestamp;
+        }
+
         public PanelLayout()
         {
             m_panelSetup = (PanelsLayoutSetup)Application.Current.FindResource("LayoutSetup");
@@ -141,6 +166,7 @@ namespace AVSHull
         void Notify(string propName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+            Timestamp = DateTime.Now;
         }
     }
 }
