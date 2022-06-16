@@ -354,6 +354,8 @@ namespace AVSHull
             newPanel.m_panelPoints = this.m_panelPoints.Clone();
             newPanel.name = this.name;
             newPanel.m_origin = this.m_origin;
+            newPanel.m_alignmentLeft = this.m_alignmentLeft;
+            newPanel.m_alignmentRight = this.m_alignmentRight;
 
             return newPanel;
         }
@@ -369,21 +371,7 @@ namespace AVSHull
             Point top = new Point();
             Point bottom = new Point();
 
-            if (HasAlignmentLine)
-            {
-                Geometry geom = GetGeometry();
-                if (geom.FillContains(AlignmentLeft) && geom.FillContains(AlignmentRight))
-                {
-                    // OK
-                }
-                else
-                {
-                    double val = AlignmentLeft.X / points_2_start.X;
-                    Console.WriteLine("alignment out of bounds{0}", val);
-                }
-            }
-
-            for (int ii = 0; ii < Points.Count - 1; ii++)
+             for (int ii = 0; ii < Points.Count - 1; ii++)
             {
                 Point first =Points[ii];
                 Point second = Points[ii + 1];
@@ -460,12 +448,37 @@ namespace AVSHull
             panel_1.name = name + "A";
             panel_2.name = name + "B";
 
+            if (HasAlignmentLine)
+            {
+                Point p1 = AlignmentLeft;
+                Point p2 = AlignmentRight;
+
+                p1.X += Origin.X;
+                p1.Y += Origin.Y;
+
+                p2.X += Origin.X;
+                p2.Y += Origin.Y;
+
+                panel_1.AddAlignment(p1, p2);
+                panel_2.AddAlignment(p1, p2);
+            }
             return true;
         }
-        public void AddAlignment(double x, double y)
+        public void AddAlignment(Point p1, Point p2)
         {
-            Point startLoc = new Point(x, y);
+            Point startLoc = p1;
+            bool isVertical = p1.X == p2.X;
+            double slope = 0;
+            double y_intercept = 0;
+            if (!isVertical)
+            {
+                slope = (p1.Y - p2.Y) / (p1.X - p2.X);
+                y_intercept = p1.Y - p1.X * slope;
+            }
+
             Geometry geom = GetGeometry();
+
+            if (!geom.FillContains(startLoc)) startLoc =p2;
 
             if (geom.FillContains(startLoc))
             {
@@ -473,9 +486,29 @@ namespace AVSHull
                 leftLoc.X -= 0.25;
                 while (geom.FillContains(leftLoc))
                 {
-                    leftLoc.X -= 0.25;
+                    if (isVertical)
+                    {
+                        leftLoc.Y -= 0.25;
+                    }
+                    else
+                    {
+                        leftLoc.X -= 0.25;
+                        leftLoc.Y = slope * leftLoc.X + y_intercept;
+                    }
                 }
-                leftLoc.X += 0.5;
+                
+                // backup two steps
+                if (isVertical)
+                {
+                    leftLoc.Y += 0.5;
+                }
+                else
+                {
+                    leftLoc.X += 0.5;
+                    leftLoc.Y = slope * leftLoc.X + y_intercept;
+                }
+                
+                // Adjust for origin
                 leftLoc.X -= Origin.X;
                 leftLoc.Y -= Origin.Y;
 
@@ -483,9 +516,29 @@ namespace AVSHull
                 rightLoc.X += 0.25;
                 while (geom.FillContains(rightLoc))
                 {
-                    rightLoc.X += 0.25;
+                    if (isVertical)
+                    {
+                        rightLoc.Y += 0.25;
+                    }
+                    else
+                    {
+                        rightLoc.X += 0.25;
+                        rightLoc.Y = slope * rightLoc.X + y_intercept;
+                    }
                 }
-                rightLoc.X -= 0.5;
+
+                // backup two steps
+                if (isVertical)
+                {
+                    rightLoc.Y -= 0.5;
+                }
+                else
+                {
+                    rightLoc.X -= 0.5;
+                    rightLoc.Y = slope * rightLoc.X + y_intercept;
+                }
+
+                // Adjust for origin
                 rightLoc.X -= Origin.X;
                 rightLoc.Y -= Origin.Y;
 

@@ -422,7 +422,10 @@ namespace AVSHull
 
         private void AlignmentClick(object sender, RoutedEventArgs e)
         {
-            if (m_selectedPanel != null) m_selectedPanel.AddAlignment(m_clickLoc.X, m_clickLoc.Y);
+            Point other = m_clickLoc;
+            other.X += 1;
+
+            if (m_selectedPanel != null) m_selectedPanel.AddAlignment(m_clickLoc, other);
         }
     }
 }

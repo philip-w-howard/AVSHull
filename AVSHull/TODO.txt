@@ -237,7 +237,8 @@ Load panels with hull: ask first
 	need filename in hull
 
 Add alignment line to panels
-	Add line
+	DONE: Add line
 	preserve across split
+	    endpoints aren't in split panels for some reason
 
 	Auto add alignment on split
