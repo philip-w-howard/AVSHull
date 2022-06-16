@@ -37,6 +37,15 @@ namespace AVSHull
             set { m_alignmentRight = value; Notify("Panel.AlignmentRight"); }
         }
 
+        public bool HasAlignmentLine
+        {
+            get
+            {
+                Point zero = new Point(0, 0);
+                return (AlignmentLeft != zero || AlignmentRight != zero);
+            }
+        }
+
         protected PointCollection m_panelPoints;
         public PointCollection Points
         { 
@@ -72,10 +81,10 @@ namespace AVSHull
             }
             Center();
         }
-        protected Panel(PointCollection points)
+        protected Panel(PointCollection points, Point origin)
         {
             m_panelPoints = points.Clone();
-            Center();
+            Center(origin);
         }
 
         protected void Panelize(Point3DCollection chine1, Point3DCollection chine2)
@@ -223,8 +232,7 @@ namespace AVSHull
 
             Matrix.Multiply(m_panelPoints, rotate, out m_panelPoints);
 
-            Point zero = new Point(0, 0);
-            if (AlignmentLeft != zero || AlignmentRight != zero)
+            if (HasAlignmentLine)
             {
                 AlignmentLeft = Matrix.Rotate(AlignmentLeft, rotate);
                 AlignmentRight = Matrix.Rotate(AlignmentRight, rotate);
@@ -234,11 +242,18 @@ namespace AVSHull
         }
         private void Center()
         {
+            Point origin = new Point(0,0);
+            Center(origin);
+        }
+        private void Center(Point origin)
+        {
+            m_origin = origin;
+
             Point center = GeometryOperations.ComputeMidPoint(m_panelPoints);
             if (center.X != 0 || center.Y != 0)
-            GeometryOperations.TranslateShape(m_panelPoints, -center.X, -center.Y);
-            m_origin.X -= center.X;
-            m_origin.Y -= center.Y;
+                GeometryOperations.TranslateShape(m_panelPoints, -center.X, -center.Y);
+            m_origin.X += center.X;
+            m_origin.Y += center.Y;
         }
         public void VerticalFlip()
         {
@@ -304,8 +319,7 @@ namespace AVSHull
 
             PathGeometry geom = new PathGeometry();
 
-            Point zero = new Point(0, 0);
-            if (AlignmentLeft == zero && AlignmentRight == zero) return geom;
+            if (!HasAlignmentLine) return geom;
 
             Point pt = AlignmentLeft;
             pt.X += Origin.X;
@@ -355,6 +369,19 @@ namespace AVSHull
             Point top = new Point();
             Point bottom = new Point();
 
+            if (HasAlignmentLine)
+            {
+                Geometry geom = GetGeometry();
+                if (geom.FillContains(AlignmentLeft) && geom.FillContains(AlignmentRight))
+                {
+                    // OK
+                }
+                else
+                {
+                    double val = AlignmentLeft.X / points_2_start.X;
+                    Console.WriteLine("alignment out of bounds{0}", val);
+                }
+            }
 
             for (int ii = 0; ii < Points.Count - 1; ii++)
             {
@@ -427,8 +454,8 @@ namespace AVSHull
             points_1.Add(points_1[0]);
             //points_2.Add(top);
 
-            panel_1 = new Panel(points_1);
-            panel_2 = new Panel(points_2);
+            panel_1 = new Panel(points_1, Origin);
+            panel_2 = new Panel(points_2, Origin);
 
             panel_1.name = name + "A";
             panel_2.name = name + "B";

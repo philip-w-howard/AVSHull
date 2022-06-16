@@ -189,8 +189,7 @@ namespace AVSHull
                 else
                     drawingContext.DrawGeometry(null, panelPen, geom);
 
-                Point zero = new Point(0, 0);
-                if (p.AlignmentLeft != zero || p.AlignmentRight != zero)
+                if (p.HasAlignmentLine)
                 {
                     geom = p.GetAlignmentGeometry();
                     geom.Transform = scale;
@@ -375,9 +374,9 @@ namespace AVSHull
                     {
                         UndoLog.StartSnapshot();
                         Point origin = m_selectedPanel.Origin;
-                        panel_1.Origin = origin;
+                        //panel_1.Origin = origin;
                         origin.X += parameters.Start;
-                        panel_2.Origin = origin;
+                        //panel_2.Origin = origin;
 
                         Layout.RemovePanel(m_selectedPanel);
                         Layout.AddPanel(panel_1);
