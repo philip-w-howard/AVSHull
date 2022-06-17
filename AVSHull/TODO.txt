@@ -218,10 +218,6 @@ Update Panel Layout on Hull update check?
 Load panels with hull: ask first
 	need filename in hull
 
-Add alignment line to panels
-	
-	Auto add alignment on split
-
 Undo/Redo
 	sort out when snapshots should happen
 		Why are there StartSnapShot calls without balancing SnapShot call?
