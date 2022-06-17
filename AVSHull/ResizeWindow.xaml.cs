@@ -134,6 +134,11 @@ namespace AVSHull
             UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
             values.ResizeExpanded = false;
 
+            HullLog undoLog;
+            undoLog = (HullLog)FindResource("UndoLog");
+
+            undoLog.StartSnapshot();
+
             HullView hull = new HullView();
 
             Size3D originalSize = hull.GetSize();
@@ -151,6 +156,7 @@ namespace AVSHull
 
                 BaseHull.Instance().Scale(scale_x, scale_y, scale_z);
             }
+            undoLog.Snapshot();
         }
 
         private void CancelClick(object sender, RoutedEventArgs e)

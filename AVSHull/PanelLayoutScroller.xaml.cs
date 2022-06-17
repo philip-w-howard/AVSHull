@@ -24,6 +24,7 @@ namespace AVSHull
     public partial class PanelLayoutScroller : UserControl
     {
         private List<Panel> m_panels;
+        private Point m_addPanelLocation;
 
         public bool IsSaved()
         {
@@ -107,7 +108,8 @@ namespace AVSHull
             MenuItem item = (MenuItem)e.Source;
             String panelName = item.Header.ToString();
 
-            Point loc = Mouse.GetPosition(LayoutControl);
+            //Point loc = Mouse.GetPosition(sender);
+            Point loc = m_addPanelLocation;
             loc.X /= LayoutControl.Layout.Scale;
             loc.Y /= LayoutControl.Layout.Scale;
 
@@ -324,6 +326,11 @@ namespace AVSHull
         private void ClearClick(object sender, RoutedEventArgs e)
         {
             LayoutControl.Clear();
+        }
+
+        private void BecameVisible(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            m_addPanelLocation = Mouse.GetPosition(LayoutControl);
         }
     }
 }
