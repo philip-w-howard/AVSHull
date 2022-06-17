@@ -17,7 +17,7 @@ namespace AVSHull
     /// <summary>
     /// Interaction logic for ResizeWindow.xaml
     /// </summary>
-    public class ResizeWindowData : INotifyPropertyChanged
+    public class ResizeControlData : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -26,7 +26,7 @@ namespace AVSHull
         private double _height;
         private double _length;
 
-        public ResizeWindowData() { }
+        public ResizeControlData() { }
 
         public bool Proportional
         {
@@ -100,12 +100,16 @@ namespace AVSHull
     /// <summary>
     /// Interaction logic for ResizeWindow.xaml
     /// </summary>
-    public partial class ResizeWindow : Window
+    public partial class ResizeControl : UserControl
     {
-        public ResizeWindow()
+        public ResizeControl()
         {
             InitializeComponent();
-            ResizeWindowData resizeData = (ResizeWindowData)this.FindResource("ResizeData");
+         }
+
+        public void Setup()
+        {
+            ResizeControlData resizeData = (ResizeControlData)this.FindResource("ResizeData");
 
             if (resizeData != null)
             {
@@ -125,19 +129,34 @@ namespace AVSHull
                 resizeData.Proportional = proportional;
             }
         }
-
-        public bool OK { get; set; }
-
         private void OKClick(object sender, RoutedEventArgs e)
         {
-            OK = true;
-            this.Close();
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.ResizeExpanded = false;
+
+            HullView hull = new HullView();
+
+            Size3D originalSize = hull.GetSize();
+
+            ResizeControlData resizeData = (ResizeControlData)FindResource("ResizeData");
+            double scale_x = 1.0;
+            double scale_y = 1.0;
+            double scale_z = 1.0;
+
+            if (resizeData != null)
+            {
+                scale_x = resizeData.Width / originalSize.X;
+                scale_y = resizeData.Height / originalSize.Y;
+                scale_z = resizeData.Length / originalSize.Z;
+
+                BaseHull.Instance().Scale(scale_x, scale_y, scale_z);
+            }
         }
 
         private void CancelClick(object sender, RoutedEventArgs e)
         {
-            OK = false;
-            this.Close();
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.ResizeExpanded = false;
         }
     }
 }

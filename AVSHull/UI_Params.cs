@@ -7,11 +7,11 @@ namespace AVSHull
 {
     class UI_Params : INotifyPropertyChanged
     {
-        private bool? _newBulkheadExpanded = false;
-        public bool? NewBulkheadExpanded
+        private bool? _resizeExpanded = false;
+        public bool? ResizeExpanded
         {
-            get { return _newBulkheadExpanded; }
-            set { _newBulkheadExpanded = value; Notify("NewBulkheadExpanded"); }
+            get { return _resizeExpanded; }
+            set { _resizeExpanded = value; Notify("ResizeExpanded"); }
         }
 
         private bool? _newBulkheadExpanded = false;
