@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
-        Title="FatalError" SizeToContent="Height" Width="300">
+        Title="FatalError" SizeToContent="Height" Width="300" WindowStartupLocation="CenterOwner">
     <StackPanel>
         <TextBlock TextWrapping="Wrap">
             Something went wrong, and the application is terminating. If you can repeat the failure, please report the circumstances to the author: phil.w.howard@gmail.com"

@@ -114,8 +114,6 @@ HullControl
 
 	Check on notification settings.
 
-	Check if Bulkhead(points, Type) is half hull or full hull.
-
 	UI Standards:
 		https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/dialog-boxes-overview?view=netdesktop-5.0
 	Create hull from scratch
@@ -138,16 +136,10 @@ HullControl
 	Data validation (beyond red rectangle)
 	Rotate perspective with mouse.
 
-	Save vs. SaveAs
-		can use undoLog.Count to determine if there are unsaved changes?
-
 	Panel Layout zoom
 		relative to mouse
 
-	Add version/Time to Hull. Done
-	Add version/Time to Panel Layout
 	Object/Property for displaying text in bottom notification panel.
-	Compute X,Y,Z in panel display
 	Get timestamp of panels in panel layout
 		Compare with that of Hull
 
@@ -198,8 +190,7 @@ UpdatePopups: mostly done
 		Horizontal Spacing as numeric text field?
     
 	Zoom panel should center on mouse
-	Eliminate Chines/New Bulkhead Loc in URH subwindow: done
-
+	
 Features:
 	Split Panel options
 		Different split option
@@ -223,22 +214,10 @@ OffsetWriter
 
 OffsetSetupWindow: spacing enabled dependent on spacing type.
 
-Panel.FixedOffsetPanel: need to get center correct.
-
-DONE: Save on close check
-    Hull
-	Panels
-Save vs. Save As
-	DONE: Record filename in Hull/Panel Layout?
-	DONE: Save vs Save As for Panel Layouts
-
 Update Panel Layout on Hull update check?
 Load panels with hull: ask first
 	need filename in hull
 
 Add alignment line to panels
-	DONE: Add line
-	preserve across split
-	    endpoints aren't in split panels for some reason
-
+	
 	Auto add alignment on split

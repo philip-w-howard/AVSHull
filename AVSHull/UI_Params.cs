@@ -14,6 +14,13 @@ namespace AVSHull
             set { _newBulkheadExpanded = value; Notify("NewBulkheadExpanded"); }
         }
 
+        private bool? _newBulkheadExpanded = false;
+        public bool? NewBulkheadExpanded
+        {
+            get { return _newBulkheadExpanded; }
+            set { _newBulkheadExpanded = value; Notify("NewBulkheadExpanded"); }
+        }
+
         private bool? _changeChinesExpanded = false;
         public bool? ChangeChinesExpanded
         {

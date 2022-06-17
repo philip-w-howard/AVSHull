@@ -211,6 +211,7 @@ namespace AVSHull
             //Point loc = GetMousePosition();
 
             CreateHullDialog createHullDialog = new CreateHullDialog();
+            createHullDialog.Owner = App.Current.MainWindow;
             //createHullDialog.Top = loc.Y;
             //createHullDialog.Left = loc.X;
             if (createHullDialog.ShowDialog() == true)
@@ -259,7 +260,7 @@ namespace AVSHull
                     scale_z = resizeData.Length / originalSize.Z;
 
                     BaseHull.Instance().Scale(scale_x, scale_y, scale_z);
-                    UpdateViews();
+                    //UpdateViews();
                 }
             }
 
