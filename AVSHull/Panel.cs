@@ -590,6 +590,55 @@ namespace AVSHull
 
             return fixedPanel;
         }
-    }
+        public List<Point> FixedOffsetAlignment(int fixed_offset)
+        {
+            List<Point> alignment = new List<Point>();
 
+            Point p1 = AlignmentLeft;
+            Point p2 = AlignmentRight;
+
+            p1.X += Origin.X;
+            p1.Y += Origin.Y;
+
+            p2.X += Origin.X;
+            p2.Y += Origin.Y;
+
+            if (p1.X > p2.X)
+            {
+                Point temp = p1;
+                p1 = p2;
+                p2 = temp;
+            }
+
+            if (p1.X == p2.X)
+            {
+                // for vertical, we can only do the endpoints
+                alignment.Add(p1);
+                alignment.Add(p2);
+            }
+            else
+            {
+                double slope = (p1.Y - p2.Y) / (p1.X - p2.X);
+                double y_intercept = p1.Y - p1.X * slope;
+
+                alignment.Add(p1);
+
+                Point current = p1;
+                current.X += fixed_offset;
+                current.Y = slope * current.X + y_intercept;
+
+                while (current.X < p2.X)
+                {
+                    alignment.Add(GeometryOperations.ComputeSpacingPoint(p1, current, fixed_offset));
+                    p1 = current;
+                    current.X += fixed_offset;
+                    current.Y = slope * current.X + y_intercept;
+                }
+
+                alignment.Add(p2);
+            }
+
+            return alignment;
+        }
+    }
 }

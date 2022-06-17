@@ -210,6 +210,24 @@ namespace AVSHull
                         {
                             output.WriteLine("   {0}", FormatPoint(panelOrigin, point, parameters.OutputType));
                         }
+
+                        if (panel.HasAlignmentLine)
+                        {
+                            output.WriteLine("Alignment Line");
+                            if (parameters.SpacingStyle == OffsetsParameters.SpacingStyleEnum.FIXED_SPACING)
+                            {
+                                List<Point> alignment = panel.FixedOffsetAlignment(parameters.Spacing);
+                                foreach (Point point in alignment)
+                                {
+                                    output.WriteLine("   {0}", FormatPoint(panelOrigin, point, parameters.OutputType));
+                                }
+                            }
+                            else
+                            {
+                                output.WriteLine("   {0}", FormatPoint(panelOrigin, outputPanel.AlignmentLeft, parameters.OutputType));
+                                output.WriteLine("   {0}", FormatPoint(panelOrigin, outputPanel.AlignmentRight, parameters.OutputType));
+                            }
+                        }
                     }
                 }
 
