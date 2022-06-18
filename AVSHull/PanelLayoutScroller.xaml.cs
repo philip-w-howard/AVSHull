@@ -126,6 +126,9 @@ namespace AVSHull
         }
         private void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            Point loc = Mouse.GetPosition(LayoutControl);
+            double scaleOld = LayoutControl.Layout.Scale;
+
             if (e.Delta > 0)
             {
                 LayoutControl.ZoomIn();
@@ -136,8 +139,28 @@ namespace AVSHull
                 LayoutControl.ZoomOut();
             }
 
-            Point loc = Mouse.GetPosition(LayoutControl);
-            Debug.WriteLine("Offsets: ({0}, {1}) Location: ({2}, {3})", Scroller.HorizontalOffset, Scroller.VerticalOffset, loc.X/LayoutControl.Layout.Scale, loc.Y / LayoutControl.Layout.Scale);
+            double scaleNew = LayoutControl.Layout.Scale;
+
+            if (Scroller.ComputedHorizontalScrollBarVisibility == Visibility.Visible)
+            {
+                double newOffset;
+                newOffset = loc.X * scaleNew / scaleOld - loc.X + Scroller.HorizontalOffset;
+
+                Scroller.ScrollToHorizontalOffset(newOffset);
+            }
+            if (Scroller.ComputedVerticalScrollBarVisibility == Visibility.Visible)
+            {
+                double newOffset;
+                newOffset = loc.Y * scaleNew / scaleOld - loc.Y + Scroller.VerticalOffset;
+
+                Scroller.ScrollToVerticalOffset(newOffset);
+            }
+
+            //Debug.WriteLine("Offsets: ({0}, {1}) Location: ({2:F1}, {3:F1}) ({4:F1}, {5:F1}) Scale: {6:F3}", 
+            //    Scroller.HorizontalOffset, Scroller.VerticalOffset,
+            //    oldLoc.X , oldLoc.Y ,
+            //    loc.X, loc.Y,
+            //    LayoutControl.Layout.Scale);
             InvalidateVisual();
         }
 

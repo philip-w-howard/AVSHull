@@ -224,3 +224,17 @@ Undo/Redo
 		Resize should be a snapshot
 	Allow nested snapshots?
 	Change chines doesn't seem to be undoable.
+
+Zoom along the lines of:
+		<Image Name="imgPicture"
+               MouseUp="imgMouseUp" 
+               Stretch="None"
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Top" 
+               >
+            <Image.LayoutTransform>
+                <TransformGroup>
+                <ScaleTransform x:Name="imgZoomTransform" ScaleX="1" ScaleY="1"></ScaleTransform>
+                </TransformGroup>
+            </Image.LayoutTransform>                
+        </Image>
