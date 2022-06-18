@@ -203,7 +203,7 @@ UpdatePopups: mostly done
 Features:
 	Split Panel options
 		Different split option
-		Positioning of split panels
+		DONE: Positioning of split panels
 
 	Measure
 		Waterline
