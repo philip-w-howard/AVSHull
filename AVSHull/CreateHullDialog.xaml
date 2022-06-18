@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d"
-        Title="Create Hull" SizeToContent="WidthAndHeight">
+        Title="Create Hull" 
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner">
     <Grid Margin="5" DataContext="{DynamicResource CreateHullData}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

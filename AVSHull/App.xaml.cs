@@ -19,6 +19,7 @@ namespace AVSHull
         {
             e.Handled = true;
             FatalError errorWindow = new FatalError();
+            errorWindow.Owner = MainWindow;
             errorWindow.ShowDialog();
             Shutdown();
         }

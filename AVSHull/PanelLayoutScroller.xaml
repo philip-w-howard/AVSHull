@@ -34,7 +34,7 @@
 
         <ScrollViewer Name="Scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="White" >
             <ScrollViewer.ContextMenu>
-                <ContextMenu x:Name="PanelContextMenu">
+                <ContextMenu x:Name="PanelContextMenu" IsVisibleChanged="BecameVisible">
                     <MenuItem Header="Add _All" Click="AddAllClick" />
                 </ContextMenu>
             </ScrollViewer.ContextMenu>

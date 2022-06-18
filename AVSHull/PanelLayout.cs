@@ -34,7 +34,7 @@ namespace AVSHull
 
         public bool IsSaved()
         {
-            return SavedTimestamp == Timestamp;
+            return m_timestamp == null || SavedTimestamp == Timestamp;
         }
 
         public PanelLayout()
@@ -85,7 +85,7 @@ namespace AVSHull
         public double SheetWidth
         {
             get { return LayoutSetup.SheetWidth; }
-            set { LayoutSetup.SheetWidth = value; Notify("WheetWidth"); }
+            set { LayoutSetup.SheetWidth = value; Notify("SheetWidth"); }
         }
         public double SheetHeight
         {
@@ -166,7 +166,13 @@ namespace AVSHull
         void Notify(string propName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-            Timestamp = DateTime.Now;
+            switch (propName)
+            {
+                case "Panels":
+                case "PanelLayout.Panel":
+                    Timestamp = DateTime.Now;
+                    break;
+            }
         }
     }
 }

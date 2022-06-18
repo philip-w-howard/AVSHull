@@ -11,7 +11,7 @@
     
     <StackPanel>
         <Label>AVS Hull</Label>
-        <Label>Copyright 2021 Philip Howard</Label>
+        <Label>Copyright 2020-2022 Philip Howard</Label>
         <Label>This software is released under the MIT License</Label>
         <StackPanel Orientation="Horizontal">
             <Label>Version: </Label>

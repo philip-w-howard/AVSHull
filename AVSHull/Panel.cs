@@ -267,7 +267,7 @@ namespace AVSHull
             }
 
             m_panelPoints = points;
-            Center();
+
             Notify("panel.flip");
         }
 
@@ -283,7 +283,7 @@ namespace AVSHull
             }
 
             m_panelPoints = points;
-            Center();
+
             Notify("panel.flip");
         }
 

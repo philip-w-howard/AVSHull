@@ -13,6 +13,12 @@
     <DockPanel>
         <StackPanel DataContext="{DynamicResource Curr_UI_Params}" Background="Gray">
             <Button Name="ResizeButton" Content="Resize" Click="ResizeClick" ToolTip="Resize hull"/>
+            <Popup IsOpen="{Binding Path=ResizeExpanded}"
+                   PlacementTarget="{Binding ElementName=FrontView}"
+                   Placement="Relative"
+                   PopupAnimation="Slide">
+                <local:ResizeControl x:Name="Resizer"/>
+            </Popup>
             <Button Content="Chines" Click="ChangeChinesClick" ToolTip="Change number of chines"/>
             <Popup IsOpen="{Binding Path=ChangeChinesExpanded}"
                    PlacementTarget="{Binding ElementName=FrontView}"
