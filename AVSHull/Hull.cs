@@ -341,5 +341,27 @@ namespace AVSHull
 
             return copy;
         }
+        public List<Point3DCollection> GenerateChines(int points_per_chine)
+        {
+            int nChines = Bulkheads[0].NumChines;
+            List<Point3DCollection> chines = new List<Point3DCollection>();
+
+            for (int chine = 0; chine < nChines; chine++)
+            {
+                Point3DCollection chine_data = new Point3DCollection(Bulkheads.Count);
+
+                for (int bulkhead = 0; bulkhead < Bulkheads.Count; bulkhead++)
+                {
+                    chine_data.Add(Bulkheads[bulkhead].Points[chine]);
+                }
+                Splines spline = new Splines(chine_data, Splines.RELAXED);
+                Point3DCollection newChine = spline.GetPoints(points_per_chine);
+                chines.Add(newChine);
+            }
+
+            return chines;
+        }
+
+
     }
 }

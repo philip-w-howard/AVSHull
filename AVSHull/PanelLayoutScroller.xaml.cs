@@ -46,7 +46,7 @@ namespace AVSHull
             if (myHull != null && myHull.Bulkheads.Count != 0)
             {
                 HullView eHull = new HullView();
-                List<Point3DCollection> chines = eHull.GenerateChines();
+                List<Point3DCollection> chines = eHull.GenerateChines(HullView.POINTS_PER_CHINE);
 
                 for (int index = 0; index < chines.Count / 2; index++)
                 {

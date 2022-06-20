@@ -12,7 +12,7 @@ namespace AVSHull
     // Presents a view of the Singleton hull defined by BaseHull
     public class HullView : Hull, INotifyPropertyChanged
     {
-        private const int POINTS_PER_CHINE = 50;
+        public const int POINTS_PER_CHINE = 50;
         public static int NOT_SELECTED = -1;
 
         private List<Point3DCollection> Chines;
@@ -205,31 +205,6 @@ namespace AVSHull
             }
         }
 
-        public List<Point3DCollection> GenerateChines(Hull hull, int points_per_chine = POINTS_PER_CHINE)
-        {
-            int nChines = hull.Bulkheads[0].NumChines;
-            List<Point3DCollection> chines = new List<Point3DCollection>();
-
-            for (int chine = 0; chine < nChines; chine++)
-            {
-                Point3DCollection chine_data = new Point3DCollection(hull.Bulkheads.Count);
-
-                for (int bulkhead = 0; bulkhead < hull.Bulkheads.Count; bulkhead++)
-                {
-                    chine_data.Add(hull.Bulkheads[bulkhead].Points[chine]);
-                }
-                Splines spline = new Splines(chine_data, Splines.RELAXED);
-                Point3DCollection newChine = spline.GetPoints(points_per_chine);
-                chines.Add(newChine);
-            }
-
-            return chines;
-        }
-
-        public List<Point3DCollection> GenerateChines(int points_per_chine = POINTS_PER_CHINE)
-        {
-            return GenerateChines(this, points_per_chine);
-        }
         public void UpdateBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
         {
             if (chine < 0 && BaseHull.Instance().Bulkheads[bulkhead].Type != Bulkhead.BulkheadType.BOW)
@@ -259,7 +234,7 @@ namespace AVSHull
 
             // get points for new bulkhead
             // First, create chines for base hull
-            List<Point3DCollection> chines = GenerateChines(BaseHull.Instance(), POINTS_PER_CHINE);
+            List<Point3DCollection> chines = BaseHull.Instance().GenerateChines(POINTS_PER_CHINE);
             Point3DCollection points = new Point3DCollection();
             for (int ii=num_chines-1; ii>=0; ii--)
             {

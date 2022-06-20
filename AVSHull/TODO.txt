@@ -100,18 +100,6 @@ HullControl
 		click off bulkhead deselects bulkhead
 		rotate only works if no bulkhead is selected.
 	
-	Place pop-ups in center of parent. 
-		See about box for sample
-			<Window> WindowStartupLocation="CenterOwner"
-			dlg.Owner = this;
-		See CreateHullDialog as another example
-			Set window (Left,Top) based on mouse position
-
-		About (in center)
-		CreateHull
-		Open/Save/Import/Export
-		Resize
-
 	Check on notification settings.
 
 	UI Standards:
@@ -127,17 +115,12 @@ HullControl
 	Dialog appearance
 		PanelLayoutSettings
 		gcode setup
-	Dialog positioning
 	Dialog data handling
 	Settings
 	Appearance based on styles
 	Add bulkhead based on click
 	Change number of chines UI
 	Data validation (beyond red rectangle)
-	Rotate perspective with mouse.
-
-	Panel Layout zoom
-		relative to mouse
 
 	Object/Property for displaying text in bottom notification panel.
 	Get timestamp of panels in panel layout
@@ -160,42 +143,13 @@ HullControl
 
 		Check Notifications on panel hierarcy
 
-	Add Undo/Redo to Layout
-
 	Make HullControl.IsEditable a property: Merging HullControl refactor
 		Based on perspective?
 		Tie to editableHull property?
 		Enable/Disable context menu based on property value.
 
 
-UpdatePopups: mostly done
-	Resize
-		Layout OK
-		Size of entry fields?
-		Format of data in entry fields
-    
-	Panel Layout: done
-		Fixed width for entry fields (Grid?)
-		border or background
-		fill panels to make them easier to see
-		Rotate 90
-
-	GCode: done
-		fixed width for entry fields (Grid?)
-		Cut Inside: dropdown or checkbox
-    
-	Offsets: done
-		Set origin of panels as LLH corner
-		enable Spacing Style
-		Horizontal Spacing as numeric text field?
-    
-	Zoom panel should center on mouse
-	
 Features:
-	Split Panel options
-		Different split option
-		DONE: Positioning of split panels
-
 	Measure
 		Waterline
 			water density
@@ -206,10 +160,6 @@ Features:
 			Height of CG
 
 OffsetWriter
-	DONE: Enable the other output options.
-	DONE: SelectPoints: pick points at the spacing mark plus "knees"
-	DONE: When outputting panel, use the SelectedPoints panels, not the original
-	DONE: Set Origin (ULH, LLH, URH, LRH, Center, Other)
 	offsets relative to panel
 
 OffsetSetupWindow: spacing enabled dependent on spacing type.
@@ -238,3 +188,5 @@ Zoom along the lines of:
                 </TransformGroup>
             </Image.LayoutTransform>                
         </Image>
+
+Move GenerateChines from HullView to Hull
