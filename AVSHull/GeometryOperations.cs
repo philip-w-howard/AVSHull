@@ -540,9 +540,10 @@ namespace AVSHull
             points.Add(new Point(center.X + Math.Cos(endAngle) * radius, center.Y + Math.Sin(endAngle) * radius));
         }
 
-        static public Point3D InterpolateFromZ(Point3DCollection points, double Z)
+        static public Point3D? InterpolateFromZ(Point3DCollection points, double Z)
         {
             // FIX THIS: need to have at least two points
+            bool found = false;
 
             Point3D left = points[0];
             Point3D right = points[1];
@@ -555,6 +556,7 @@ namespace AVSHull
                     if (point.Z >= Z)
                     {
                         right = point;
+                        found = true;
                         break;
                     }
                     else
@@ -562,7 +564,6 @@ namespace AVSHull
                         left = point;
                     }
                 }
-                // FIX THIS: Z was not in range
             }
             else if (left.Z > Z)
             {
@@ -572,6 +573,7 @@ namespace AVSHull
                     if (point.Z <= Z)
                     {
                         right = point;
+                        found = true;
                         break;
                     }
                     else
@@ -579,13 +581,14 @@ namespace AVSHull
                         left = point;
                     }
                 }
-                // FIX THIS: Z was not in range
             }
             else
             {
                 // landed exactly on the point
                 return points[0];
             }
+
+            if (!found) return null;
 
             // Did we land exactly on a point?
             if (left.Z == Z) return left;
@@ -642,6 +645,38 @@ namespace AVSHull
             return new Point(interest_x, interest_y);
         }
 
+        // Interpolate a point on a line between two points given the desired Y value of the point
+        public static Point3D InterpolateFromY(Point3D p1, Point3D p2, double y)
+        {
+            if (p1.Y == y)
+                return p1;
+            else if (p2.Y == y)
+                return p2;
+            else
+            {
+                double delta = (p1.Y - y) / (p1.Y - p2.Y);
+                double x = (p1.X - p2.X) * delta;
+                double z = (p1.Z - p2.Z) * delta;
+
+                return new Point3D(x, y, z);
+            }
+        }
+        // Interpolate a point on a line between two points given the desired Z value of the point
+        public static Point3D InterpolateFromZ(Point3D p1, Point3D p2, double z)
+        {
+            if (p1.Z == z)
+                return p1;
+            else if (p2.Z == z)
+                return p2;
+            else
+            {
+                double delta = (p1.Z - z) / (p1.Z - p2.Z);
+                double x = (p1.X - p2.X) * delta;
+                double y = (p1.Y - p2.Y) * delta;
+
+                return new Point3D(x, y, z);
+            }
+        }
         public static bool SpansX(Point p1, Point p2, int fixed_offset)
         {
             double x1 = Math.Abs(p1.X);
