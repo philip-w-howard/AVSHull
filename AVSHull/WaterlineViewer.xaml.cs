@@ -14,28 +14,18 @@ using System.Windows.Shapes;
 
 namespace AVSHull
 {
-    /// <summary>
-    /// Interaction logic for WaterlinesControl.xaml
-    /// </summary>
-    public class WaterlineControlDatax : INotifyPropertyChanged
+    public class WaterlineControlData : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private bool _showWaterlines;
         private double _deltaLength;
         private double _deltaHeight;
+        private double _weight;
+        private double _waterDensity;
+        bool _showAllWaterlines;
 
-        public WaterlineControlDatax() { }
+        public WaterlineControlData() { }
 
-        public bool ShowWaterlines
-        {
-            get { return _showWaterlines; }
-            set
-            {
-                _showWaterlines = value;
-                Notify("ShowWaterlines");
-            }
-        }
         public double DeltaLength
         {
             get { return _deltaLength; }
@@ -47,6 +37,21 @@ namespace AVSHull
             get { return _deltaHeight; }
             set { _deltaHeight = value; Notify("DeltaHeight"); }
         }
+        public double Weight
+        {
+            get { return _weight; }
+            set { _weight = value; Notify("Weight"); }
+        }
+        public double WaterDensity
+        {
+            get { return _waterDensity; }
+            set { _waterDensity = value; Notify("WaterDensity"); }
+        }
+        public bool ShowAllWaterlines
+        {
+            get { return _showAllWaterlines; }
+            set { _showAllWaterlines = value; Notify("ShowAllWaterlines"); }
+        }
         private void Notify(string propertyname)
         {
             if (PropertyChanged != null)
@@ -56,18 +61,18 @@ namespace AVSHull
         }
     }
 
-
-    public partial class WaterlinesControl : UserControl
+    /// <summary>
+    /// Interaction logic for WaterlineViewer.xaml
+    /// </summary>
+    public partial class WaterlineViewer : UserControl
     {
-        public WaterlinesControl()
+        public WaterlineViewer()
         {
             InitializeComponent();
         }
 
-        private void OKClick(object sender, RoutedEventArgs e)
+        private void RedrawClick(object sender, RoutedEventArgs e)
         {
-            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
-            values.WaterlinesExpanded = false;
 
         }
     }
