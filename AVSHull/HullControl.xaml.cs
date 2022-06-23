@@ -494,5 +494,10 @@ namespace AVSHull
             UI_Params values = this.FindResource("Curr_UI_Params") as UI_Params;
             m_editableHull.ChangeChines(values.NumChines);
         }
+
+        private void ContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (!IsEditable) e.Handled = true;
+        }
     }
 }
