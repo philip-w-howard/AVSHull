@@ -386,23 +386,32 @@ namespace AVSHull
                 Point3DCollection right = new Point3DCollection();
                 bool foundLeft = false;
 
+                //**********************************
+                // debug
+                int lastIndex = 0;
+
                 for (double length=min.Z; length<=min.Z + size.Z; length += lengthInterval)
                 {
-                    int index = 0;
-                    Point3D? lastPoint = GeometryOperations.InterpolateFromZ(myChines[index], length);
-                    index++;
+                    int index = NumChines/2;
+                    lastIndex = -1;
+                    Point3D? lastPoint = null;
                     while (lastPoint == null && index < NumChines-1)
                     {
                         lastPoint = GeometryOperations.InterpolateFromZ(myChines[index], length);
+                        lastIndex = index;
                         index++;
                     }
 
                     // If nothing is in range, go to the next point
-                    if (lastPoint == null) continue;
-                    if (index == 1 && lastPoint.Value.Y < height) takingOnWater = true;
+                    if (lastPoint == null)
+                    {
+                        if (Waterlines.Count == 2 && length > 8 && length < 12) Debug.WriteLine("Nothing in range {0}", Waterlines.Count);
+                        continue;
+                    }
 
-                    // If we didn't find a point in range, go to the next height
-                    if (lastPoint == null) break;
+                    if (Waterlines.Count == 2 && length > 8 && length < 12) Debug.WriteLine("Starting lastPoint: {0} {1}", lastPoint, index - 1);
+                    
+                    if (index == 1 && lastPoint.Value.Y < height) takingOnWater = true;
 
                     Point3D? point;
                     // FIX THIS: determine when taking on water.
@@ -418,6 +427,7 @@ namespace AVSHull
                             if (Math.Min(lastPoint.Value.Y, point.Value.Y) <= height && height < Math.Max(lastPoint.Value.Y, point.Value.Y))
                             {
                                 Point3D newPoint = GeometryOperations.InterpolateFromY(lastPoint.Value, point.Value, height);
+                                if (Waterlines.Count == 2 && length > 8 && length < 12) Debug.WriteLine("Point: {0} from {1} to {2} indexes {3} {4}", newPoint, lastPoint, point, lastIndex, chine);
                                 if (!foundLeft)
                                 {
                                     left.Add(newPoint);
@@ -431,7 +441,13 @@ namespace AVSHull
                                 }
                             }
 
+                            if (Waterlines.Count == 2 && length > 8 && length < 12) Debug.WriteLine("new lastpoint: {0} old: {1} chine: {2}", point, lastPoint, chine);
                             lastPoint = point;
+                            lastIndex = chine;
+                        }
+                        else
+                        {
+                            if (Waterlines.Count == 2) Debug.WriteLine("null point {0} {1} {2}", Waterlines.Count, chine, length);
                         }
                     }
                 }
