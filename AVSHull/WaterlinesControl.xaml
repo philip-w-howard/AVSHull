@@ -7,9 +7,9 @@
              mc:Ignorable="d" 
              BorderThickness="2">
     <UserControl.Resources>
-        <local:WaterlineControlDatax x:Key="WaterlineData" ShowWaterlines="False" DeltaHeight="0.25" DeltaLength="0.25" />
+        <local:WaterlineControlDatax x:Key="WaterlineData" ShowWaterlines="False" DeltaHeight="1.0" DeltaLength="0.25" />
     </UserControl.Resources>
-    <Grid Margin="15" Background="White" DataContext="{Binding Source={StaticResource WaterlineData}}">
+    <Grid Background="White" DataContext="{Binding Source={StaticResource WaterlineData}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
@@ -21,7 +21,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <CheckBox Grid.Row="0" Grid.ColumnSpan="2" IsChecked="{Binding Path=ShowWaterlines}">Show waterlines</CheckBox>
+        <CheckBox Margin="3" Grid.Row="0" Grid.ColumnSpan="2" IsChecked="{Binding Path=ShowWaterlines}">Show waterlines</CheckBox>
 
         <Label Grid.Row="1" Grid.Column="0" >Delta Height</Label>
         <TextBox  Grid.Row="1" Grid.Column="1" Name="widthValue" Text="{Binding Path=DeltaHeight}" HorizontalAlignment="Stretch" TextAlignment="Right"/>

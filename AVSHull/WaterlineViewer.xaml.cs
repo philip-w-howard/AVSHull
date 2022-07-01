@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -71,9 +72,29 @@ namespace AVSHull
             InitializeComponent();
         }
 
+        private void GenerateWaterlines()
+        {
+            WaterlineControlData values = (WaterlineControlData)this.FindResource("WaterlineData");
+
+            Waterlines.CreateHull();
+            Waterlines.IsEditable = false;
+            Waterlines.IsRotatable = true;
+
+            Waterlines.GenerateWaterlines(values.DeltaHeight, values.DeltaLength);
+            Waterlines.InvalidateVisual();
+            Waterlines.Rotate(0, 90, 90);
+        }
         private void RedrawClick(object sender, RoutedEventArgs e)
         {
+            GenerateWaterlines();
+        }
 
+        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (BaseHull.Instance() != null && BaseHull.Instance().Bulkheads.Count != 0)
+            {
+                GenerateWaterlines();
+            }
         }
     }
 }

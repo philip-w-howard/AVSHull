@@ -48,7 +48,11 @@ namespace AVSHull
             get { return _perspective; }
             set
             {
-                m_editableHull = new HullView();
+                CreateHull();
+
+                //***************************************************
+                // Handle Waterlines
+
                 _perspective = value;
                 switch (_perspective)
                 {
@@ -101,8 +105,17 @@ namespace AVSHull
             m_handles = new List<RectangleGeometry>();
 
             m_mouseLoc = (NotifyPoint3D)FindResource("HullMouseLocation");
+
+            CreateHull();
         }
 
+        public void CreateHull()
+        {
+            if (BaseHull.Instance() != null && BaseHull.Instance().Bulkheads.Count != 0)
+            {
+                m_editableHull = new HullView();
+            }
+        }
         protected override Size MeasureOverride(Size availableSize)
         {
             // attempt to clip output. FIX THIS: Does not work as expected
@@ -158,6 +171,7 @@ namespace AVSHull
 
             Pen bulkheadPen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
             Pen chinePen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
+            Pen waterlinesPen = new Pen(System.Windows.Media.Brushes.Red, 1.0);
 
             m_bulkheadGeometry = m_editableHull.GetBulkheadGeometry();
             foreach (Geometry geom in m_bulkheadGeometry)
@@ -171,6 +185,12 @@ namespace AVSHull
             chines.Transform = m_xform;
             drawingContext.DrawGeometry(null, chinePen, chines);
 
+            if (m_editableHull.DisplayWaterlines)
+            {
+                Geometry waterlines = m_editableHull.GetWaterlineGeometry();
+                waterlines.Transform = m_xform;
+                drawingContext.DrawGeometry(null, waterlinesPen, waterlines);
+            }
             if (IsEditable && m_selectedBulkhead != NOT_SELECTED)
             {
                 foreach (Geometry geom in m_handles)
@@ -495,6 +515,10 @@ namespace AVSHull
             m_editableHull.ChangeChines(values.NumChines);
         }
 
+        public void GenerateWaterlines(double deltaHeight, double deltaLength)
+        {
+            m_editableHull.GenerateWaterlines(deltaHeight, deltaLength);
+        }
         private void ContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             if (!IsEditable) e.Handled = true;

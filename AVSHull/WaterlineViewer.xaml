@@ -5,9 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AVSHull"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" IsVisibleChanged="UserControl_IsVisibleChanged">
     <UserControl.Resources>
-        <local:WaterlineControlData x:Key="WaterlineData" DeltaHeight="0.25" DeltaLength="0.25" WaterDensity="62.4" Weight="180" ShowAllWaterlines="false"/>
+        <local:WaterlineControlData x:Key="WaterlineData" DeltaHeight="1.0" DeltaLength="0.25" WaterDensity="62.4" Weight="180" ShowAllWaterlines="True"/>
+        <local:HullLog x:Key="UndoLog" />
+        <local:HullLog x:Key="RedoLog" />
     </UserControl.Resources>
     <DockPanel>
         <Grid DockPanel.Dock="Left" DataContext="{DynamicResource WaterlineData}" Background="Gray">
@@ -29,7 +31,7 @@
             <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding Path=DeltaHeight}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
 
             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=DeltaLength}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
-            <Label Grid.Row="1" Grid.Column="0">Delta Width</Label>
+            <Label Grid.Row="1" Grid.Column="0">Delta Length</Label>
 
             <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Weight}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
             <Label Grid.Row="2" Grid.Column="0">Weight</Label>

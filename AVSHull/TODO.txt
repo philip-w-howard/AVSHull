@@ -190,3 +190,13 @@ Zoom along the lines of:
         </Image>
 
 Move GenerateChines from HullView to Hull
+
+Changing the number of chines leaves a property notification disconnected.
+	Notification was fixed, 
+	...but all bulkheads are not labeled "BOW"
+
+
+WaterlineViewer
+	finish copying OnRender from HullControl to WaterlineViewer
+		or, is one a subclass of the other?
+	Rotate m_editableHull to top view.

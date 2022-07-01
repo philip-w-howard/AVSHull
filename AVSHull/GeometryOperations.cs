@@ -648,15 +648,15 @@ namespace AVSHull
         // Interpolate a point on a line between two points given the desired Y value of the point
         public static Point3D InterpolateFromY(Point3D p1, Point3D p2, double y)
         {
-            if (p1.Y == y)
+             if (p1.Y == y)
                 return p1;
             else if (p2.Y == y)
                 return p2;
             else
             {
                 double delta = (p1.Y - y) / (p1.Y - p2.Y);
-                double x = (p1.X - p2.X) * delta;
-                double z = (p1.Z - p2.Z) * delta;
+                double x = p1.X - (p1.X - p2.X) * delta;
+                double z = p1.Z - (p1.Z - p2.Z) * delta;
 
                 return new Point3D(x, y, z);
             }

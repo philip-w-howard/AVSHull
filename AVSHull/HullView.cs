@@ -16,6 +16,11 @@ namespace AVSHull
         public static int NOT_SELECTED = -1;
 
         private List<Point3DCollection> Chines;
+        private List<Point3DCollection> Waterlines;
+        private bool m_displayWaterlines = false;
+        public bool DisplayWaterlines
+        { get { return m_displayWaterlines; } }
+
         private int m_SelectedBulkhead;
         public int SelectedBulkhead
         {
@@ -84,7 +89,28 @@ namespace AVSHull
 
             return geom;
         }
-    
+
+        public Geometry GetWaterlineGeometry()
+        {
+            GeometryGroup geom = new GeometryGroup();
+
+            if (m_displayWaterlines && Waterlines != null)
+            {
+                foreach (Point3DCollection waterline in Waterlines)
+                {
+                    // FIXTHIS: use a foreach and simply remember the previous point
+                    for (int point = 0; point < waterline.Count - 1; point++)
+                    {
+                        Point p1 = new Point(waterline[point].X, waterline[point].Y);
+                        Point p2 = new Point(waterline[point + 1].X, waterline[point + 1].Y);
+
+                        geom.Children.Add(new LineGeometry(p1, p2));
+                    }
+                }
+            }
+
+            return geom;
+        }
         private void UpdateWithMatrix(double[,] matrix)
         {
             for (int ii = 0; ii < Bulkheads.Count; ii++)
@@ -101,6 +127,15 @@ namespace AVSHull
                     Chines[ii] = newChine;
                 }
             }
+
+            if (Waterlines !=null)
+                for (int ii = 0; ii < Waterlines.Count; ii++)
+                {
+                    Point3DCollection newWaterline;
+                    Matrix.Multiply(Waterlines[ii], matrix, out newWaterline);
+                    Waterlines[ii] = newWaterline;
+                }
+
         }
         protected Point3D GetMin()
         {
@@ -125,6 +160,19 @@ namespace AVSHull
                 foreach (Point3DCollection chine in Chines)
                 {
                     foreach (Point3D point in chine)
+                    {
+                        min_x = Math.Min(min_x, point.X);
+                        min_y = Math.Min(min_y, point.Y);
+                        min_z = Math.Min(min_z, point.Z);
+                    }
+                }
+            }
+
+            if (m_displayWaterlines && Waterlines != null)
+            {
+                foreach (Point3DCollection waterline in Waterlines)
+                {
+                    foreach (Point3D point in waterline)
                     {
                         min_x = Math.Min(min_x, point.X);
                         min_y = Math.Min(min_y, point.Y);
@@ -165,9 +213,9 @@ namespace AVSHull
                 {
                     foreach (Point3D point in chine)
                     {
-                        min_x = Math.Min(min_x, point.X);
-                        min_y = Math.Min(min_y, point.Y);
-                        min_z = Math.Min(min_z, point.Z);
+                        max_x = Math.Max(max_x, point.X);
+                        max_y = Math.Max(max_y, point.Y);
+                        max_z = Math.Max(max_z, point.Z);
 
                         min_x = Math.Min(min_x, point.X);
                         min_y = Math.Min(min_y, point.Y);
@@ -176,6 +224,23 @@ namespace AVSHull
                 }
             }
 
+            if (m_displayWaterlines && Waterlines != null)
+            {
+                foreach (Point3DCollection waterline in Waterlines)
+                {
+                    foreach (Point3D point in waterline)
+                    {
+                        max_x = Math.Max(max_x, point.X);
+                        max_y = Math.Max(max_y, point.Y);
+                        max_z = Math.Max(max_z, point.Z);
+
+                        min_x = Math.Min(min_x, point.X);
+                        min_y = Math.Min(min_y, point.Y);
+                        min_z = Math.Min(min_z, point.Z);
+                    }
+                }
+            }
+            
             return new Size3D(max_x - min_x, max_y - min_y, max_z - min_z);
         }
 
@@ -201,6 +266,20 @@ namespace AVSHull
                     }
 
                     Chines[ii] = newChine;
+                }
+            }
+ 
+            if (Waterlines != null)
+            {
+                for (int ii = 0; ii < Waterlines.Count; ii++)
+                {
+                    Point3DCollection newWaterline = new Point3DCollection(Waterlines.Count);
+                    foreach (Point3D point in Waterlines[ii])
+                    {
+                        newWaterline.Add(point + zeroVect);
+                    }
+
+                    Waterlines[ii] = newWaterline;
                 }
             }
         }
@@ -278,10 +357,11 @@ namespace AVSHull
         //    1) This is in ViewHull not Hull because it needs chines and so that it will work with a rotated hull (for heel and pitch)
         //    2) This code assumes an open top hull
         //    3) Computation will stop when the waterline allos the hull to take on water.
-        public List<Point3DCollection> GenerateWaterLines(double depthInterval, double lengthInterval)
+        public List<Point3DCollection> GenerateWaterlines(double depthInterval, double lengthInterval)
         {
-            List<Point3DCollection> waterlines = new List<Point3DCollection>();
-
+            Waterlines = new List<Point3DCollection>();
+            m_displayWaterlines = true;
+            
             // Copy the chines and then add first/last bulkhead points
             List<Point3DCollection> myChines = Chines;
 
@@ -305,10 +385,10 @@ namespace AVSHull
                 Point3DCollection left = new Point3DCollection();
                 Point3DCollection right = new Point3DCollection();
                 bool foundLeft = false;
-                int index = 0;
 
                 for (double length=min.Z; length<=min.Z + size.Z; length += lengthInterval)
                 {
+                    int index = 0;
                     Point3D? lastPoint = GeometryOperations.InterpolateFromZ(myChines[index], length);
                     index++;
                     while (lastPoint == null && index < NumChines-1)
@@ -321,11 +401,15 @@ namespace AVSHull
                     if (lastPoint == null) continue;
                     if (index == 1 && lastPoint.Value.Y < height) takingOnWater = true;
 
-                    Point3D? point = lastPoint;
+                    // If we didn't find a point in range, go to the next height
+                    if (lastPoint == null) break;
 
+                    Point3D? point;
                     // FIX THIS: determine when taking on water.
                     for (int chine=index; chine<NumChines; chine++)
                     {
+                        foundLeft = false;
+
                         point = GeometryOperations.InterpolateFromZ(myChines[chine], length);
                         if (point != null)
                         {
@@ -333,17 +417,22 @@ namespace AVSHull
 
                             if (Math.Min(lastPoint.Value.Y, point.Value.Y) <= height && height < Math.Max(lastPoint.Value.Y, point.Value.Y))
                             {
-                                Point3D newPoint = GeometryOperations.InterpolateFromY(lastPoint.Value, point.Value, length);
+                                Point3D newPoint = GeometryOperations.InterpolateFromY(lastPoint.Value, point.Value, height);
                                 if (!foundLeft)
+                                {
                                     left.Add(newPoint);
+                                    foundLeft = true;
+                                    break;  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEMP <<<<<<<<<<<<<<<
+                                }
                                 else
                                 {
                                     right.Add(newPoint);
                                     break;  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                                 }
                             }
+
+                            lastPoint = point;
                         }
-                        lastPoint = point;
                     }
                 }
 
@@ -353,13 +442,13 @@ namespace AVSHull
                     {
                         left.Add(right[ii]);
                     }
-                    waterlines.Add(left);
+                    Waterlines.Add(left);
 
                     height += depthInterval;
                 }
             }
 
-            return waterlines;
+            return Waterlines;
         }
 
          //*************************************************************
