@@ -361,15 +361,30 @@ namespace AVSHull
         {
             Waterlines = new List<Point3DCollection>();
             m_displayWaterlines = true;
-            
+
             // Copy the chines and then add first/last bulkhead points
-            List<Point3DCollection> myChines = Chines;
+            List<Point3DCollection> myChines = new List<Point3DCollection>();
 
             int last = Bulkheads.Count - 1;
-            for (int ii=0; ii<myChines.Count-1; ii++)
+
+            for (int ii = 0; ii <= NumChines / 2; ii++)
             {
-                myChines[ii].Insert(0, Bulkheads[0].Points[ii + 1]);
-                myChines[ii].Add(Bulkheads[last].Points[ii + 1]);
+                myChines.Add(Chines[ii]);
+                if (ii != 0)
+                {
+                    myChines[myChines.Count-1].Insert(0, Bulkheads[0].Points[ii - 1]);
+                    myChines[myChines.Count-1].Add(Bulkheads[last].Points[ii - 1]);
+                }
+            }
+
+            for (int ii = NumChines/2; ii < NumChines; ii++)
+            {
+                myChines.Add(Chines[ii]);
+                if (ii != NumChines-1)
+                {
+                    myChines[myChines.Count-1].Insert(0, Bulkheads[0].Points[ii + 1]);
+                    myChines[myChines.Count-1].Add(Bulkheads[last].Points[ii + 1]);
+                }
             }
 
             Point3D min = GetMin();
@@ -390,16 +405,22 @@ namespace AVSHull
                 // debug
                 int lastIndex = 0;
 
+                int startOffset = -1;
+                int end = -1;
+                int increment = -1;
+                //int startOffset = 0;
+                //int end = myChines.Count;
+                //int increment = 1;
                 for (double length=min.Z; length<=min.Z + size.Z; length += lengthInterval)
                 {
-                    int index = NumChines/2;
+                    int index = myChines.Count / 2 + startOffset;
                     lastIndex = -1;
                     Point3D? lastPoint = null;
-                    while (lastPoint == null && index < NumChines-1)
+                    while (lastPoint == null && index != end-2*increment)
                     {
                         lastPoint = GeometryOperations.InterpolateFromZ(myChines[index], length);
                         lastIndex = index;
-                        index++;
+                        index += increment;
                     }
 
                     // If nothing is in range, go to the next point
@@ -411,18 +432,19 @@ namespace AVSHull
 
                     if (Waterlines.Count == 2 && length > 8 && length < 12) Debug.WriteLine("Starting lastPoint: {0} {1}", lastPoint, index - 1);
                     
-                    if (index == 1 && lastPoint.Value.Y < height) takingOnWater = true;
+                    //if (index == 1 && lastPoint.Value.Y < height) takingOnWater = true;
 
                     Point3D? point;
                     // FIX THIS: determine when taking on water.
-                    for (int chine=index; chine<NumChines; chine++)
+                    for (int chine=index; chine!=end; chine+=increment)
                     {
                         foundLeft = false;
 
                         point = GeometryOperations.InterpolateFromZ(myChines[chine], length);
                         if (point != null)
                         {
-                            if (index == NumChines-1 && point.Value.Y < height) takingOnWater = true;
+                            if (chine == end-increment && point.Value.Y < height) 
+                                takingOnWater = true;
 
                             if (Math.Min(lastPoint.Value.Y, point.Value.Y) <= height && height < Math.Max(lastPoint.Value.Y, point.Value.Y))
                             {
@@ -461,6 +483,9 @@ namespace AVSHull
                     Waterlines.Add(left);
 
                     height += depthInterval;
+
+                    // avoid an infinite loop if something goes wrong with taking on water calculation above
+                    if (height > min.Y + size.Y) takingOnWater = true;
                 }
             }
 
