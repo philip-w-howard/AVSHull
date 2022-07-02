@@ -501,23 +501,40 @@ namespace AVSHull
             double weight = 0;
             double sliceWeight;
             double momentX;
-            //double momentY = 0;
             double momentZ;
-            double y = 0;
+            double Y = 0;
+            double sumArea = 0;
+            double sumArea_X = 0;
+            double sumArea_Y = 0;
+            double sumArea_Z = 0;
+
             for (int ii=0; ii<Waterlines.Count; ii++)
             {
                 area = GeometryOperations.ComputeFlatArea(Waterlines[ii], out momentX, out momentZ);
                 sliceWeight = area * waterDensity * depthInterval / (12 * 12 * 12);         // converted to inches cubed
                 weight += sliceWeight;
+
+                sumArea += area;
+                sumArea_X += momentX * area;
+                sumArea_Y += Y * area;
+                sumArea_Z += momentZ * area;
+
                 Debug.WriteLine("Layer: Y: {0:F3}, Area: {1:F1}, Weight: {2:F2} {3:F2} (x,z): {4:F2}, {5:F2}",
-                    y, area, sliceWeight, weight, momentX, momentZ);
-                y += depthInterval;
+                    Y, area, sliceWeight, weight, momentX, momentZ);
+                Y += depthInterval;
                 if (!showAll && weight > loadedWeight)
                 {
                     m_freeboard = (Waterlines.Count - 1 - ii) * depthInterval;
                     Point3DCollection waterline = Waterlines[ii];
                     Waterlines.Clear();
                     Waterlines.Add(waterline);
+
+                    if (sumArea > 0)
+                    {
+                        m_momentX = sumArea_X / sumArea;
+                        m_momentY = sumArea_Y / sumArea;
+                        m_momentZ = sumArea_Z / sumArea;
+                    }
                     break;
                 }
             }

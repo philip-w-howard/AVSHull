@@ -61,19 +61,19 @@
             <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="20" Click="RedrawClick" Width="50">Redraw</Button>
 
             <Label Grid.Row="6" Grid.Column="0">Freeboard</Label>
-            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=Freeboard}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=Freeboard, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
             <Label Grid.Row="6" Grid.Column="2">inches</Label>
 
             <Label Grid.Row="7" Grid.Column="0">Moment X</Label>
-            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=MomentX}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=MomentX, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
             <Label Grid.Row="7" Grid.Column="2">inch-lbs</Label>
 
             <Label Grid.Row="8" Grid.Column="0">Moment Y</Label>
-            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=MomentY}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=MomentY, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
             <Label Grid.Row="8" Grid.Column="2">inch-lbs</Label>
 
             <Label Grid.Row="9" Grid.Column="0">Moment Z</Label>
-            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=MomentZ}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=MomentZ, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
             <Label Grid.Row="9" Grid.Column="2">inch-lbs</Label>
         </Grid>
  
