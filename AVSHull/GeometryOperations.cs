@@ -686,5 +686,46 @@ namespace AVSHull
 
             return false;
         }
+
+        // Compute the area and centroid of a shape.
+        // Assumptions: 
+        //      1) The shape is "flat" meaning the Y coordinate of each point is the same
+        //      2) The shape is symetric on Z meaining that point[ii].Z == point[count-ii-1].Z
+        // These assumptions are met for waterlines computed on a hull with no heel.
+        public static double ComputeFlatArea(Point3DCollection boundary, out double centroidX, out double centroidZ)
+        {
+            int limit = boundary.Count / 2;
+
+            double area = 0;
+            centroidX = 0;
+            centroidZ = 0;
+
+            if (boundary.Count > 0)
+            {
+                Point3D lastLeft = boundary[0];
+                Point3D lastRight = boundary[boundary.Count - 1];
+                Point3D left, right;
+
+                for (int ii = 1; ii < limit; ii++)
+                {
+                    left = boundary[ii];
+                    right = boundary[boundary.Count - ii - 1];
+
+                    double width = (Math.Abs(left.X - right.X) + Math.Abs(lastLeft.X - lastRight.X)) / 2;
+                    double height = Math.Abs(left.Z - lastLeft.Z);
+                    area += width * height;
+                    centroidX += (left.X + right.X + lastLeft.X + lastRight.X) / 4 * width * height; // Approx: need to do the triangle thing for the ends
+                    centroidZ += (left.Z + right.Z + lastLeft.Z + lastRight.Z) / 4 * width * height; // Approx: Need to do the triangle thing for the ends
+
+                    lastLeft = left;
+                    lastRight = right;
+                }
+
+                centroidX /= area;
+                centroidZ /= area;
+            }
+
+            return area;
+        }
     }
 }

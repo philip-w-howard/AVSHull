@@ -28,6 +28,20 @@ namespace AVSHull
             set { m_SelectedBulkhead = value; }
         }
 
+        private double m_freeboard;
+        public double Freeboard
+        {
+            get { return m_freeboard; }
+        }
+
+        private double m_momentX;
+        private double m_momentY;
+        private double m_momentZ;
+        public Point3D Moment
+        {
+            get { return new Point3D(m_momentX, m_momentY, m_momentZ); }
+        }
+
         public HullView()
         {
             Bulkheads = new List<Bulkhead>();
@@ -422,7 +436,11 @@ namespace AVSHull
             return waterlines;
         }
 
-        public List<Point3DCollection> GenerateWaterlines(double depthInterval, double lengthInterval)
+        public List<Point3DCollection> GetWaterlines()
+        {
+            return Waterlines;
+        }
+        public void GenerateWaterlines(double depthInterval, double lengthInterval, double loadedWeight, double waterDensity, bool showAll)
         {
             Waterlines = new List<Point3DCollection>();
             m_displayWaterlines = true;
@@ -478,7 +496,31 @@ namespace AVSHull
                 }
                 Waterlines.Add(left[ii]);
             }
-            return Waterlines;
+
+            double area;
+            double weight = 0;
+            double sliceWeight;
+            double momentX;
+            //double momentY = 0;
+            double momentZ;
+            double y = 0;
+            for (int ii=0; ii<Waterlines.Count; ii++)
+            {
+                area = GeometryOperations.ComputeFlatArea(Waterlines[ii], out momentX, out momentZ);
+                sliceWeight = area * waterDensity * depthInterval / (12 * 12 * 12);         // converted to inches cubed
+                weight += sliceWeight;
+                Debug.WriteLine("Layer: Y: {0:F3}, Area: {1:F1}, Weight: {2:F2} {3:F2} (x,z): {4:F2}, {5:F2}",
+                    y, area, sliceWeight, weight, momentX, momentZ);
+                y += depthInterval;
+                if (!showAll && weight > loadedWeight)
+                {
+                    m_freeboard = (Waterlines.Count - 1 - ii) * depthInterval;
+                    Point3DCollection waterline = Waterlines[ii];
+                    Waterlines.Clear();
+                    Waterlines.Add(waterline);
+                    break;
+                }
+            }
         }
 
          //*************************************************************

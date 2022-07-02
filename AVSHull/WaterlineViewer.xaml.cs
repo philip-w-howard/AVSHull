@@ -24,6 +24,10 @@ namespace AVSHull
         private double _weight;
         private double _waterDensity;
         bool _showAllWaterlines;
+        private double _freeboard;
+        private double _momentX;
+        private double _momentY;
+        private double _momentZ;
 
         public WaterlineControlData() { }
 
@@ -53,6 +57,27 @@ namespace AVSHull
             get { return _showAllWaterlines; }
             set { _showAllWaterlines = value; Notify("ShowAllWaterlines"); }
         }
+
+        public double Freeboard
+        {
+            get { return _freeboard; }
+            set { _freeboard = value; Notify("Freeboard"); }
+        }
+        public double MomentX
+        {
+            get { return _momentX; }
+            set { _momentX = value; Notify("MomentX"); }
+        }
+        public double MomentY
+        {
+            get { return _momentY; }
+            set { _momentY = value; Notify("MomentY"); }
+        }
+        public double MomentZ
+        {
+            get { return _momentZ; }
+            set { _momentZ = value; Notify("MomentZ"); }
+        }
         private void Notify(string propertyname)
         {
             if (PropertyChanged != null)
@@ -76,13 +101,19 @@ namespace AVSHull
         {
             WaterlineControlData values = (WaterlineControlData)this.FindResource("WaterlineData");
 
-            Waterlines.CreateHull();
-            Waterlines.IsEditable = false;
-            Waterlines.IsRotatable = true;
+            WaterlineHull.CreateHull();
+            WaterlineHull.IsEditable = false;
+            WaterlineHull.IsRotatable = true;
 
-            Waterlines.GenerateWaterlines(values.DeltaHeight, values.DeltaLength);
-            Waterlines.InvalidateVisual();
-            Waterlines.Rotate(0, 90, 90);
+            WaterlineHull.Hull.GenerateWaterlines(values.DeltaHeight, values.DeltaLength, values.Weight, values.WaterDensity, values.ShowAllWaterlines);
+
+            values.Freeboard = WaterlineHull.Hull.Freeboard;
+            values.MomentX = WaterlineHull.Hull.Moment.X;
+            values.MomentY = WaterlineHull.Hull.Moment.Y;
+            values.MomentZ = WaterlineHull.Hull.Moment.Z;
+
+            WaterlineHull.InvalidateVisual();
+            WaterlineHull.Rotate(0, 90, 90);
         }
         private void RedrawClick(object sender, RoutedEventArgs e)
         {
@@ -95,6 +126,23 @@ namespace AVSHull
             {
                 GenerateWaterlines();
             }
+        }
+
+        public class BoolInverter : IValueConverter
+        {
+            #region IValueConverter Members
+
+            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                return !(bool)value;
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
         }
     }
 }

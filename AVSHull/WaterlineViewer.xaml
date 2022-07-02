@@ -10,10 +10,25 @@
         <local:WaterlineControlData x:Key="WaterlineData" DeltaHeight="1.0" DeltaLength="0.25" WaterDensity="62.4" Weight="180" ShowAllWaterlines="True"/>
         <local:HullLog x:Key="UndoLog" />
         <local:HullLog x:Key="RedoLog" />
+        <Style x:Key="Enabler" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowAllWaterlines}" Value="True">
+                    <Setter Property="TextBox.IsEnabled" Value="False"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=ShowAllWaterlines}" Value="False">
+                    <Setter Property="TextBox.IsEnabled" Value="True"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
     <DockPanel>
         <Grid DockPanel.Dock="Left" DataContext="{DynamicResource WaterlineData}" Background="Gray">
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -30,25 +45,39 @@
             <Label Grid.Row="0" Grid.Column="0" >Delta Height</Label>
             <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding Path=DeltaHeight}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
 
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=DeltaLength}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
             <Label Grid.Row="1" Grid.Column="0">Delta Length</Label>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=DeltaLength}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
 
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Weight}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
             <Label Grid.Row="2" Grid.Column="0">Weight</Label>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Weight}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
             <Label Grid.Row="2" Grid.Column="2">lb</Label>
 
-            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=WaterDensity}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
             <Label Grid.Row="3" Grid.Column="0">Water Density</Label>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=WaterDensity}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
             <Label Grid.Row="3" Grid.Column="2">lb/ft3</Label>
 
             <CheckBox Grid.Row="4" Grid.ColumnSpan="2" IsChecked="{Binding Path=ShowAllWaterlines}">Show all waterlines</CheckBox>
 
-
-
             <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="20" Click="RedrawClick" Width="50">Redraw</Button>
+
+            <Label Grid.Row="6" Grid.Column="0">Freeboard</Label>
+            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=Freeboard}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <Label Grid.Row="6" Grid.Column="2">inches</Label>
+
+            <Label Grid.Row="7" Grid.Column="0">Moment X</Label>
+            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=MomentX}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <Label Grid.Row="7" Grid.Column="2">inch-lbs</Label>
+
+            <Label Grid.Row="8" Grid.Column="0">Moment Y</Label>
+            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=MomentY}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <Label Grid.Row="8" Grid.Column="2">inch-lbs</Label>
+
+            <Label Grid.Row="9" Grid.Column="0">Moment Z</Label>
+            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=MomentZ}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <Label Grid.Row="9" Grid.Column="2">inch-lbs</Label>
         </Grid>
  
-        <local:HullControl x:Name="Waterlines" ClipToBounds ="False"  IsRotatable="True"
+        <local:HullControl x:Name="WaterlineHull" ClipToBounds ="False"  IsRotatable="True"
               HorizontalAlignment="Left" VerticalAlignment="Top" Background="White" />
 
     </DockPanel>

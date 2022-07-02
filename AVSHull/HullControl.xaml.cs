@@ -515,10 +515,11 @@ namespace AVSHull
             m_editableHull.ChangeChines(values.NumChines);
         }
 
-        public void GenerateWaterlines(double deltaHeight, double deltaLength)
+        public HullView Hull
         {
-            m_editableHull.GenerateWaterlines(deltaHeight, deltaLength);
+            get { return m_editableHull; }
         }
+
         private void ContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             if (!IsEditable) e.Handled = true;
