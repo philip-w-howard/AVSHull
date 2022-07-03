@@ -35,6 +35,8 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -56,25 +58,33 @@
             <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=WaterDensity}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
             <Label Grid.Row="3" Grid.Column="2">lb/ft3</Label>
 
-            <CheckBox Grid.Row="4" Grid.ColumnSpan="2" IsChecked="{Binding Path=ShowAllWaterlines}">Show all waterlines</CheckBox>
+            <Label Grid.Row="4" Grid.Column="0">Heel Angle</Label>
+            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=HeelAngle}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
+            <Label Grid.Row="4" Grid.Column="2">degrees</Label>
 
-            <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="20" Click="RedrawClick" Width="50">Redraw</Button>
+            <Label Grid.Row="5" Grid.Column="0">Pitch Angle</Label>
+            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=PitchAngle}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
+            <Label Grid.Row="5" Grid.Column="2">degrees</Label>
 
-            <Label Grid.Row="6" Grid.Column="0">Freeboard</Label>
-            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=Freeboard, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
-            <Label Grid.Row="6" Grid.Column="2">inches</Label>
+            <CheckBox Grid.Row="6" Grid.ColumnSpan="2" IsChecked="{Binding Path=ShowAllWaterlines}">Show all waterlines</CheckBox>
 
-            <Label Grid.Row="7" Grid.Column="0">Moment X</Label>
-            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=MomentX, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
-            <Label Grid.Row="7" Grid.Column="2">inch-lbs</Label>
+            <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="20" Click="RedrawClick" Width="50">Redraw</Button>
 
-            <Label Grid.Row="8" Grid.Column="0">Moment Y</Label>
-            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=MomentY, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
-            <Label Grid.Row="8" Grid.Column="2">inch-lbs</Label>
+            <Label Grid.Row="8" Grid.Column="0">Freeboard</Label>
+            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=Freeboard, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <Label Grid.Row="8" Grid.Column="2">inches</Label>
 
-            <Label Grid.Row="9" Grid.Column="0">Moment Z</Label>
-            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=MomentZ, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <Label Grid.Row="9" Grid.Column="0">Moment X</Label>
+            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=MomentX, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
             <Label Grid.Row="9" Grid.Column="2">inch-lbs</Label>
+
+            <Label Grid.Row="10" Grid.Column="0">Moment Y</Label>
+            <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding Path=MomentY, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <Label Grid.Row="10" Grid.Column="2">inch-lbs</Label>
+
+            <Label Grid.Row="11" Grid.Column="0">Moment Z</Label>
+            <TextBox Grid.Row="11" Grid.Column="1" Text="{Binding Path=MomentZ, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <Label Grid.Row="11" Grid.Column="2">inch-lbs</Label>
         </Grid>
  
         <local:HullControl x:Name="WaterlineHull" ClipToBounds ="False"  IsRotatable="True"

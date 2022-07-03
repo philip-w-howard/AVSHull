@@ -28,6 +28,8 @@ namespace AVSHull
         private double _momentX;
         private double _momentY;
         private double _momentZ;
+        private double _heelAngle;
+        private double _pitchAngle;
 
         public WaterlineControlData() { }
 
@@ -78,6 +80,16 @@ namespace AVSHull
             get { return _momentZ; }
             set { _momentZ = value; Notify("MomentZ"); }
         }
+        public double HeelAngle
+        {
+            get { return _heelAngle; }
+            set { _heelAngle = value; Notify("HeelAngle"); }
+        }
+        public double PitchAngle
+        {
+            get { return _pitchAngle; }
+            set { _pitchAngle = value; Notify("PitchAngle"); }
+        }
         private void Notify(string propertyname)
         {
             if (PropertyChanged != null)
@@ -105,7 +117,13 @@ namespace AVSHull
             WaterlineHull.IsEditable = false;
             WaterlineHull.IsRotatable = true;
 
+            if (values.HeelAngle != 0) WaterlineHull.Rotate(0, 0, values.HeelAngle);
+            if (values.PitchAngle != 0) WaterlineHull.Rotate(values.PitchAngle, 0, 0);
+
             WaterlineHull.Hull.GenerateWaterlines(values.DeltaHeight, values.DeltaLength, values.Weight, values.WaterDensity, values.ShowAllWaterlines);
+
+            if (values.PitchAngle != 0) WaterlineHull.Rotate(-values.PitchAngle, 0, 0);
+            if (values.HeelAngle != 0) WaterlineHull.Rotate(0, 0, -values.HeelAngle);
 
             values.Freeboard = WaterlineHull.Hull.Freeboard;
             values.MomentX = WaterlineHull.Hull.Moment.X;
