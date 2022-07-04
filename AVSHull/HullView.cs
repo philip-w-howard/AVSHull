@@ -371,7 +371,7 @@ namespace AVSHull
         //    1) This is in ViewHull not Hull because it needs chines and so that it will work with a rotated hull (for heel and pitch)
         //    2) This code assumes an open top hull
         //    3) Computation will stop when the waterline allos the hull to take on water.
-        private List<Point3DCollection> GenerateHalfWaterlines(List<Point3DCollection> myChines, int startOffset, int end, int increment, 
+        private List<Point3DCollection> GenerateHalfWaterlines(List<Point3DCollection> myChines, int startOffset, int end, int increment,
             double minHeight, double maxHeight, double minLength, double maxLength, double lengthInterval, double heightInterval)
         {
             List<Point3DCollection> waterlines = new List<Point3DCollection>();
@@ -435,6 +435,139 @@ namespace AVSHull
             }
             return waterlines;
         }
+        // Generate a series fo waterlines.
+        // NOTES:
+        //    1) This is in ViewHull not Hull because it needs chines and so that it will work with a rotated hull (for heel and pitch)
+        //    2) This code assumes an open top hull
+        //    3) Computation will stop when the waterline allos the hull to take on water.
+        private List<Point3DCollection> GenerateFullWaterlines(List<Point3DCollection> myChines, 
+            double minHeight, double maxHeight, double minLength, double maxLength, double lengthInterval, double heightInterval)
+        {
+            List<Point3DCollection> waterlines = new List<Point3DCollection>();
+
+
+            double height = minHeight;
+
+            bool takingOnWater = false;
+            bool foundLeft;
+
+            while (!takingOnWater)
+            {
+                Point3DCollection left = new Point3DCollection();
+                Point3DCollection right = new Point3DCollection();
+
+                for (double length = minLength; length <= maxLength; length += lengthInterval)
+                {
+                    foundLeft = false;
+                    int index = 0;
+                    Point3D? lastPoint = null;
+                    
+                    // Stop at Count-2 because we need one chine past the one we're looking at
+                    while (lastPoint == null && index != myChines.Count-2)
+                    {
+                        lastPoint = GeometryOperations.InterpolateFromZ(myChines[index], length);
+                        index++;
+                    }
+
+                    // If nothing is in range, go to the next point
+                    if (lastPoint == null)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (index == 1 && lastPoint.Value.Y < height)
+                        {
+                            takingOnWater = true;
+                            break;
+                        }
+                    }
+
+                    Point3D? point;
+
+                    for (int chine = index; chine < myChines.Count; chine++)
+                    {
+                        point = GeometryOperations.InterpolateFromZ(myChines[chine], length);
+                        if (point != null)
+                        {
+                            if (chine == myChines.Count - 1 && point.Value.Y < height)
+                            {
+                                takingOnWater = true;
+                                break;
+                            }
+
+                            if (point == lastPoint)
+                            {
+                                if (height == 4 && length >= 139 && length <= 141)
+                                {
+                                    Debug.WriteLine("Skipping duplicate point {0}, {1} {2:F1}", height, chine, point);
+                                }
+
+                                continue;
+                            }
+
+                            if (Math.Min(lastPoint.Value.Y, point.Value.Y) <= height && height < Math.Max(lastPoint.Value.Y, point.Value.Y))
+                            {
+                                if (height == 4 && length == 140)
+                                {
+                                    Debug.WriteLine("Debug breakpoint");
+                                }
+                                Point3D newPoint = GeometryOperations.InterpolateFromY(lastPoint.Value, point.Value, height);
+                                if (!foundLeft)
+                                {
+                                    left.Add(newPoint);
+                                    if (height == 4 && length >= 139 && length <= 141)
+                                    {
+                                        Debug.WriteLine("Left:  {0:F3} {1:F3} {2} {3}", newPoint.X, newPoint.Z, height, chine);
+                                        Debug.WriteLine("{0:F3} {1:F3}", lastPoint, point);
+                                    }
+                                    foundLeft = true;
+                                    if (Math.Min(lastPoint.Value.Y, point.Value.Y) == height)
+                                    {
+                                        right.Add(newPoint);
+                                        if (height == 4 && length >= 139 && length <= 141)
+                                        {
+                                            Debug.WriteLine("Right X: {0:F3} {1:F3} {2} {3}", newPoint.X, newPoint.Z, height, chine);
+                                            break;      // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    right.Add(newPoint);
+                                    if (height == 4 && length >= 139 && length <= 141)
+                                    {
+                                        Debug.WriteLine("Right: {0:F3} {1:F3} {2} {3}", newPoint.X, newPoint.Z, height, chine);
+                                        Debug.WriteLine("{0:F3} {1:F3}", lastPoint, point);
+                                        break;      // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                    }
+                                    break;      // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                }
+                            }
+
+                            lastPoint = point;
+                        }
+                    }
+                }
+
+                if (!takingOnWater)
+                {
+                    for (int ii = right.Count - 1; ii >= 0; ii--)
+                    {
+                        left.Add(right[ii]);
+                    }
+
+                    waterlines.Add(left);
+
+
+                    height += heightInterval;
+
+                    // avoid an infinite loop if something goes wrong with taking on water calculation above
+                    if (height > maxHeight) takingOnWater = true;
+                }
+            }
+            return waterlines;
+        }
 
         public List<Point3DCollection> GetWaterlines()
         {
@@ -450,7 +583,7 @@ namespace AVSHull
 
             int last = Bulkheads.Count - 1;
 
-            for (int ii = 0; ii <= NumChines / 2; ii++)
+            for (int ii = 0; ii <= NumChines/2; ii++)
             {
                 myChines.Add(Chines[ii]);
                 if (ii != 0)
@@ -460,42 +593,42 @@ namespace AVSHull
                 }
             }
 
-            for (int ii = NumChines/2; ii < NumChines; ii++)
+            for (int ii = NumChines / 2; ii < NumChines; ii++)
             {
                 myChines.Add(Chines[ii]);
-                if (ii != NumChines-1)
+                if (ii != NumChines - 1)
                 {
-                    myChines[myChines.Count-1].Insert(0, Bulkheads[0].Points[ii + 1]);
-                    myChines[myChines.Count-1].Add(Bulkheads[last].Points[ii + 1]);
+                    myChines[myChines.Count - 1].Insert(0, Bulkheads[0].Points[ii + 1]);
+                    myChines[myChines.Count - 1].Add(Bulkheads[last].Points[ii + 1]);
                 }
             }
 
             Point3D min = GetMin();
             Size3D size = GetSize();
 
-            List<Point3DCollection> left, right;
 
-            int startOffset = -1;
-            int end = -1;
-            int increment = -1;
-            //int startOffset = 0;
-            //int end = myChines.Count;
-            //int increment = 1;
-            left = GenerateHalfWaterlines(myChines, startOffset, end, increment, min.Y, min.Y + size.Y, min.Z, min.Z + size.Z, lengthInterval, depthInterval);
+            //List<Point3DCollection> left, right;
 
-            startOffset = 0;
-            end = myChines.Count;
-            increment = 1;
-            right = GenerateHalfWaterlines(myChines, startOffset, end, increment, min.Y, min.Y + size.Y, min.Z, min.Z + size.Z, lengthInterval, depthInterval);
+            //int startOffset = -1;
+            //int end = -1;
+            //int increment = -1;
+            //left = GenerateHalfWaterlines(myChines, startOffset, end, increment, min.Y, min.Y + size.Y, min.Z, min.Z + size.Z, lengthInterval, depthInterval);
 
-            for (int ii=0; ii<Math.Min(left.Count, right.Count); ii++)
-            {
-                for (int jj=right[ii].Count-1; jj>=0; jj--)
-                {
-                    left[ii].Add(right[ii][jj]);
-                }
-                Waterlines.Add(left[ii]);
-            }
+            //startOffset = 0;
+            //end = myChines.Count;
+            //increment = 1;
+            //right = GenerateHalfWaterlines(myChines, startOffset, end, increment, min.Y, min.Y + size.Y, min.Z, min.Z + size.Z, lengthInterval, depthInterval);
+
+            //for (int ii=0; ii<Math.Min(left.Count, right.Count); ii++)
+            //{
+            //    for (int jj=right[ii].Count-1; jj>=0; jj--)
+            //    {
+            //        left[ii].Add(right[ii][jj]);
+            //    }
+            //    Waterlines.Add(left[ii]);
+            //}
+
+            Waterlines = GenerateFullWaterlines(myChines, min.Y, min.Y + size.Y, min.Z, min.Z + size.Z, lengthInterval, depthInterval);
 
             double area;
             double weight = 0;

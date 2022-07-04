@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" IsVisibleChanged="UserControl_IsVisibleChanged">
     <UserControl.Resources>
-        <local:WaterlineControlData x:Key="WaterlineData" DeltaHeight="1.0" DeltaLength="0.25" WaterDensity="62.4" Weight="180" ShowAllWaterlines="True"/>
+        <local:WaterlineControlData x:Key="WaterlineData" DeltaHeight="2.0" DeltaLength="0.5" WaterDensity="62.4" Weight="180" ShowAllWaterlines="False"/>
         <local:HullLog x:Key="UndoLog" />
         <local:HullLog x:Key="RedoLog" />
         <Style x:Key="Enabler" TargetType="{x:Type TextBox}">
