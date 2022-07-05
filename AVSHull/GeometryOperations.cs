@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -700,7 +701,7 @@ namespace AVSHull
             centroidX = 0;
             centroidZ = 0;
 
-            if (boundary.Count > 0)
+            if (boundary.Count > 3) // need at least 4 points: two on each side
             {
                 Point3D lastLeft = boundary[0];
                 Point3D lastRight = boundary[boundary.Count - 1];
@@ -711,11 +712,13 @@ namespace AVSHull
                     left = boundary[ii];
                     right = boundary[boundary.Count - ii - 1];
 
+                    if (left.Z != right.Z) Debug.WriteLine("Z offset error: {0:F2},    {1:F2}", left, right);
+
                     double width = (Math.Abs(left.X - right.X) + Math.Abs(lastLeft.X - lastRight.X)) / 2;
-                    double height = Math.Abs(left.Z - lastLeft.Z);
-                    area += width * height;
-                    centroidX += (left.X + right.X + lastLeft.X + lastRight.X) / 4 * width * height; // Approx: need to do the triangle thing for the ends
-                    centroidZ += (left.Z + right.Z + lastLeft.Z + lastRight.Z) / 4 * width * height; // Approx: Need to do the triangle thing for the ends
+                    double length = Math.Abs(left.Z - lastLeft.Z);
+                    area += width * length;
+                    centroidX += ((left.X + right.X + lastLeft.X + lastRight.X) / 4) * width * length; // Approx: need to do the triangle thing for the ends
+                    centroidZ += ((left.Z + right.Z + lastLeft.Z + lastRight.Z) / 4) * width * length; // Approx: Need to do the triangle thing for the ends
 
                     lastLeft = left;
                     lastRight = right;

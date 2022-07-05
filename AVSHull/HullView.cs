@@ -298,6 +298,47 @@ namespace AVSHull
             }
         }
 
+        private void RepositionToHome()
+        {
+            Point3D zero = GetMin();
+            Size3D size = GetSize();
+
+            Vector3D zeroVect = new Vector3D(-(zero.X + size.X / 2), -zero.Y, -zero.Z);
+
+            foreach (Bulkhead bulk in Bulkheads)
+            {
+                bulk.ShiftBy(zeroVect);
+            }
+
+            if (Chines != null)
+            {
+                for (int ii = 0; ii < Chines.Count; ii++)
+                {
+                    Point3DCollection newChine = new Point3DCollection(Chines.Count);
+                    foreach (Point3D point in Chines[ii])
+                    {
+                        newChine.Add(point + zeroVect);
+                    }
+
+                    Chines[ii] = newChine;
+                }
+            }
+
+            if (Waterlines != null)
+            {
+                for (int ii = 0; ii < Waterlines.Count; ii++)
+                {
+                    Point3DCollection newWaterline = new Point3DCollection(Waterlines.Count);
+                    foreach (Point3D point in Waterlines[ii])
+                    {
+                        newWaterline.Add(point + zeroVect);
+                    }
+
+                    Waterlines[ii] = newWaterline;
+                }
+            }
+        }
+
         public void UpdateBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
         {
             if (chine < 0 && BaseHull.Instance().Bulkheads[bulkhead].Type != Bulkhead.BulkheadType.BOW)
@@ -496,6 +537,8 @@ namespace AVSHull
 
             int last = Bulkheads.Count - 1;
 
+            RepositionToHome();
+
             for (int ii = 0; ii <= NumChines / 2; ii++)
             {
                 myChines.Add(Chines[ii]);
@@ -522,6 +565,8 @@ namespace AVSHull
             Waterlines = GenerateFullWaterlines(myChines, min.Y, min.Y + size.Y, min.Z, min.Z + size.Z, lengthInterval, depthInterval);
 
             ComputeWaterlineStats(waterDensity, depthInterval, loadedWeight, showAll);
+
+            RepositionToZero();
         }
 
         // Compute waterline stats: Freeboard and moments
@@ -538,9 +583,10 @@ namespace AVSHull
             double sumArea_Y = 0;
             double sumArea_Z = 0;
 
-            for (int ii = 0; ii < Waterlines.Count; ii++)
+            int waterlineIndex;
+            for (waterlineIndex = 0; waterlineIndex < Waterlines.Count; waterlineIndex++)
             {
-                area = GeometryOperations.ComputeFlatArea(Waterlines[ii], out momentX, out momentZ);
+                area = GeometryOperations.ComputeFlatArea(Waterlines[waterlineIndex], out momentX, out momentZ);
                 sliceWeight = area * waterDensity * depthInterval / (12 * 12 * 12);         // converted to inches cubed
                 weight += sliceWeight;
 
@@ -552,26 +598,27 @@ namespace AVSHull
                 Debug.WriteLine("Layer: Y: {0:F3}, Area: {1:F1}, Weight: {2:F2} {3:F2} (x,z): {4:F2}, {5:F2} sums (aream x,z) {6:F2} {7:F2} {8:F2}",
                     Y, area, sliceWeight, weight, momentX, momentZ, sumArea, sumArea_X, sumArea_Z);
                 Y += depthInterval;
-                if (!showAll && weight > loadedWeight)
-                {
-                    m_freeboard = (Waterlines.Count - 1 - ii) * depthInterval;
-                    Point3DCollection waterline = Waterlines[ii];
-                    Waterlines.Clear();
-                    Waterlines.Add(waterline);
+                if (weight > loadedWeight) break; //<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            }
 
-                    if (sumArea > 0)
-                    {
-                        m_momentX = sumArea_X / sumArea;
-                        m_momentY = sumArea_Y / sumArea;
-                        m_momentZ = sumArea_Z / sumArea;
-                    }
-                    break;
-                }
-                if (showAll && weight > loadedWeight)
-                {
-                    Waterlines.RemoveRange(ii+1, Waterlines.Count - ii - 1);
-                    break;
-                }
+            m_freeboard = (Waterlines.Count - 1 - waterlineIndex) * depthInterval;
+
+            if (sumArea > 0)
+            {
+                m_momentX = sumArea_X / sumArea;
+                m_momentY = sumArea_Y / sumArea;
+                m_momentZ = sumArea_Z / sumArea;
+            }
+
+            if (showAll)
+            {
+                Waterlines.RemoveRange(waterlineIndex + 1, Waterlines.Count - waterlineIndex - 1);
+            }
+            else
+            {
+                Point3DCollection waterline = Waterlines[waterlineIndex];
+                Waterlines.Clear();
+                Waterlines.Add(waterline);
             }
         }
 
