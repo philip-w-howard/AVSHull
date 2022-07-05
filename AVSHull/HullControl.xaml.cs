@@ -485,7 +485,6 @@ namespace AVSHull
         }
         private void hull_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Debug.WriteLine("HullControl.PropertyChanged: " + e.PropertyName);
             if (e.PropertyName == "Bulkhead" || e.PropertyName == "HullData")
             {
                 CreateHandles();
