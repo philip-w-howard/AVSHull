@@ -10,21 +10,11 @@
         <local:WaterlineControlData x:Key="WaterlineData" DeltaHeight="0.25" DeltaLength="0.25" WaterDensity="62.4" Weight="180" ShowAllWaterlines="False"/>
         <local:HullLog x:Key="UndoLog" />
         <local:HullLog x:Key="RedoLog" />
-        <Style x:Key="Enabler" TargetType="{x:Type TextBox}">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=ShowAllWaterlines}" Value="True">
-                    <Setter Property="TextBox.IsEnabled" Value="False"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=ShowAllWaterlines}" Value="False">
-                    <Setter Property="TextBox.IsEnabled" Value="True"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
     </UserControl.Resources>
     <DockPanel>
         <Grid DockPanel.Dock="Left" DataContext="{DynamicResource WaterlineData}" Background="Gray">
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -71,20 +61,24 @@
             <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="20" Click="RedrawClick" Width="50">Redraw</Button>
 
             <Label Grid.Row="8" Grid.Column="0">Freeboard</Label>
-            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=Freeboard, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
+            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=Freeboard, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" IsEnabled="False"/>
             <Label Grid.Row="8" Grid.Column="2">inches</Label>
 
-            <Label Grid.Row="9" Grid.Column="0">Moment X</Label>
-            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=MomentX, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
-            <Label Grid.Row="9" Grid.Column="2">inch-lbs</Label>
+            <Label Grid.Row="9" Grid.Column="0">Centroid X</Label>
+            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=CentroidX, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" IsEnabled="False"/>
+            <Label Grid.Row="9" Grid.Column="2">inches</Label>
 
-            <Label Grid.Row="10" Grid.Column="0">Moment Y</Label>
-            <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding Path=MomentY, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
-            <Label Grid.Row="10" Grid.Column="2">inch-lbs</Label>
+            <Label Grid.Row="10" Grid.Column="0">Centroid Y</Label>
+            <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding Path=CentroidY, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" IsEnabled="False"/>
+            <Label Grid.Row="10" Grid.Column="2">inches</Label>
 
-            <Label Grid.Row="11" Grid.Column="0">Moment Z</Label>
-            <TextBox Grid.Row="11" Grid.Column="1" Text="{Binding Path=MomentZ, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" Style="{StaticResource Enabler}"/>
-            <Label Grid.Row="11" Grid.Column="2">inch-lbs</Label>
+            <Label Grid.Row="11" Grid.Column="0">Centroid Z</Label>
+            <TextBox Grid.Row="11" Grid.Column="1" Text="{Binding Path=CentroidZ, StringFormat=F3}" HorizontalAlignment="Stretch" TextAlignment="Right" IsEnabled="False"/>
+            <Label Grid.Row="11" Grid.Column="2">inches</Label>
+
+            <Label Grid.Row="12" Grid.Column="0">Righting Moment</Label>
+            <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding Path=MomentX, StringFormat=F2}" HorizontalAlignment="Stretch" TextAlignment="Right" IsEnabled="False"/>
+            <Label Grid.Row="12" Grid.Column="2">foot-lbs</Label>
         </Grid>
  
         <local:HullControl x:Name="WaterlineHull" ClipToBounds ="False"  IsRotatable="True"

@@ -34,12 +34,18 @@ namespace AVSHull
             get { return m_freeboard; }
         }
 
-        private double m_momentX;
-        private double m_momentY;
-        private double m_momentZ;
-        public Point3D Moment
+        private double m_centroidX;
+        private double m_centroidY;
+        private double m_centroidZ;
+        public Point3D Centroid
         {
-            get { return new Point3D(m_momentX, m_momentY, m_momentZ); }
+            get { return new Point3D(m_centroidX, m_centroidY, m_centroidZ); }
+        }
+
+        double m_momentX;
+        public double RightingMomentX
+        {
+            get { return m_momentX; }
         }
 
         public HullView()
@@ -598,16 +604,24 @@ namespace AVSHull
                 Debug.WriteLine("Layer: Y: {0:F3}, Area: {1:F1}, Weight: {2:F2} {3:F2} (x,z): {4:F2}, {5:F2} sums (aream x,z) {6:F2} {7:F2} {8:F2}",
                     Y, area, sliceWeight, weight, momentX, momentZ, sumArea, sumArea_X, sumArea_Z);
                 Y += depthInterval;
-                if (weight > loadedWeight) break; //<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                if (weight > loadedWeight)
+                {
+                    // went one too far, so we need to back up.
+                    weight -= sliceWeight;
+                    waterlineIndex--;
+                    break; //<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                }
             }
 
             m_freeboard = (Waterlines.Count - 1 - waterlineIndex) * depthInterval;
 
             if (sumArea > 0)
             {
-                m_momentX = sumArea_X / sumArea;
-                m_momentY = sumArea_Y / sumArea;
-                m_momentZ = sumArea_Z / sumArea;
+                m_centroidX = sumArea_X / sumArea;
+                m_centroidY = sumArea_Y / sumArea;
+                m_centroidZ = sumArea_Z / sumArea;
+
+                m_momentX = m_centroidX / 12.0 * weight;        // convert inches to feet
             }
 
             if (showAll)

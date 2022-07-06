@@ -197,8 +197,4 @@ Changing the number of chines leaves a property notification disconnected.
 
 
 WaterlineViewer
-	finish copying OnRender from HullControl to WaterlineViewer
-		or, is one a subclass of the other?
-	Rotate m_editableHull to top view.
-
-	Extending chines for right side is wrong???
+	Clean up use of HullControl references to underlying HullView.

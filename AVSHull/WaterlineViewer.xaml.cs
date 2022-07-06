@@ -25,9 +25,10 @@ namespace AVSHull
         private double _waterDensity;
         bool _showAllWaterlines;
         private double _freeboard;
+        private double _centroidX;
+        private double _centroidY;
+        private double _centroidZ;
         private double _momentX;
-        private double _momentY;
-        private double _momentZ;
         private double _heelAngle;
         private double _pitchAngle;
 
@@ -65,20 +66,25 @@ namespace AVSHull
             get { return _freeboard; }
             set { _freeboard = value; Notify("Freeboard"); }
         }
+        public double CentroidX
+        {
+            get { return _centroidX; }
+            set { _centroidX = value; Notify("CentroidX"); }
+        }
+        public double CentroidY
+        {
+            get { return _centroidY; }
+            set { _centroidY = value; Notify("CentroidY"); }
+        }
+        public double CentroidZ
+        {
+            get { return _centroidZ; }
+            set { _centroidZ = value; Notify("CentroidZ"); }
+        }
         public double MomentX
         {
             get { return _momentX; }
             set { _momentX = value; Notify("MomentX"); }
-        }
-        public double MomentY
-        {
-            get { return _momentY; }
-            set { _momentY = value; Notify("MomentY"); }
-        }
-        public double MomentZ
-        {
-            get { return _momentZ; }
-            set { _momentZ = value; Notify("MomentZ"); }
         }
         public double HeelAngle
         {
@@ -126,9 +132,11 @@ namespace AVSHull
             if (values.HeelAngle != 0) WaterlineHull.Rotate(0, 0, -values.HeelAngle);
 
             values.Freeboard = WaterlineHull.Hull.Freeboard;
-            values.MomentX = WaterlineHull.Hull.Moment.X;
-            values.MomentY = WaterlineHull.Hull.Moment.Y;
-            values.MomentZ = WaterlineHull.Hull.Moment.Z;
+            values.CentroidX = WaterlineHull.Hull.Centroid.X;
+            values.CentroidY = WaterlineHull.Hull.Centroid.Y;
+            values.CentroidZ = WaterlineHull.Hull.Centroid.Z;
+
+            values.MomentX = WaterlineHull.Hull.RightingMomentX;
 
             WaterlineHull.InvalidateVisual();
             WaterlineHull.Rotate(0, 90, 90);
@@ -144,23 +152,6 @@ namespace AVSHull
             {
                 GenerateWaterlines();
             }
-        }
-
-        public class BoolInverter : IValueConverter
-        {
-            #region IValueConverter Members
-
-            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                return !(bool)value;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
-
-            #endregion
         }
     }
 }
