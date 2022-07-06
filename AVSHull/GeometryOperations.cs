@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -540,9 +541,10 @@ namespace AVSHull
             points.Add(new Point(center.X + Math.Cos(endAngle) * radius, center.Y + Math.Sin(endAngle) * radius));
         }
 
-        static public Point3D InterpolateFromZ(Point3DCollection points, double Z)
+        static public Point3D? InterpolateFromZ(Point3DCollection points, double Z)
         {
             // FIX THIS: need to have at least two points
+            bool found = false;
 
             Point3D left = points[0];
             Point3D right = points[1];
@@ -555,6 +557,7 @@ namespace AVSHull
                     if (point.Z >= Z)
                     {
                         right = point;
+                        found = true;
                         break;
                     }
                     else
@@ -562,7 +565,6 @@ namespace AVSHull
                         left = point;
                     }
                 }
-                // FIX THIS: Z was not in range
             }
             else if (left.Z > Z)
             {
@@ -572,6 +574,7 @@ namespace AVSHull
                     if (point.Z <= Z)
                     {
                         right = point;
+                        found = true;
                         break;
                     }
                     else
@@ -579,13 +582,14 @@ namespace AVSHull
                         left = point;
                     }
                 }
-                // FIX THIS: Z was not in range
             }
             else
             {
                 // landed exactly on the point
                 return points[0];
             }
+
+            if (!found) return null;
 
             // Did we land exactly on a point?
             if (left.Z == Z) return left;
@@ -642,6 +646,38 @@ namespace AVSHull
             return new Point(interest_x, interest_y);
         }
 
+        // Interpolate a point on a line between two points given the desired Y value of the point
+        public static Point3D InterpolateFromY(Point3D p1, Point3D p2, double y)
+        {
+             if (p1.Y == y)
+                return p1;
+            else if (p2.Y == y)
+                return p2;
+            else
+            {
+                double delta = (p1.Y - y) / (p1.Y - p2.Y);
+                double x = p1.X - (p1.X - p2.X) * delta;
+                double z = p1.Z - (p1.Z - p2.Z) * delta;
+
+                return new Point3D(x, y, z);
+            }
+        }
+        // Interpolate a point on a line between two points given the desired Z value of the point
+        public static Point3D InterpolateFromZ(Point3D p1, Point3D p2, double z)
+        {
+            if (p1.Z == z)
+                return p1;
+            else if (p2.Z == z)
+                return p2;
+            else
+            {
+                double delta = (p1.Z - z) / (p1.Z - p2.Z);
+                double x = (p1.X - p2.X) * delta;
+                double y = (p1.Y - p2.Y) * delta;
+
+                return new Point3D(x, y, z);
+            }
+        }
         public static bool SpansX(Point p1, Point p2, int fixed_offset)
         {
             double x1 = Math.Abs(p1.X);
@@ -650,6 +686,49 @@ namespace AVSHull
             if ((int)(x1 / fixed_offset) != (int)(x2 / fixed_offset)) return true;
 
             return false;
+        }
+
+        // Compute the area and centroid of a shape.
+        // Assumptions: 
+        //      1) The shape is "flat" meaning the Y coordinate of each point is the same
+        //      2) The shape is symetric on Z meaining that point[ii].Z == point[count-ii-1].Z
+        // These assumptions are met for waterlines computed on a hull with no heel.
+        public static double ComputeFlatArea(Point3DCollection boundary, out double centroidX, out double centroidZ)
+        {
+            int limit = boundary.Count / 2;
+
+            double area = 0;
+            centroidX = 0;
+            centroidZ = 0;
+
+            if (boundary.Count > 3) // need at least 4 points: two on each side
+            {
+                Point3D lastLeft = boundary[0];
+                Point3D lastRight = boundary[boundary.Count - 1];
+                Point3D left, right;
+
+                for (int ii = 1; ii < limit; ii++)
+                {
+                    left = boundary[ii];
+                    right = boundary[boundary.Count - ii - 1];
+
+                    if (left.Z != right.Z) Debug.WriteLine("Z offset error: {0:F2},    {1:F2}", left, right);
+
+                    double width = (Math.Abs(left.X - right.X) + Math.Abs(lastLeft.X - lastRight.X)) / 2;
+                    double length = Math.Abs(left.Z - lastLeft.Z);
+                    area += width * length;
+                    centroidX += ((left.X + right.X + lastLeft.X + lastRight.X) / 4) * width * length; // Approx: need to do the triangle thing for the ends
+                    centroidZ += ((left.Z + right.Z + lastLeft.Z + lastRight.Z) / 4) * width * length; // Approx: Need to do the triangle thing for the ends
+
+                    lastLeft = left;
+                    lastRight = right;
+                }
+
+                centroidX /= area;
+                centroidZ /= area;
+            }
+
+            return area;
         }
     }
 }

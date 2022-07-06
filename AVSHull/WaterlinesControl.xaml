@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="AVSHull.WaterlinesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AVSHull"
+             mc:Ignorable="d" 
+             BorderThickness="2">
+    <UserControl.Resources>
+        <local:WaterlineControlDatax x:Key="WaterlineData" ShowWaterlines="False" DeltaHeight="1.0" DeltaLength="0.25" />
+    </UserControl.Resources>
+    <Grid Background="White" DataContext="{Binding Source={StaticResource WaterlineData}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <CheckBox Margin="3" Grid.Row="0" Grid.ColumnSpan="2" IsChecked="{Binding Path=ShowWaterlines}">Show waterlines</CheckBox>
+
+        <Label Grid.Row="1" Grid.Column="0" >Delta Height</Label>
+        <TextBox  Grid.Row="1" Grid.Column="1" Name="widthValue" Text="{Binding Path=DeltaHeight}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
+
+        <TextBox Grid.Row="2" Grid.Column="1" Name="heightValue" Text="{Binding Path=DeltaLength}" HorizontalAlignment="Stretch" TextAlignment="Right"/>
+        <Label Grid.Row="2" Grid.Column="0">Delta Width</Label>
+
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="20" Click="OKClick" Width="50">OK</Button>
+    </Grid>
+</UserControl>

@@ -17,7 +17,7 @@ namespace AVSHull
     /// <summary>
     /// Interaction logic for ResizeWindow.xaml
     /// </summary>
-    public class ResizeControlData : INotifyPropertyChanged
+    public class ResizeWindowData : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -26,7 +26,7 @@ namespace AVSHull
         private double _height;
         private double _length;
 
-        public ResizeControlData() { }
+        public ResizeWindowData() { }
 
         public bool Proportional
         {
@@ -109,7 +109,7 @@ namespace AVSHull
 
         public void Setup()
         {
-            ResizeControlData resizeData = (ResizeControlData)this.FindResource("ResizeData");
+            ResizeWindowData resizeData = (ResizeWindowData)this.FindResource("ResizeData");
 
             if (resizeData != null)
             {
@@ -143,7 +143,7 @@ namespace AVSHull
 
             Size3D originalSize = hull.GetSize();
 
-            ResizeControlData resizeData = (ResizeControlData)FindResource("ResizeData");
+            ResizeWindowData resizeData = (ResizeWindowData)FindResource("ResizeData");
             double scale_x = 1.0;
             double scale_y = 1.0;
             double scale_z = 1.0;

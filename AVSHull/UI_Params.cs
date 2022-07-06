@@ -28,6 +28,13 @@ namespace AVSHull
             set { _changeChinesExpanded = value; Notify("ChangeChinesExpanded"); }
         }
 
+        private bool? _waterlinesExpanded = false;
+        public bool? WaterlinesExpanded
+        {
+            get { return _waterlinesExpanded; }
+            set { _waterlinesExpanded = value; Notify("WaterlinesExpanded"); }
+        }
+
         private bool? _offsetsSetupExpanded = false;
         public bool? OffsetsSetupExpanded
         {

@@ -189,5 +189,14 @@ Zoom along the lines of:
             </Image.LayoutTransform>                
         </Image>
 
+Move GenerateChines from HullView to Hull
+
+Changing the number of chines leaves a property notification disconnected.
+	Notification was fixed, 
+	...but all bulkheads are not labeled "BOW"
+
+
+WaterlineViewer
+	Clean up use of HullControl references to underlying HullView.
 Waterlines:
 	prepare to merge

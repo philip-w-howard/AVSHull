@@ -294,6 +294,8 @@ namespace AVSHull
                 Bulkheads[ii] = new Bulkhead(Bulkheads[ii], numChines);
             }
 
+            SetBulkheadHandler();
+
             Notify("HullData");
         }
 

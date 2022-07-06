@@ -34,6 +34,14 @@
                    PopupAnimation="Slide">
                 <local:NewBulkheadControl/>
             </Popup>
+            
+            <Button Content="Waterlines" Click="WaterlinesClick" ToolTip="Show/Hide waterlines"/>
+            <Popup IsOpen="{Binding Path=WaterlinesExpanded}"
+                   PlacementTarget="{Binding ElementName=FrontView}"
+                   Placement="Relative"
+                   PopupAnimation="Slide">
+                <local:WaterlinesControl/>
+            </Popup>
         </StackPanel>
         <Border BorderBrush="Gray" BorderThickness="3">
             <Grid>

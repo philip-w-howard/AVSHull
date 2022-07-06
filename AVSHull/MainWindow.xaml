@@ -58,6 +58,10 @@
             <local:ATabItem Header="Panels" TabName="Panels" >
                 <local:PanelLayoutScroller x:Name="LayoutWindow"/>
             </local:ATabItem>
+
+            <local:ATabItem Header="Waterlines" TabName="Waterlines" >
+                <local:WaterlineViewer x:Name="WaterlineViewer"/>
+            </local:ATabItem>
         </TabControl>
     </DockPanel>
 </Window>

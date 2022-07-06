@@ -297,5 +297,18 @@ namespace AVSHull
             UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
             values.NewBulkheadExpanded = !values.NewBulkheadExpanded;
         }
+
+        private void WaterlinesClick(object sender, RoutedEventArgs e)
+        {
+            if (BaseHull.Instance().Bulkheads.Count == 0)
+            {
+                MessageBox.Show("Can't add bulkhead to a non-existant hull.");
+                return;
+            }
+
+            UI_Params values = (UI_Params)this.FindResource("Curr_UI_Params");
+            values.WaterlinesExpanded = !values.WaterlinesExpanded;
+
+        }
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AVSHull"
         mc:Ignorable="d">
     <UserControl.Resources>
-        <local:ResizeControlData x:Key="ResizeData" Proportional="True" Width="50" Height="10" Length="150" />
+        <local:ResizeWindowData x:Key="ResizeData" Proportional="True" Width="50" Height="10" Length="150" />
     </UserControl.Resources>
     <Grid Margin="5" Background="White" DataContext="{Binding Source={StaticResource ResizeData}}">
         <!--https://www.c-sharpcorner.com/article/explain-inotifypropertychanged-in-wpf-mvvm/-->
