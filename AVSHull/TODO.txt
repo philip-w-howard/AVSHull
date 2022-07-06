@@ -189,4 +189,5 @@ Zoom along the lines of:
             </Image.LayoutTransform>                
         </Image>
 
-Move GenerateChines from HullView to Hull
+Waterlines:
+	prepare to merge
