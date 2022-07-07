@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using System.Diagnostics;
 
 namespace AVSHull
 {
@@ -557,7 +558,7 @@ namespace AVSHull
             PointCollection points = new PointCollection();
 
             Point p1 = m_panelPoints[m_panelPoints.Count - 2];
-            Point p2 = m_panelPoints[m_panelPoints.Count - 2];
+            Point p2 = m_panelPoints[m_panelPoints.Count - 1];
             Point p3;
 
             p1 = new Point(p1.X + m_origin.X, p1.Y + m_origin.Y);
@@ -566,15 +567,21 @@ namespace AVSHull
             for (int ii=0; ii<m_panelPoints.Count; ii++)
             {
                 p3 = new Point(m_panelPoints[ii].X + m_origin.X, m_panelPoints[ii].Y + m_origin.Y);
-                if (GeometryOperations.IsKnee(p1, p2, p3, KNEE_ANGLE))
+
+                if (ii==0 || ii==m_panelPoints.Count-1)
+                {
+                    points.Add(p3);
+                }
+                else if (GeometryOperations.IsKnee(p1, p2, p3, KNEE_ANGLE))
                 {
                     points.Add(p2);
                 }
-
+                
                 if (GeometryOperations.SpansX(p2, p3, fixed_offset))
                 {
+                    Point temp = GeometryOperations.ComputeSpacingPoint(p2, p3, fixed_offset);
                     // transitioned across boundary
-                    points.Add(GeometryOperations.ComputeSpacingPoint(p2, p3, fixed_offset));
+                    points.Add(temp);
                 }
 
                 p1 = p2;

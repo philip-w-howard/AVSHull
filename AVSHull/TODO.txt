@@ -198,5 +198,9 @@ Changing the number of chines leaves a property notification disconnected.
 
 WaterlineViewer
 	Clean up use of HullControl references to underlying HullView.
-Waterlines:
-	prepare to merge
+	Check flat-bottom waterline computation
+
+Input validation
+
+Direct-edit bulkhead points
+
