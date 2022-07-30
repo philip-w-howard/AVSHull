@@ -626,7 +626,10 @@ namespace AVSHull
 
             if (showAll)
             {
-                Waterlines.RemoveRange(waterlineIndex + 1, Waterlines.Count - waterlineIndex - 1);
+                if (Waterlines.Count > waterlineIndex)
+                {
+                    Waterlines.RemoveRange(waterlineIndex + 1, Waterlines.Count - waterlineIndex - 1);
+                }
             }
             else
             {

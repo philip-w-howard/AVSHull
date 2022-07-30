@@ -149,16 +149,6 @@ HullControl
 		Enable/Disable context menu based on property value.
 
 
-Features:
-	Measure
-		Waterline
-			water density
-			Weight
-		Righting moment
-			Heel
-			Pitch
-			Height of CG
-
 OffsetWriter
 	offsets relative to panel
 
@@ -193,7 +183,7 @@ Move GenerateChines from HullView to Hull
 
 Changing the number of chines leaves a property notification disconnected.
 	Notification was fixed, 
-	...but all bulkheads are not labeled "BOW"
+	...but all bulkheads are now labeled "BOW"
 
 
 WaterlineViewer
@@ -203,4 +193,8 @@ WaterlineViewer
 Input validation
 
 Direct-edit bulkhead points
+	select point
+	display selected (change color)
+	Enable appropriate x,y,z values
+	Update on change
 
