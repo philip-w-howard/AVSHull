@@ -631,9 +631,15 @@ namespace AVSHull
                     Waterlines.RemoveRange(waterlineIndex + 1, Waterlines.Count - waterlineIndex - 1);
                 }
             }
-            else
+            else if (waterlineIndex < Waterlines.Count)
             {
                 Point3DCollection waterline = Waterlines[waterlineIndex];
+                Waterlines.Clear();
+                Waterlines.Add(waterline);
+            }
+            else
+            {
+                Point3DCollection waterline = new Point3DCollection();
                 Waterlines.Clear();
                 Waterlines.Add(waterline);
             }

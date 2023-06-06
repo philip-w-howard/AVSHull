@@ -34,7 +34,7 @@ namespace AVSHull
 
         public bool IsSaved()
         {
-            return m_timestamp == null || SavedTimestamp == Timestamp;
+            return SavedTimestamp == Timestamp;
         }
 
         public PanelLayout()
